@@ -1,11 +1,18 @@
 #pragma once
 #include <KPController.hpp>
 #include <KPFileLoader.hpp>
+#include <KPStateMachine.hpp>
 
-//subclassing?
+// subclassing?
 
 class Application : public KPController {
 public:
-    void setup() override {}
-    void update() override { KPController::update(); }
+	KPStateMachine sm("state-machine");
+	void setup() override {
+		addComponent(sm);
+		Serial.print("Hi");
+	}
+	void update() override {
+		KPController::update();
+	}
 };
