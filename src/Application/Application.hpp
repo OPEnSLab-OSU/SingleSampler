@@ -7,7 +7,7 @@
 
 class Application : public KPController {
 public:
-	KPStateMachine sm("state-machine");
+	KPStateMachine sm{"state-machine"};
 	void setup() override {
 		addComponent(sm);
 		Serial.print("Hi");
