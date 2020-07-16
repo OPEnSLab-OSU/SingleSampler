@@ -12,9 +12,14 @@
 
 class Application : public KPController {
 public:
+	// Components
 	KPStateMachine sm{"state-machine"};
+	Pump pump{"pump", HardwarePins::MOTOR_FORWARDS, HardwarePins::MOTOR_BACKWARDS};
+
 	void setup() override {
 		addComponent(sm);
+		addComponent(pump);
+
 		Serial.print("Hi");
 	}
 	void update() override {
@@ -26,6 +31,4 @@ public:
 		HardwarePins::SHFT_REG_DATA,
 		HardwarePins::SHFT_REG_CLOCK,
 		HardwarePins::SHFT_REG_LATCH};
-
-	Pump pump{"pump", HardwarePins::MOTOR_FORWARDS, HardwarePins::MOTOR_BACKWARDS};
 };

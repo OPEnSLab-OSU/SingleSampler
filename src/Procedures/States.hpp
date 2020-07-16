@@ -14,6 +14,7 @@ class StateIdle : public KPState {
 
 class StateFlush : public KPState {
 	void enter(KPStateMachine & sm) override;
+	unsigned long time = 20;
 };
 
 class StateSample : public KPState {
