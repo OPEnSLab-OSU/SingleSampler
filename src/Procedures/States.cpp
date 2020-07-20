@@ -2,7 +2,10 @@
 #include <Application/Application.hpp>
 
 // Idle
-void StateIdle::enter(KPStateMachine & sm) {}
+void StateIdle::enter(KPStateMachine & sm) {
+	setTimeCondition(time, [&]() { sm.transitionTo(StateNames::FLUSH); });
+	
+}
 
 // Stop
 void StateStop::enter(KPStateMachine & sm) {
@@ -11,7 +14,7 @@ void StateStop::enter(KPStateMachine & sm) {
 	app.shift.writeAllRegistersLow();
 	app.shift.writeLatchOut();
 
-	setTimeCondition(5, [&]() { sm.transitionTo(StateNames::FLUSH); });
+	setTimeCondition(time, [&]() { sm.transitionTo(StateNames::IDLE); });
 }
 
 // Flush

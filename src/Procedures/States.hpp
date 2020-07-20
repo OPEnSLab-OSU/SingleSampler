@@ -10,6 +10,7 @@ namespace StateNames {
 
 class StateIdle : public KPState {
 	void enter(KPStateMachine & sm) override;
+	unsigned long time = 3600;
 };
 
 class StateFlush : public KPState {
@@ -23,4 +24,5 @@ class StateSample : public KPState {
 
 class StateStop : public KPState {
 	void enter(KPStateMachine & sm) override;
+	unsigned long time = 5;
 };

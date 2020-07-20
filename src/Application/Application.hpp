@@ -4,7 +4,10 @@
 #include <KPStateMachine.hpp>
 
 #include <KPSerialInputObserver.hpp>
+#include <KPSerialInput.hpp>
 
+#include <Procedures/States.hpp>
+#include <Procedures/MainStateMachine.hpp>
 #include "Constants.hpp"
 
 #include <Components/ShiftRegister.hpp>
@@ -15,9 +18,8 @@
 class Application : public KPController, public KPSerialInputObserver {
 public:
 	// Components
-	KPStateMachine sm{"state-machine"};
+	MainStateMachine sm;
 	Pump pump{"pump", HardwarePins::MOTOR_FORWARDS, HardwarePins::MOTOR_REVERSE};
-
 	// Shift Register
 	ShiftRegister shift{"shift-register",
 		32,
@@ -29,8 +31,10 @@ public:
 		Serial.begin(115200);
 		addComponent(sm);
 		addComponent(pump);
-
-		print("Hello", "AAAAAAAAA");
+		addComponent(KPSerialInput::sharedInstance());
+		sm.setup();
+		KPSerialInput::sharedInstance().addObserver(this);
+		Serial.print("Hello");
 	}
 	void update() override {
 		KPController::update();
@@ -39,10 +43,12 @@ public:
 	// Serial Monitor
 	void commandReceived(const char * line) override {
 		// NULL is EOF
-		if (strcmp("pump", line) == 0) {
-			sm.transitionTo("state-flush");
+		Serial.print("Command recieved\n");
+		if (strcmp("start", line) == 0) {
+			Serial.print("Running pump\n");
+			sm.begin();
 		}
 	}
 };
 
-//	
+//
