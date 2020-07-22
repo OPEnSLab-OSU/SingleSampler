@@ -53,7 +53,7 @@ public:
 		const char delim[2] = " ";
 		const char * tok	= strtok(str, delim);
 		char cmd[30];
-		int arg1;
+		int arg1 = 0;
 
 		Serial.print("Recieved: ");
 		Serial.print(str);
@@ -68,14 +68,14 @@ public:
 		if (0 == strcmp(cmd, "run")) {
 			sm.begin();
 		} else if (0 == strcmp(cmd, "sample")) {
-			StateSample * sample = sm.getState<StateSample>(StateNames::SAMPLE);
-			sample->time		 = arg1;
+			StateSample sample = sm.getState<StateSample>(StateNames::SAMPLE);
+			sample.time		   = arg1;
 		} else if (0 == strcmp(cmd, "flush")) {
-			StateFlush * flush = sm.getState<StateFlush>(StateNames::FLUSH);
-			flush->time		   = arg1;
+			StateFlush flush = sm.getState<StateFlush>(StateNames::FLUSH);
+			flush.time		 = arg1;
 		} else if (0 == strcmp(cmd, "idle")) {
-			StateIdle * idle = sm.getState<StateIdle>(StateNames::IDLE);
-			idle->time		 = arg1;
+			StateIdle idle = sm.getState<StateIdle>(StateNames::IDLE);
+			idle.time	   = arg1;
 		} else if (0 == strcmp(cmd, "runs")) {
 			no_runs = arg1;
 		} else if (0 == strcmp(cmd, "stop")) {
