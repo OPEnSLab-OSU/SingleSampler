@@ -13,6 +13,7 @@ public:
 		registerState(StateIdle(), StateNames::IDLE);
 		registerState(StateStop(), StateNames::STOP);
 		registerState(StateFlush(), StateNames::FLUSH);
-		// registerState(StateSample(), StateNames::SAMPLE);
+		registerState(StateSample(), StateNames::SAMPLE);
+		registerState(StateFinished(), StateNames::FINISHED);
 	}
 };
