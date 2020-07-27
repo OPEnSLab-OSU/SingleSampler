@@ -7,7 +7,7 @@ class MainStateMachine : public StateMachine {
 public:
 	MainStateMachine()
 		: StateMachine(
-			"main-state-machine", StateNames::FLUSH, StateNames::STOP, StateNames::IDLE) {}
+			"main-state-machine", StateNames::SETUP, StateNames::STOP, StateNames::IDLE) {}
 
 	void setup() override {
 		registerState(StateIdle(), StateNames::IDLE);
@@ -15,5 +15,7 @@ public:
 		registerState(StateFlush(), StateNames::FLUSH);
 		registerState(StateSample(), StateNames::SAMPLE);
 		registerState(StateFinished(), StateNames::FINISHED);
+		registerState(StatePurge(), StateNames::PURGE);
+		registerState(StateSetup(), StateNames::SETUP);
 	}
 };

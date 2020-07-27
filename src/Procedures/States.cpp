@@ -13,7 +13,7 @@ void writeLatch(bool controlPin, ShiftRegister & shift) {
 void StateIdle::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 	if (app.current_valve < app.no_runs)
-		setTimeCondition(time, [&]() { sm.transitionTo(StateNames::FLUSH); });
+		setTimeCondition(time, [&]() { sm.transitionTo(StateNames::PURGE); });
 	else
 		sm.transitionTo(StateNames::FINISHED);
 }
@@ -56,3 +56,16 @@ void StateSample::leave(KPStateMachine & sm) {
 }
 
 void StateFinished::enter(KPStateMachine & sm) {}
+
+void StatePurge::enter(KPStateMachine & sm) {
+	Application & app = *static_cast<Application *>(sm.controller);
+	app.shift.setAllRegistersLow();
+	app.shift.setPin(app.current_valve + Shift::FIRST_SAMPLE_VALVE, HIGH);
+	app.shift.write();
+	app.pump.on(Direction::reverse);
+	setTimeCondition(time, [&]() { sm.transitionTo(StateNames::FLUSH); });
+}
+
+void StateSetup::enter(KPStateMachine & sm) {
+	setTimeCondition(time, [&]() { sm.transitionTo(StateNames::PURGE); });
+}

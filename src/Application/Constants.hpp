@@ -13,7 +13,9 @@ namespace HardwarePins {
 namespace DefaultTimes {
 	const int FLUSH_TIME  = 20;
 	const int SAMPLE_TIME = 20;
-	const int IDLE_TIME	  = 3600 - FLUSH_TIME - SAMPLE_TIME;
+	const int PURGE_TIME  = 5;
+	const int IDLE_TIME	  = 3600 - FLUSH_TIME - SAMPLE_TIME - PURGE_TIME;
+	const int SETUP_TIME  = 0;
 }  // namespace DefaultTimes
 
 namespace TPICDevices {

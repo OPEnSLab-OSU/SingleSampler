@@ -8,6 +8,8 @@ namespace StateNames {
 	constexpr const char * SAMPLE	= "state-sample";
 	constexpr const char * STOP		= "state-stop";
 	constexpr const char * FINISHED = "state-finsihed";
+	constexpr const char * PURGE	= "state-purge";
+	constexpr const char * SETUP	= "state-setup";
 }  // namespace StateNames
 
 class StateIdle : public KPState {
@@ -37,4 +39,17 @@ public:
 class StateFinished : public KPState {
 public:
 	void enter(KPStateMachine & sm) override;
+};
+
+class StatePurge : public KPState {
+public:
+	void enter(KPStateMachine & sm) override;
+	void leave(KPStateMachine & sm) override;
+	unsigned long time = DefaultTimes::PURGE_TIME;
+};
+
+class StateSetup : public KPState {
+public:
+	void enter(KPStateMachine & sm) override;
+	unsigned long time = DefaultTimes::SETUP_TIME;
 };
