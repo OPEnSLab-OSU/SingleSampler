@@ -68,18 +68,17 @@ public:
 		if (0 == strcmp(cmd, "run")) {
 			sm.begin();
 		} else if (0 == strcmp(cmd, "sample")) {
-			StateSample & sample = sm.getState<StateSample>(StateNames::SAMPLE);
-			sample.time			 = arg1;
+			sm.getState<StateSample>(StateNames::SAMPLE).time = arg1;
 		} else if (0 == strcmp(cmd, "flush")) {
-			StateFlush & flush = sm.getState<StateFlush>(StateNames::FLUSH);
-			flush.time		   = arg1;
+			sm.getState<StateFlush>(StateNames::FLUSH).time = arg1;
 		} else if (0 == strcmp(cmd, "idle")) {
-			StateIdle & idle = sm.getState<StateIdle>(StateNames::IDLE);
-			idle.time		 = arg1;
+			sm.getState<StateIdle>(StateNames::IDLE).time = arg1;
 		} else if (0 == strcmp(cmd, "runs")) {
 			no_runs = arg1;
 		} else if (0 == strcmp(cmd, "stop")) {
 			sm.stop();
+		} else if (0 == strcmp(cmd, "setup")) {
+			sm.getState<StateSetup>(StateNames::SETUP).time = arg1;
 		}
 	}
 };
