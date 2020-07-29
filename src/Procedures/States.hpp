@@ -44,7 +44,7 @@ public:
 class StatePurge : public KPState {
 public:
 	void enter(KPStateMachine & sm) override;
-	void leave(KPStateMachine & sm) override;
+	// void leave(KPStateMachine & sm) override;
 	unsigned long time = DefaultTimes::PURGE_TIME;
 };
 
