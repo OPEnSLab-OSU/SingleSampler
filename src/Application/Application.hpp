@@ -18,7 +18,7 @@
 class Application : public KPController, public KPSerialInputObserver {
 public:
 	unsigned short current_valve = 0;
-	unsigned short no_runs		 = 24;
+	unsigned short last_valve	 = 24;
 	MainStateMachine sm;
 	Pump pump{"pump", HardwarePins::MOTOR_FORWARDS, HardwarePins::MOTOR_REVERSE};
 	ShiftRegister shift{"shift-register",
@@ -73,12 +73,21 @@ public:
 			sm.getState<StateFlush>(StateNames::FLUSH).time = arg1;
 		} else if (0 == strcmp(cmd, "idle")) {
 			sm.getState<StateIdle>(StateNames::IDLE).time = arg1;
-		} else if (0 == strcmp(cmd, "runs")) {
-			no_runs = arg1;
+		} else if (0 == strcmp(cmd, "last")) {
+			last_valve = arg1;
 		} else if (0 == strcmp(cmd, "stop")) {
 			sm.stop();
 		} else if (0 == strcmp(cmd, "setup")) {
 			sm.getState<StateSetup>(StateNames::SETUP).time = arg1;
+		} else if (0 == strcmp(cmd, "whereat")) {
+			Serial.print(current_valve);
+		} else if (0 == strcmp(cmd, "purge")) {
+			sm.getState<StatePurge>(StateNames::PURGE).time = arg1;
+		} else if (0 == strcmp(cmd, "runat")) {
+			current_valve = arg1;
+			last_valve	  = arg1;
+		} else if (0 == strcmp(cmd, "startat")) {
+			current_valve = arg1;
 		}
 	}
 };
