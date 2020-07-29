@@ -67,25 +67,26 @@ public:
 		}
 		if (0 == strcmp(cmd, "run")) {
 			sm.begin();
-		} else if (0 == strcmp(cmd, "sample")) {
+		} else if (0 == strcmp(cmd, "sampletime")) {
 			sm.getState<StateSample>(StateNames::SAMPLE).time = arg1;
-		} else if (0 == strcmp(cmd, "flush")) {
+		} else if (0 == strcmp(cmd, "flushtime")) {
 			sm.getState<StateFlush>(StateNames::FLUSH).time = arg1;
-		} else if (0 == strcmp(cmd, "idle")) {
+		} else if (0 == strcmp(cmd, "idletime")) {
 			sm.getState<StateIdle>(StateNames::IDLE).time = arg1;
-		} else if (0 == strcmp(cmd, "last")) {
+		} else if (0 == strcmp(cmd, "lastat")) {
 			last_valve = arg1;
 		} else if (0 == strcmp(cmd, "stop")) {
 			sm.stop();
-		} else if (0 == strcmp(cmd, "setup")) {
+		} else if (0 == strcmp(cmd, "setuptime")) {
 			sm.getState<StateSetup>(StateNames::SETUP).time = arg1;
 		} else if (0 == strcmp(cmd, "whereat")) {
 			Serial.print(current_valve);
-		} else if (0 == strcmp(cmd, "purge")) {
+		} else if (0 == strcmp(cmd, "purgetime")) {
 			sm.getState<StatePurge>(StateNames::PURGE).time = arg1;
 		} else if (0 == strcmp(cmd, "runat")) {
 			current_valve = arg1;
 			last_valve	  = arg1;
+			sm.begin();
 		} else if (0 == strcmp(cmd, "startat")) {
 			current_valve = arg1;
 		}
