@@ -6,14 +6,11 @@
 #include <KPSerialInputObserver.hpp>
 #include <KPSerialInput.hpp>
 
-#include <Procedures/SampleStates.hpp>
 #include <Procedures/SampleStateMachine.hpp>
-#include <Procedures/CleanStates.hpp>
 #include <Procedures/CleanStateMachine.hpp>
-#include <Procedures/EmptyStates.hpp>
 #include <Procedures/EmptyStateMachine.hpp>
 
-#include "Constants.hpp"
+#include <Application/Constants.hpp>
 
 #include <Components/ShiftRegister.hpp>
 #include <Components/Pump.hpp>

@@ -9,19 +9,19 @@ namespace EmptyStateNames {
 	constexpr const char * PURGE	= "state-purge-empty";
 }  // namespace EmptyStateNames
 
-class StateIdleEmpty : KPState {
+class StateIdleEmpty : public KPState {
 	void enter(KPStateMachine & sm) override;
 	unsigned long time = DefaultTimesEmpty::IDLE_TIME;
 };
-class StatePurgeEmpty : KPState {
+class StatePurgeEmpty : public KPState {
 	void enter(KPStateMachine & sm) override;
 	void leave(KPStateMachine & sm) override;
 	unsigned long time = DefaultTimesEmpty::PURGE_TIME;
 };
-class StateFinishedEmpty : KPState {
+class StateFinishedEmpty : public KPState {
 	void enter(KPStateMachine & sm) override;
 };
 
-class StateStopEmpty : KPState {
+class StateStopEmpty : public KPState {
 	void enter(KPStateMachine & sm) override;
 };
