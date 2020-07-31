@@ -1,4 +1,5 @@
 #include <Procedures/EmptyStates.hpp>
+#include <Application/Application.hpp>
 
 void StateIdleEmpty::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);

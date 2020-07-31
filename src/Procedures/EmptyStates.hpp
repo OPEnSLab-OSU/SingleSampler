@@ -1,7 +1,6 @@
 #pragma once
 #include <KPState.hpp>
 #include <Application/Constants.hpp>
-#include <Application/Application.hpp>
 
 namespace EmptyStateNames {
 	constexpr const char * IDLE		= "state-idle-empty";

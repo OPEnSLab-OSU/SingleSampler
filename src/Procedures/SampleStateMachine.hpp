@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Components/StateMachine.hpp>
-#include <SampleStates.hpp>
+#include <Procedures/SampleStates.hpp>
 
 class SampleStateMachine : public StateMachine {
 public:

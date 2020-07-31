@@ -1,4 +1,5 @@
 #include <Procedures/CleanStates.hpp>
+#include <Application/Application.hpp>
 
 // Idle
 void CleanStateIdle::enter(KPStateMachine & sm) {
