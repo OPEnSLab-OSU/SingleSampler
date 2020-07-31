@@ -26,7 +26,9 @@ public:
 	SampleStateMachine sm;
 	CleanStateMachine csm;
 	EmptyStateMachine esm;
-	Button run_button{13, "run-button"};
+	Button run_button{HardwarePins::RUN_BUTTON, "run-button"};
+	Button empty_button{HardwarePins::PURGE_BUTTON, "purge-button"};
+	Button clean_button{HardWarePins::CLEAN_BUTTON, "clean-button"};
 	Pump pump{"pump", HardwarePins::MOTOR_FORWARDS, HardwarePins::MOTOR_REVERSE};
 	ShiftRegister shift{"shift-register",
 		32,
@@ -51,6 +53,8 @@ public:
 	}
 	void update() override {
 		run_button.listen(sm);
+		empty_button.listen(esm);
+		clean_button.listen(csm);
 		KPController::update();
 	}
 
