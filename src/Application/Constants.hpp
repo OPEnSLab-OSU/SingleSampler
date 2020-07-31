@@ -18,6 +18,17 @@ namespace DefaultTimes {
 	const int SETUP_TIME  = 0;
 }  // namespace DefaultTimes
 
+namespace DefaultTimesEmpty {
+	const int PURGE_TIME = 40;
+	const int IDLE_TIME	 = 0;
+}  // namespace DefaultTimesEmpty
+
+namespace DefaultTimesClean {
+	const int SAMPLE_TIME = 5;
+	const int IDLE_TIME	  = 0;
+	const int FLUSH_TIME  = 20;
+}  // namespace DefaultTimesClean
+
 namespace TPICDevices {
 	constexpr int INTAKE_POS	= 0;
 	constexpr int INTAKE_NEG	= 1;
