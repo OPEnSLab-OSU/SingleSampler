@@ -26,9 +26,9 @@ public:
 	SampleStateMachine sm;
 	CleanStateMachine csm;
 	EmptyStateMachine esm;
-	Button run_button{HardwarePins::RUN_BUTTON, "run-button"};
-	Button empty_button{HardwarePins::PURGE_BUTTON, "purge-button"};
-	Button clean_button{HardwarePins::CLEAN_BUTTON, "clean-button"};
+	Button run_button{HardwarePins::RUN_BUTTON};
+	Button empty_button{HardwarePins::PURGE_BUTTON};
+	Button clean_button{HardwarePins::CLEAN_BUTTON};
 	Pump pump{"pump", HardwarePins::MOTOR_FORWARDS, HardwarePins::MOTOR_REVERSE};
 	ShiftRegister shift{"shift-register",
 		32,
