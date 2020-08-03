@@ -45,7 +45,6 @@ public:
 		addComponent(sm);
 		addComponent(pump);
 		addComponent(shift);
-		addComponent(run_button);
 		addComponent(KPSerialInput::sharedInstance());
 		// sm.setup();
 		KPSerialInput::sharedInstance().addObserver(this);

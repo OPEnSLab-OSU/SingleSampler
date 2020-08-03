@@ -32,6 +32,10 @@ namespace DefaultTimesClean {
 	const int FLUSH_TIME  = 20;
 }  // namespace DefaultTimesClean
 
+namespace DefaultTimesButton {
+	const unsigned long DEBOUNCE_TIME = 100;
+}
+
 namespace TPICDevices {
 	constexpr int INTAKE_POS	= 0;
 	constexpr int INTAKE_NEG	= 1;
