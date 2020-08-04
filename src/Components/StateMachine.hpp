@@ -2,6 +2,7 @@
 
 #include <KPFoundation.hpp>
 #include <KPStateMachine.hpp>
+#include <KPState.hpp>
 
 class StateMachine : public KPStateMachine {
 public:
