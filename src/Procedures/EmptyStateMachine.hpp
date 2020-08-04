@@ -7,7 +7,7 @@ class EmptyStateMachine : public StateMachine {
 public:
 	EmptyStateMachine()
 		: StateMachine("empty-state-machine", EmptyStateNames::PURGE, EmptyStateNames::STOP,
-			EmptyStateNames::IDLE) {}
+			EmptyStateNames::IDLE, EmptyStateNames::FINISHED) {}
 
 	void setup() override {
 		registerState(StatePurgeEmpty(), EmptyStateNames::PURGE);
@@ -15,5 +15,4 @@ public:
 		registerState(StateFinishedEmpty(), EmptyStateNames::FINISHED);
 		registerState(StateIdleEmpty(), EmptyStateNames::IDLE);
 	}
-
 };

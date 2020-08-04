@@ -7,7 +7,7 @@ class SampleStateMachine : public StateMachine {
 public:
 	SampleStateMachine()
 		: StateMachine("sample-state-machine", SampleStateNames::SETUP, SampleStateNames::STOP,
-			SampleStateNames::IDLE) {}
+			SampleStateNames::IDLE, SampleStateNames::FINISHED) {}
 
 	void setup() override {
 		registerState(SampleStateIdle(), SampleStateNames::IDLE);

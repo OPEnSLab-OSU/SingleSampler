@@ -52,13 +52,19 @@ public:
 		KPSerialInput::sharedInstance().addObserver(this);
 		Serial.print("Hello");
 	}
-	void update() override {
-		run_button.listen(sm);
-		empty_button.listen(esm);
-		clean_button.listen(csm);
-		KPController::update();
+
+	bool isBusy() {
+		return sm.isBusy() || esm.isBusy() || csm.isBusy();
 	}
 
+	void update() override {
+		if (isBusy()) {
+			run_button.listen(sm);
+			empty_button.listen(esm);
+			clean_button.listen(csm);
+		}
+		KPController::update();
+	}
 	// Serial Monitor
 	void commandReceived(const char * line) override {
 		// NULL is EOF

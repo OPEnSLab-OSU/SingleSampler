@@ -7,7 +7,7 @@ class CleanStateMachine : public StateMachine {
 public:
 	CleanStateMachine()
 		: StateMachine("clean-state-machine", CleanStateNames::FLUSH, CleanStateNames::STOP,
-			CleanStateNames::IDLE) {}
+			CleanStateNames::IDLE, CleanStateNames::FINISHED) {}
 
 	void setup() override {
 		registerState(CleanStateIdle(), CleanStateNames::IDLE);
