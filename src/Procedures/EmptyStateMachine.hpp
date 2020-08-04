@@ -15,4 +15,5 @@ public:
 		registerState(StateFinishedEmpty(), EmptyStateNames::FINISHED);
 		registerState(StateIdleEmpty(), EmptyStateNames::IDLE);
 	}
+
 };

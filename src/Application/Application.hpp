@@ -43,6 +43,8 @@ public:
 	void setup() override {
 		Serial.begin(115200);
 		addComponent(sm);
+		addComponent(esm);
+		addComponent(csm);
 		addComponent(pump);
 		addComponent(shift);
 		addComponent(KPSerialInput::sharedInstance());
@@ -88,7 +90,12 @@ public:
 		} else if (0 == strcmp(cmd, "lastat")) {
 			last_valve = arg1;
 		} else if (0 == strcmp(cmd, "stop")) {
+			current_valve = 24;
 			sm.stop();
+			current_valve = 24;
+			csm.stop();
+			current_valve = 24;
+			esm.stop();
 		} else if (0 == strcmp(cmd, "setuptime")) {
 			sm.getState<SampleStateSetup>(SampleStateNames::SETUP).time = arg1;
 		} else if (0 == strcmp(cmd, "whereat")) {
@@ -101,6 +108,19 @@ public:
 			sm.begin();
 		} else if (0 == strcmp(cmd, "startat")) {
 			current_valve = arg1;
+		} else if (0 == strcmp(cmd, "erun")) {
+			esm.begin();
+		} else if (0 == strcmp(cmd, "estop")) {
+			current_valve = 24;
+			esm.stop();
+		} else if (0 == strcmp(cmd, "crun")) {
+			csm.begin();
+		} else if (0 == strcmp(cmd, "cstop")) {
+			current_valve = 24;
+			csm.stop();
+		} else if (0 == strcmp(cmd, "sstop")) {
+			current_valve = 24;
+			sm.stop();
 		}
 	}
 };
