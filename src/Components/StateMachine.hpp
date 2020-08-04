@@ -37,7 +37,7 @@ public:
 	 */
 
 	bool isBusy() const {
-		return (getCurrentState() == nullptr
+		return !(getCurrentState() == nullptr
 			|| 0 == strcmp(getCurrentState()->getName(), finishedStateName));
 	}
 };
