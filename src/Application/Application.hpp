@@ -6,12 +6,16 @@
 #include <KPSerialInputObserver.hpp>
 #include <KPSerialInput.hpp>
 
-#include <Procedures/States.hpp>
-#include <Procedures/MainStateMachine.hpp>
-#include "Constants.hpp"
+#include <Procedures/SampleStateMachine.hpp>
+#include <Procedures/CleanStateMachine.hpp>
+#include <Procedures/EmptyStateMachine.hpp>
+
+#include <Application/Constants.hpp>
 
 #include <Components/ShiftRegister.hpp>
 #include <Components/Pump.hpp>
+
+#include <Buttons/Button.hpp>
 
 // subclassing?
 
@@ -19,7 +23,12 @@ class Application : public KPController, public KPSerialInputObserver {
 public:
 	unsigned short current_valve = 0;
 	unsigned short last_valve	 = 24;
-	MainStateMachine sm;
+	SampleStateMachine sm;
+	CleanStateMachine csm;
+	EmptyStateMachine esm;
+	Button run_button{HardwarePins::RUN_BUTTON};
+	Button empty_button{HardwarePins::PURGE_BUTTON};
+	Button clean_button{HardwarePins::CLEAN_BUTTON};
 	Pump pump{"pump", HardwarePins::MOTOR_FORWARDS, HardwarePins::MOTOR_REVERSE};
 	ShiftRegister shift{"shift-register",
 		32,
@@ -34,6 +43,8 @@ public:
 	void setup() override {
 		Serial.begin(115200);
 		addComponent(sm);
+		addComponent(esm);
+		addComponent(csm);
 		addComponent(pump);
 		addComponent(shift);
 		addComponent(KPSerialInput::sharedInstance());
@@ -41,10 +52,19 @@ public:
 		KPSerialInput::sharedInstance().addObserver(this);
 		Serial.print("Hello");
 	}
-	void update() override {
-		KPController::update();
+
+	bool isBusy() {
+		return sm.isBusy() || esm.isBusy() || csm.isBusy();
 	}
 
+	void update() override {
+		if (!isBusy()) {
+			run_button.listen(sm);
+			empty_button.listen(esm);
+			clean_button.listen(csm);
+		}
+		KPController::update();
+	}
 	// Serial Monitor
 	void commandReceived(const char * line) override {
 		// NULL is EOF
@@ -53,7 +73,7 @@ public:
 		const char delim[2] = " ";
 		const char * tok	= strtok(str, delim);
 		char cmd[30];
-		int arg1;
+		int arg1 = -1;
 
 		Serial.print("Recieved: ");
 		Serial.print(str);
@@ -68,27 +88,45 @@ public:
 		if (0 == strcmp(cmd, "run")) {
 			sm.begin();
 		} else if (0 == strcmp(cmd, "sampletime")) {
-			sm.getState<StateSample>(StateNames::SAMPLE).time = arg1;
+			sm.getState<SampleStateSample>(SampleStateNames::SAMPLE).time = arg1;
 		} else if (0 == strcmp(cmd, "flushtime")) {
-			sm.getState<StateFlush>(StateNames::FLUSH).time = arg1;
+			sm.getState<SampleStateFlush>(SampleStateNames::FLUSH).time = arg1;
 		} else if (0 == strcmp(cmd, "idletime")) {
-			sm.getState<StateIdle>(StateNames::IDLE).time = arg1;
+			sm.getState<SampleStateIdle>(SampleStateNames::IDLE).time = arg1;
 		} else if (0 == strcmp(cmd, "lastat")) {
 			last_valve = arg1;
 		} else if (0 == strcmp(cmd, "stop")) {
+			current_valve = 24;
 			sm.stop();
+			current_valve = 24;
+			csm.stop();
+			current_valve = 24;
+			esm.stop();
 		} else if (0 == strcmp(cmd, "setuptime")) {
-			sm.getState<StateSetup>(StateNames::SETUP).time = arg1;
+			sm.getState<SampleStateSetup>(SampleStateNames::SETUP).time = arg1;
 		} else if (0 == strcmp(cmd, "whereat")) {
 			Serial.print(current_valve);
 		} else if (0 == strcmp(cmd, "purgetime")) {
-			sm.getState<StatePurge>(StateNames::PURGE).time = arg1;
+			sm.getState<SampleStatePurge>(SampleStateNames::PURGE).time = arg1;
 		} else if (0 == strcmp(cmd, "runat")) {
 			current_valve = arg1;
 			last_valve	  = arg1;
 			sm.begin();
 		} else if (0 == strcmp(cmd, "startat")) {
 			current_valve = arg1;
+		} else if (0 == strcmp(cmd, "erun")) {
+			esm.begin();
+		} else if (0 == strcmp(cmd, "estop")) {
+			current_valve = 24;
+			esm.stop();
+		} else if (0 == strcmp(cmd, "crun")) {
+			csm.begin();
+		} else if (0 == strcmp(cmd, "cstop")) {
+			current_valve = 24;
+			csm.stop();
+		} else if (0 == strcmp(cmd, "sstop")) {
+			current_valve = 24;
+			sm.stop();
 		}
 	}
 };

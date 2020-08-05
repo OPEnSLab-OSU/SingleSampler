@@ -6,6 +6,9 @@ namespace HardwarePins {
 	constexpr int SHFT_REG_DATA	 = 12;
 	constexpr int MOTOR_REVERSE	 = 5;
 	constexpr int MOTOR_FORWARDS = 6;
+	constexpr int RUN_BUTTON	 = 13;
+	constexpr int PURGE_BUTTON	 = A3;
+	constexpr int CLEAN_BUTTON	 = A4;
 }  // namespace HardwarePins
 
 // flush pin is the same
@@ -17,6 +20,21 @@ namespace DefaultTimes {
 	const int IDLE_TIME	  = 3600 - FLUSH_TIME - SAMPLE_TIME - PURGE_TIME;
 	const int SETUP_TIME  = 0;
 }  // namespace DefaultTimes
+
+namespace DefaultTimesEmpty {
+	const int PURGE_TIME = 40;
+	const int IDLE_TIME	 = 0;
+}  // namespace DefaultTimesEmpty
+
+namespace DefaultTimesClean {
+	const int SAMPLE_TIME = 5;
+	const int IDLE_TIME	  = 0;
+	const int FLUSH_TIME  = 20;
+}  // namespace DefaultTimesClean
+
+namespace DefaultTimesButton {
+	const unsigned long DEBOUNCE_TIME = 100;
+}
 
 namespace TPICDevices {
 	constexpr int INTAKE_POS	= 0;
