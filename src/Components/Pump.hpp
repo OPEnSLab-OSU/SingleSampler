@@ -17,9 +17,9 @@ public:
 	}
 
 	void on(Direction dir = Direction::normal) {
-		delay(20);										  // why?
-		analogWrite(control1, dir == Direction::normal);  // True for normal?
-		analogWrite(control2, dir == Direction::normal);
+		delay(20);													// why?
+		analogWrite(control1, dir == Direction::normal ? 255 : 0);	// True for normal?
+		analogWrite(control2, dir == Direction::normal ? 0 : 255);
 	}
 
 	void off() {

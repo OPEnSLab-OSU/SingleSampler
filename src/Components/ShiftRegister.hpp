@@ -38,9 +38,7 @@ public:
 
 public:
 	ShiftRegister(const char * name, int capacity, int data, int clock, int latch)
-		: KPComponent(name),
-		  capacity(capacity),
-		  registersCount(capacity / capacityPerRegister) {
+		: KPComponent(name), capacity(capacity), registersCount(capacity / capacityPerRegister) {
 		registers = new int8_t[registersCount]();
 		setRegisterPins(data, clock, latch);
 	}
