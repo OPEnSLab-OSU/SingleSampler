@@ -66,7 +66,7 @@ public:
 		KPController::update();
 	}
 	// Serial Monitor
-	void commandReceived(const char * line) override {
+	void commandReceived(const char * line, size_t size) override {
 		// NULL is EOF
 		char str[80];
 		strcpy(str, line);
