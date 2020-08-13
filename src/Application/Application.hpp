@@ -8,7 +8,6 @@
 
 #include <Procedures/SampleStateMachine.hpp>
 #include <Procedures/CleanStateMachine.hpp>
-#include <Procedures/EmptyStateMachine.hpp>
 
 #include <Application/Constants.hpp>
 
@@ -21,11 +20,10 @@
 
 class Application : public KPController, public KPSerialInputObserver {
 public:
-	unsigned short current_valve = 0;
-	unsigned short last_valve	 = 24;
+	unsigned short current_sample = 0;
+	unsigned short last_sample	  = 24;
 	SampleStateMachine sm;
 	CleanStateMachine csm;
-	EmptyStateMachine esm;
 	Button run_button{HardwarePins::RUN_BUTTON};
 	Button empty_button{HardwarePins::PURGE_BUTTON};
 	Button clean_button{HardwarePins::CLEAN_BUTTON};
@@ -37,13 +35,12 @@ public:
 		HardwarePins::SHFT_REG_LATCH};
 
 	void iterateValve() {
-		++current_valve;
+		++current_sample;
 	}
 
 	void setup() override {
 		Serial.begin(115200);
 		addComponent(sm);
-		addComponent(esm);
 		addComponent(csm);
 		addComponent(pump);
 		addComponent(shift);
@@ -54,13 +51,12 @@ public:
 	}
 
 	bool isBusy() {
-		return sm.isBusy() || esm.isBusy() || csm.isBusy();
+		return sm.isBusy() || csm.isBusy();
 	}
 
 	void update() override {
 		if (!isBusy()) {
 			run_button.listen(sm);
-			empty_button.listen(esm);
 			clean_button.listen(csm);
 		}
 		KPController::update();
@@ -94,38 +90,31 @@ public:
 		} else if (0 == strcmp(cmd, "idletime")) {
 			sm.getState<SampleStateIdle>(SampleStateNames::IDLE).time = arg1;
 		} else if (0 == strcmp(cmd, "lastat")) {
-			last_valve = arg1;
+			last_sample = arg1;
 		} else if (0 == strcmp(cmd, "stop")) {
-			current_valve = 24;
+			current_sample = 24;
 			sm.stop();
-			current_valve = 24;
+			current_sample = 24;
 			csm.stop();
-			current_valve = 24;
-			esm.stop();
 		} else if (0 == strcmp(cmd, "setuptime")) {
 			sm.getState<SampleStateSetup>(SampleStateNames::SETUP).time = arg1;
 		} else if (0 == strcmp(cmd, "whereat")) {
-			Serial.print(current_valve);
+			Serial.print(current_sample);
 		} else if (0 == strcmp(cmd, "purgetime")) {
 			sm.getState<SampleStatePurge>(SampleStateNames::PURGE).time = arg1;
 		} else if (0 == strcmp(cmd, "runat")) {
-			current_valve = arg1;
-			last_valve	  = arg1;
+			current_sample = arg1;
+			last_sample	   = arg1;
 			sm.begin();
 		} else if (0 == strcmp(cmd, "startat")) {
-			current_valve = arg1;
-		} else if (0 == strcmp(cmd, "erun")) {
-			esm.begin();
-		} else if (0 == strcmp(cmd, "estop")) {
-			current_valve = 24;
-			esm.stop();
+			current_sample = arg1;
 		} else if (0 == strcmp(cmd, "crun")) {
 			csm.begin();
 		} else if (0 == strcmp(cmd, "cstop")) {
-			current_valve = 24;
+			current_sample = 24;
 			csm.stop();
 		} else if (0 == strcmp(cmd, "sstop")) {
-			current_valve = 24;
+			current_sample = 24;
 			sm.stop();
 		}
 	}
