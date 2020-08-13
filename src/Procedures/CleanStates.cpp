@@ -35,7 +35,7 @@ void CleanStateFlush::enter(KPStateMachine & sm) {
 void CleanStateSample::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 	app.shift.setAllRegistersLow();
-	app.shift.setPin(app.current_sample + Shift::FIRST_SAMPLE_VALVE, HIGH);
+	app.shift.setPin(TPICDevices::WATER_VALVE, HIGH);
 	app.shift.write();
 	app.pump.on();
 	setTimeCondition(time, [&]() { sm.transitionTo(CleanStateNames::STOP); });

@@ -43,7 +43,7 @@ void SampleStateFlush::enter(KPStateMachine & sm) {
 void SampleStateSample::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 	app.shift.setAllRegistersLow();
-	app.shift.setPin(app.current_sample + Shift::FIRST_SAMPLE_VALVE, HIGH);
+	app.shift.setPin(TPICDevices::WATER_VALVE, HIGH);
 	app.shift.write();
 	app.pump.on();
 	setTimeCondition(time, [&]() { sm.transitionTo(SampleStateNames::STOP); });
@@ -55,14 +55,14 @@ void SampleStateSample::leave(KPStateMachine & sm) {
 }
 
 void SampleStateFinished::enter(KPStateMachine & sm) {
-	Application & app = *static_cast<Application *>(sm.controller);
+	Application & app  = *static_cast<Application *>(sm.controller);
 	app.current_sample = 0;
 }
 
 void SampleStatePurge::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 	app.shift.setAllRegistersLow();
-	app.shift.setPin(app.current_sample + Shift::FIRST_SAMPLE_VALVE, HIGH);
+	app.shift.setPin(TPICDevices::WATER_VALVE, HIGH);
 	app.shift.write();
 	app.pump.on(Direction::reverse);
 	setTimeCondition(time, [&]() { sm.transitionTo(SampleStateNames::FLUSH); });
