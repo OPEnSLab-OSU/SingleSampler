@@ -16,6 +16,8 @@
 
 #include <Buttons/Button.hpp>
 
+#include <Application/Shell.hpp>
+
 // subclassing?
 
 class Application : public KPController, public KPSerialInputObserver {
@@ -62,8 +64,12 @@ public:
 		KPController::update();
 	}
 	// Serial Monitor
-	void commandReceived(const char * line, size_t size) override {
-		// NULL is EOF
+	void commandReceived(const char * line, size_t size) override {}
+};
+
+//
+/*
+		// null is eof
 		char str[80];
 		strcpy(str, line);
 		const char delim[2] = " ";
@@ -71,24 +77,24 @@ public:
 		char cmd[30];
 		int arg1 = -1;
 
-		Serial.print("Recieved: ");
-		Serial.print(str);
-		Serial.print("\n");
+		serial.print("recieved: ");
+		serial.print(str);
+		serial.print("\n");
 
 		strcpy(cmd, tok);
-		tok = strtok(NULL, delim);
-		if (tok != NULL) {
+		tok = strtok(null, delim);
+		if (tok != null) {
 			arg1 = atoi(tok);
-			tok	 = strtok(NULL, delim);
+			tok	 = strtok(null, delim);
 		}
 		if (0 == strcmp(cmd, "run")) {
 			sm.begin();
 		} else if (0 == strcmp(cmd, "sampletime")) {
-			sm.getState<SampleStateSample>(SampleStateNames::SAMPLE).time = arg1;
+			sm.getstate<samplestatesample>(samplestatenames::sample).time = arg1;
 		} else if (0 == strcmp(cmd, "flushtime")) {
-			sm.getState<SampleStateFlush>(SampleStateNames::FLUSH).time = arg1;
+			sm.getstate<samplestateflush>(samplestatenames::flush).time = arg1;
 		} else if (0 == strcmp(cmd, "idletime")) {
-			sm.getState<SampleStateIdle>(SampleStateNames::IDLE).time = arg1;
+			sm.getstate<samplestateidle>(samplestatenames::idle).time = arg1;
 		} else if (0 == strcmp(cmd, "lastat")) {
 			last_sample = arg1;
 		} else if (0 == strcmp(cmd, "stop")) {
@@ -97,11 +103,11 @@ public:
 			current_sample = 24;
 			csm.stop();
 		} else if (0 == strcmp(cmd, "setuptime")) {
-			sm.getState<SampleStateSetup>(SampleStateNames::SETUP).time = arg1;
+			sm.getstate<samplestatesetup>(samplestatenames::setup).time = arg1;
 		} else if (0 == strcmp(cmd, "whereat")) {
-			Serial.print(current_sample);
+			serial.print(current_sample);
 		} else if (0 == strcmp(cmd, "purgetime")) {
-			sm.getState<SampleStatePurge>(SampleStateNames::PURGE).time = arg1;
+			sm.getstate<samplestatepurge>(samplestatenames::purge).time = arg1;
 		} else if (0 == strcmp(cmd, "runat")) {
 			current_sample = arg1;
 			last_sample	   = arg1;
@@ -117,7 +123,4 @@ public:
 			current_sample = 24;
 			sm.stop();
 		}
-	}
-};
-
-//
+		*/

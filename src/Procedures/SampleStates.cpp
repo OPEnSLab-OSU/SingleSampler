@@ -25,7 +25,7 @@ void SampleStateStop::enter(KPStateMachine & sm) {
 	app.shift.writeAllRegistersLow();
 	app.shift.writeLatchOut();
 
-	sm.transitionTo(SampleStateNames::IDLE);
+	sm.next();
 }
 
 // Flush
@@ -37,7 +37,7 @@ void SampleStateFlush::enter(KPStateMachine & sm) {
 	app.shift.write();								   // write shifts wide
 	app.pump.on();
 
-	setTimeCondition(time, [&]() { sm.transitionTo(SampleStateNames::SAMPLE); });
+	setTimeCondition(time, [&]() { sm.next(); });
 }
 
 void SampleStateSample::enter(KPStateMachine & sm) {
@@ -46,7 +46,7 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 	app.shift.setPin(TPICDevices::WATER_VALVE, HIGH);
 	app.shift.write();
 	app.pump.on();
-	setTimeCondition(time, [&]() { sm.transitionTo(SampleStateNames::STOP); });
+	setTimeCondition(time, [&]() { sm.next(); });
 }
 
 void SampleStateSample::leave(KPStateMachine & sm) {
@@ -65,9 +65,9 @@ void SampleStatePurge::enter(KPStateMachine & sm) {
 	app.shift.setPin(TPICDevices::WATER_VALVE, HIGH);
 	app.shift.write();
 	app.pump.on(Direction::reverse);
-	setTimeCondition(time, [&]() { sm.transitionTo(SampleStateNames::FLUSH); });
+	setTimeCondition(time, [&]() { sm.next(); });
 }
 
 void SampleStateSetup::enter(KPStateMachine & sm) {
-	setTimeCondition(time, [&]() { sm.transitionTo(SampleStateNames::PURGE); });
+	setTimeCondition(time, [&]() { sm.next(); });
 }
