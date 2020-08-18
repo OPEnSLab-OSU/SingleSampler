@@ -4,10 +4,9 @@
 #include <utility>
 #include <string>
 
-#include <Application/Application.hpp>
-
+class Application;
 namespace ShellRecieverSpace {
-	using void (*func)(Application & app, std::string * args);
+	typedef void (*func)(Application & app, std::string * args);
 };	// namespace ShellRecieverSpace
 
 class ShellReciever {
