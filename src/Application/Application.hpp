@@ -18,6 +18,8 @@
 
 #include <Application/Shell.hpp>
 
+#include <string>
+
 // subclassing?
 
 class Application : public KPController, public KPSerialInputObserver {
@@ -35,6 +37,7 @@ public:
 		HardwarePins::SHFT_REG_DATA,
 		HardwarePins::SHFT_REG_CLOCK,
 		HardwarePins::SHFT_REG_LATCH};
+	Shell shell{"shell", this};
 
 	void iterateValve() {
 		++current_sample;
@@ -47,6 +50,7 @@ public:
 		addComponent(pump);
 		addComponent(shift);
 		addComponent(KPSerialInput::sharedInstance());
+		addComponent(shell);
 		// sm.setup();
 		KPSerialInput::sharedInstance().addObserver(this);
 		Serial.print("Hello");
@@ -64,7 +68,21 @@ public:
 		KPController::update();
 	}
 	// Serial Monitor
-	void commandReceived(const char * line, size_t size) override {}
+	void commandReceived(const char * line, size_t size) override {
+		std::string * args = new std::string[5];
+		char str[80];
+		strcpy(str, line);
+		println("Recieved: ", str);
+		const char delim[2] = " ";
+		const char * tok	= strtok(str, delim);
+		int i				= 0;
+		while (tok != NULL) {
+			args[i] = tok;
+			tok		= strtok(NULL, delim);
+			++i;
+		}
+		shell.runFunction(args, i);
+	}
 };
 
 //

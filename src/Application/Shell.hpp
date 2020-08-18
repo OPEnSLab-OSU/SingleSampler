@@ -3,16 +3,23 @@
 #include <map>
 #include <utility>
 #include <string>
+#include <KPFoundation.hpp>
 
 class Application;
-namespace ShellRecieverSpace {
-	typedef void (*func)(Application & app, std::string * args);
-};	// namespace ShellRecieverSpace
+namespace ShellSpace {
+	using func = void (*)(Application & app, const std::string * args);
+	struct func_args {
+		func function;
+		unsigned short n_args;
+	};
 
-class ShellReciever {
+};	// namespace ShellSpace
+
+class Shell : public KPComponent {
 public:
-	std::map<std::string, ShellRecieverSpace::func> commands;
+	std::map<std::string, ShellSpace::func_args> commands;
 
-	ShellReciever();
-	// void runFunction(Application &, std::string[]);
+	Shell(const char * name, KPController * controller) : KPComponent(name, controller){};
+	void setup() override;
+	void runFunction(const std::string *, const unsigned short);
 };
