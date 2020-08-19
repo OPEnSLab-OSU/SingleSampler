@@ -42,8 +42,5 @@ namespace TPICDevices {
 	constexpr int AIR_VALVE		= 2;
 	constexpr int ALCOHOL_VALVE = 3;
 	constexpr int FLUSH_VALVE	= 5;
+	constexpr int WATER_VALVE	= 8;
 }  // namespace TPICDevices
-
-namespace Shift {
-	constexpr int FIRST_SAMPLE_VALVE = 8;
-}

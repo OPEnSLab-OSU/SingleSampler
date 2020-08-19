@@ -4,7 +4,7 @@
 // Idle
 void CleanStateIdle::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
-	if (app.current_valve < app.last_valve)
+	if (app.current_sample < app.last_sample)
 		setTimeCondition(time, [&]() { sm.transitionTo(CleanStateNames::SAMPLE); });
 	else
 		sm.transitionTo(CleanStateNames::FINISHED);
@@ -35,7 +35,7 @@ void CleanStateFlush::enter(KPStateMachine & sm) {
 void CleanStateSample::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 	app.shift.setAllRegistersLow();
-	app.shift.setPin(app.current_valve + Shift::FIRST_SAMPLE_VALVE, HIGH);
+	app.shift.setPin(TPICDevices::WATER_VALVE, HIGH);
 	app.shift.write();
 	app.pump.on();
 	setTimeCondition(time, [&]() { sm.transitionTo(CleanStateNames::STOP); });
@@ -47,6 +47,6 @@ void CleanStateSample::leave(KPStateMachine & sm) {
 }
 
 void CleanStateFinished::enter(KPStateMachine & sm) {
-	Application & app = *static_cast<Application *>(sm.controller);
-	app.current_valve = 0;
+	Application & app  = *static_cast<Application *>(sm.controller);
+	app.current_sample = 0;
 }

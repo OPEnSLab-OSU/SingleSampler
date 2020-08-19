@@ -12,7 +12,7 @@ void writeLatch(bool controlPin, ShiftRegister & shift) {
 // Idle
 void SampleStateIdle::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
-	if (app.current_valve < app.last_valve)
+	if (app.current_sample < app.last_sample)
 		setTimeCondition(time, [&]() { sm.transitionTo(SampleStateNames::PURGE); });
 	else
 		sm.transitionTo(SampleStateNames::FINISHED);
@@ -25,7 +25,7 @@ void SampleStateStop::enter(KPStateMachine & sm) {
 	app.shift.writeAllRegistersLow();
 	app.shift.writeLatchOut();
 
-	sm.transitionTo(SampleStateNames::IDLE);
+	sm.next();
 }
 
 // Flush
@@ -37,16 +37,16 @@ void SampleStateFlush::enter(KPStateMachine & sm) {
 	app.shift.write();								   // write shifts wide
 	app.pump.on();
 
-	setTimeCondition(time, [&]() { sm.transitionTo(SampleStateNames::SAMPLE); });
+	setTimeCondition(time, [&]() { sm.next(); });
 }
 
 void SampleStateSample::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 	app.shift.setAllRegistersLow();
-	app.shift.setPin(app.current_valve + Shift::FIRST_SAMPLE_VALVE, HIGH);
+	app.shift.setPin(TPICDevices::WATER_VALVE, HIGH);
 	app.shift.write();
 	app.pump.on();
-	setTimeCondition(time, [&]() { sm.transitionTo(SampleStateNames::STOP); });
+	setTimeCondition(time, [&]() { sm.next(); });
 }
 
 void SampleStateSample::leave(KPStateMachine & sm) {
@@ -55,19 +55,19 @@ void SampleStateSample::leave(KPStateMachine & sm) {
 }
 
 void SampleStateFinished::enter(KPStateMachine & sm) {
-	Application & app = *static_cast<Application *>(sm.controller);
-	app.current_valve = 0;
+	Application & app  = *static_cast<Application *>(sm.controller);
+	app.current_sample = 0;
 }
 
 void SampleStatePurge::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 	app.shift.setAllRegistersLow();
-	app.shift.setPin(app.current_valve + Shift::FIRST_SAMPLE_VALVE, HIGH);
+	app.shift.setPin(TPICDevices::WATER_VALVE, HIGH);
 	app.shift.write();
 	app.pump.on(Direction::reverse);
-	setTimeCondition(time, [&]() { sm.transitionTo(SampleStateNames::FLUSH); });
+	setTimeCondition(time, [&]() { sm.next(); });
 }
 
 void SampleStateSetup::enter(KPStateMachine & sm) {
-	setTimeCondition(time, [&]() { sm.transitionTo(SampleStateNames::PURGE); });
+	setTimeCondition(time, [&]() { sm.next(); });
 }

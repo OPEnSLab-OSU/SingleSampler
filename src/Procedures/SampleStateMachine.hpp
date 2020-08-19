@@ -11,11 +11,12 @@ public:
 
 	void setup() override {
 		registerState(SampleStateIdle(), SampleStateNames::IDLE);
-		registerState(SampleStateStop(), SampleStateNames::STOP);
-		registerState(SampleStateFlush(), SampleStateNames::FLUSH);
-		registerState(SampleStateSample(), SampleStateNames::SAMPLE);
+		registerState(SampleStateStop(), SampleStateNames::STOP, SampleStateNames::IDLE);
 		registerState(SampleStateFinished(), SampleStateNames::FINISHED);
-		registerState(SampleStatePurge(), SampleStateNames::PURGE);
-		registerState(SampleStateSetup(), SampleStateNames::SETUP);
+
+		registerState(SampleStateSetup(), SampleStateNames::SETUP, SampleStateNames::FLUSH);
+		registerState(SampleStatePurge(), SampleStateNames::PURGE, SampleStateNames::FLUSH);
+		registerState(SampleStateFlush(), SampleStateNames::FLUSH, SampleStateNames::SAMPLE);
+		registerState(SampleStateSample(), SampleStateNames::SAMPLE, SampleStateNames::STOP);
 	}
 };
