@@ -7,7 +7,6 @@ namespace HardwarePins {
 	constexpr int MOTOR_REVERSE	 = 5;
 	constexpr int MOTOR_FORWARDS = 6;
 	constexpr int RUN_BUTTON	 = 13;
-	constexpr int PURGE_BUTTON	 = A4;
 	constexpr int CLEAN_BUTTON	 = A3;
 }  // namespace HardwarePins
 
@@ -21,11 +20,6 @@ namespace DefaultTimes {
 	const int SETUP_TIME  = 0;
 }  // namespace DefaultTimes
 
-namespace DefaultTimesEmpty {
-	const int PURGE_TIME = 40;
-	const int IDLE_TIME	 = 0;
-}  // namespace DefaultTimesEmpty
-
 namespace DefaultTimesClean {
 	const int SAMPLE_TIME = 5;
 	const int IDLE_TIME	  = 0;
@@ -37,10 +31,8 @@ namespace DefaultTimesButton {
 }
 
 namespace TPICDevices {
-	constexpr int INTAKE_POS	= 0;
-	constexpr int INTAKE_NEG	= 1;
-	constexpr int AIR_VALVE		= 2;
-	constexpr int ALCOHOL_VALVE = 3;
-	constexpr int FLUSH_VALVE	= 5;
-	constexpr int WATER_VALVE	= 8;
+	constexpr int INTAKE_POS  = 0;
+	constexpr int INTAKE_NEG  = 1;
+	constexpr int FLUSH_VALVE = 6;
+	constexpr int WATER_VALVE = 7;
 }  // namespace TPICDevices
