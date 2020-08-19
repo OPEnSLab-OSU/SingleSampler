@@ -1,3 +1,3 @@
-# OpenSampler-Scratch
+# SingleSampler
 
-OpenSampler code created from scratch using Kawin Pechetratanapanit's sampler framework.
+SingleSampler code created from scratch using Kawin Pechetratanapanit's sampler framework.
