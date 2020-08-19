@@ -40,6 +40,7 @@ void SampleStateFlush::enter(KPStateMachine & sm) {
 	setTimeCondition(time, [&]() { sm.next(); });
 }
 
+// Sample
 void SampleStateSample::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 	app.shift.setAllRegistersLow();
@@ -49,16 +50,18 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 	setTimeCondition(time, [&]() { sm.next(); });
 }
 
+// Sample leave
 void SampleStateSample::leave(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 	app.iterateValve();
 }
 
+// Finished
 void SampleStateFinished::enter(KPStateMachine & sm) {
 	Application & app  = *static_cast<Application *>(sm.controller);
 	app.current_sample = 0;
 }
-
+// Purge (obsolete)
 void SampleStatePurge::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 	app.shift.setAllRegistersLow();
@@ -68,6 +71,7 @@ void SampleStatePurge::enter(KPStateMachine & sm) {
 	setTimeCondition(time, [&]() { sm.next(); });
 }
 
+// Setup
 void SampleStateSetup::enter(KPStateMachine & sm) {
 	setTimeCondition(time, [&]() { sm.next(); });
 }

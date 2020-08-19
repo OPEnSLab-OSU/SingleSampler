@@ -14,16 +14,33 @@ void Shell::runFunction(const std::string * args, const unsigned short length) {
 		Serial.print("Bad command.\n");
 	}
 }
+/*
+	addFunction(
+		cmnd_lambda { function },
+		number of args,
+		"name");
+	in function, args[0] should be the same as "name".
 
+*/
 void Shell::setup() {
-	ShellSpace::func_args entry;
+	// run button
+	addFunction(
+		cmnd_lambda { app.sm.begin(); },
+		0,
+		"sample_button_press");
 
-	entry.function = cmnd_lambda {
-		Serial.print("aljdl");
-	};
-	entry.n_args	 = 0;
-	commands["test"] = entry;
+	addFunction(
+		cmnd_lambda { app.csm.begin(); },
+		0,
+		"clean_button_press");
 };
+
+void Shell::addFunction(ShellSpace::func function, const unsigned short n_args, const char * name) {
+	ShellSpace::func_args entry;
+	entry.function = function;
+	entry.n_args   = n_args;
+	commands[name] = entry;
+}
 
 /*
 
