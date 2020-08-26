@@ -20,16 +20,20 @@
 
 #include <string>
 
+#include <FileIO/Logger.hpp>
+
+#include <SD.h>
+
 // subclassing?
 
 class Application : public KPController, public KPSerialInputObserver {
 public:
-	unsigned short current_sample = 0;
-	unsigned short last_sample	  = 24;
+	//	unsigned short current_sample = 0;	// todo move to the state machines
+	//	unsigned short last_sample	  = 24;
+	Logger logger{"logger", this};
 	SampleStateMachine sm;
 	CleanStateMachine csm;
 	Button run_button{HardwarePins::RUN_BUTTON};
-	Button empty_button{HardwarePins::PURGE_BUTTON};
 	Button clean_button{HardwarePins::CLEAN_BUTTON};
 	Pump pump{"pump", HardwarePins::MOTOR_FORWARDS, HardwarePins::MOTOR_REVERSE};
 	ShiftRegister shift{"shift-register",
@@ -39,10 +43,6 @@ public:
 		HardwarePins::SHFT_REG_LATCH};
 	Shell shell{"shell", this};
 
-	void iterateValve() {
-		++current_sample;
-	}
-
 	void setup() override {
 		Serial.begin(115200);
 		addComponent(sm);
@@ -51,9 +51,10 @@ public:
 		addComponent(shift);
 		addComponent(KPSerialInput::sharedInstance());
 		addComponent(shell);
+		addComponent(logger);
 		// sm.setup();
 		KPSerialInput::sharedInstance().addObserver(this);
-		Serial.print("Hello");
+		SD.begin(HardwarePins::SD);
 	}
 
 	bool isBusy() {
@@ -64,6 +65,9 @@ public:
 		if (!isBusy()) {
 			run_button.listen(sm);
 			clean_button.listen(csm);
+		}
+		if (sm.isBusy()) {
+			logger.log();
 		}
 		KPController::update();
 	}

@@ -22,5 +22,5 @@ public:
 	Shell(const char * name, KPController * controller) : KPComponent(name, controller){};
 	void setup() override;
 	void runFunction(const std::string *, const unsigned short);
-	void addFunction(ShellSpace::func, const unsigned short, const char *);
+	void addFunction(const char *, const unsigned short, ShellSpace::func);
 };

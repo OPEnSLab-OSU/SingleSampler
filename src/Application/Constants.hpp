@@ -7,7 +7,8 @@ namespace HardwarePins {
 	constexpr int MOTOR_REVERSE	 = 5;
 	constexpr int MOTOR_FORWARDS = 6;
 	constexpr int RUN_BUTTON	 = 13;
-	constexpr int CLEAN_BUTTON	 = A3;
+	constexpr int CLEAN_BUTTON	 = A4;
+	constexpr int SD			 = 10;
 }  // namespace HardwarePins
 
 // flush pin is the same

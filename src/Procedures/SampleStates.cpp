@@ -12,7 +12,7 @@ void writeLatch(bool controlPin, ShiftRegister & shift) {
 // Idle
 void SampleStateIdle::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
-	if (app.current_sample < app.last_sample)
+	if (app.sm.current_cycle < app.sm.last_cycle)
 		setTimeCondition(time, [&]() { sm.transitionTo(SampleStateNames::PURGE); });
 	else
 		sm.transitionTo(SampleStateNames::FINISHED);
@@ -53,13 +53,13 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 // Sample leave
 void SampleStateSample::leave(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
-	app.iterateValve();
+	app.sm.current_cycle += 1;
 }
 
 // Finished
 void SampleStateFinished::enter(KPStateMachine & sm) {
-	Application & app  = *static_cast<Application *>(sm.controller);
-	app.current_sample = 0;
+	Application & app = *static_cast<Application *>(sm.controller);
+	app.sm.reset();
 }
 // Purge (obsolete)
 void SampleStatePurge::enter(KPStateMachine & sm) {

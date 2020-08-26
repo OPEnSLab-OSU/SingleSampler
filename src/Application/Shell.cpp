@@ -1,6 +1,9 @@
 #include <Application/Shell.hpp>
 #include <Application/Application.hpp>
+#include <Application/Utility.hpp>
+#include <KPFoundation.hpp>
 #define cmnd_lambda [](Application & app, const std::string * args)
+#define CALL		(app, args)
 
 void Shell::runFunction(const std::string * args, const unsigned short length) {
 	if (commands.find(args[0]) != commands.end()) {
@@ -14,28 +17,59 @@ void Shell::runFunction(const std::string * args, const unsigned short length) {
 		Serial.print("Bad command.\n");
 	}
 }
+
 /*
 	addFunction(
-		cmnd_lambda { function },
-		number of args,
-		"name");
-	in function, args[0] should be the same as "name".
+		"name",
+		n args,
+		cmnd_lambda { function });
 
+	You will have access to app and args[]. args[0] should always
+	be the same as the name of the command. They are C++ strings
 */
+
 void Shell::setup() {
 	// run button
 	addFunction(
-		cmnd_lambda { app.sm.begin(); },
+		"sample_button_press",
 		0,
-		"sample_button_press");
+		cmnd_lambda { app.sm.begin(); });
 
+	// clean button
 	addFunction(
-		cmnd_lambda { app.csm.begin(); },
+		"clean_button_press",
 		0,
-		"clean_button_press");
+		cmnd_lambda { app.csm.begin(); });
+
+	// halt the machine in the sample state
+	addFunction(
+		"sample_halt",
+		0,
+		cmnd_lambda { app.sm.halt(); });
+
+	// halt the clean state machine
+	addFunction(
+		"clean_halt",
+		0,
+		cmnd_lambda { app.csm.halt(); });
+
+	// halt all state machines
+	addFunction(
+		"halt",
+		0,
+		cmnd_lambda {
+			app.sm.halt();
+			app.csm.halt();
+		});
+
+	// print free ram
+	addFunction(
+		"mem",
+		0,
+		cmnd_lambda { Serial.println(free_ram()); });
 };
 
-void Shell::addFunction(ShellSpace::func function, const unsigned short n_args, const char * name) {
+void Shell::addFunction(const char * name, const unsigned short n_args, ShellSpace::func function) {
 	ShellSpace::func_args entry;
 	entry.function = function;
 	entry.n_args   = n_args;

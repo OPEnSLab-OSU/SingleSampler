@@ -4,7 +4,7 @@
 // Idle
 void CleanStateIdle::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
-	if (app.current_sample < app.last_sample)
+	if (app.csm.current_cycle < app.csm.last_cycle)
 		setTimeCondition(time, [&]() { sm.transitionTo(CleanStateNames::SAMPLE); });
 	else
 		sm.transitionTo(CleanStateNames::FINISHED);
@@ -43,10 +43,10 @@ void CleanStateSample::enter(KPStateMachine & sm) {
 
 void CleanStateSample::leave(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
-	app.iterateValve();
+	app.csm.current_cycle += 1;
 }
 
 void CleanStateFinished::enter(KPStateMachine & sm) {
-	Application & app  = *static_cast<Application *>(sm.controller);
-	app.current_sample = 0;
+	Application & app = *static_cast<Application *>(sm.controller);
+	app.csm.reset();
 }

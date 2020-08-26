@@ -10,7 +10,15 @@ public:
 	const char * stopStateName	   = nullptr;
 	const char * idleStateName	   = nullptr;
 	const char * finishedStateName = nullptr;
-
+	int current_cycle			   = 0;
+	int last_cycle				   = 24;
+	void reset() {
+		current_cycle = 0;
+	}
+	void halt() {
+		current_cycle = last_cycle;
+		stop();
+	}
 	StateMachine(const char * name, const char * entryStateName, const char * stopStateName,
 		const char * idleStateName, const char * finishedStateName)
 		: KPStateMachine(name),
@@ -31,6 +39,10 @@ public:
 
 	void setup() override {
 		Serial.print("StateMachine setup");
+	}
+
+	const char * getCurrentStateName() {
+		return getCurrentState()->getName();
 	}
 
 	/**
