@@ -23,6 +23,7 @@
 #include <FileIO/Logger.hpp>
 
 #include <SD.h>
+#include <ArduinoJson.h>
 
 // subclassing?
 
@@ -55,6 +56,7 @@ public:
 		// sm.setup();
 		KPSerialInput::sharedInstance().addObserver(this);
 		SD.begin(HardwarePins::SD);
+		loadInfo();
 	}
 
 	bool isBusy() {
@@ -88,6 +90,25 @@ public:
 			++i;
 		}
 		shell.runFunction(args, i);
+	}
+
+	// this should be in utility but the scope isnt working todo solve
+	std::string readEntireFile(File & file) {
+		std::string contents;
+		while (-1 != file.peek()) {
+			contents.push_back(file.read());
+		}
+		return contents;
+	}
+	void loadInfo() {
+		File file = SD.open("state.js", FILE_READ);
+		if (file) {
+			StaticJsonDocument<512> doc;
+			std::string contents = readEntireFile(file);
+			deserializeJson(doc, contents);
+			sm.getState<SampleStateFlush>(SampleStateNames::FLUSH).time
+				= doc["sample"]["flush_time"];
+		}
 	}
 };
 

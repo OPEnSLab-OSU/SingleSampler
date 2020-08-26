@@ -14,6 +14,7 @@ public:
 		pinMode(pin, INPUT);
 	}
 
+	void act(StateMachine & sm);
 	void listen(StateMachine & sm) {
 		int reading = digitalRead(pin);
 
@@ -30,5 +31,4 @@ public:
 		}
 		lastButtonState = reading;
 	}
-	void act(StateMachine & sm);
 };

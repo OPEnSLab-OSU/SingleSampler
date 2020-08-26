@@ -1,6 +1,7 @@
 #pragma once
-#include <Application/Application.hpp>
-
+//#include <Application/Application.hpp>
+#include <SD.h>
+#include <string>
 namespace Utility {
 	// returns true if str is a pos int
 	// assumes string correctness
@@ -24,4 +25,13 @@ namespace Utility {
 		}
 		return posint;
 	}
+
+	std::string readEntireFile(File & file) {
+		std::string contents;
+		while (-1 != file.peek()) {
+			contents.push_back(file.read());
+		}
+		return contents;
+	}
+
 };	// namespace Utility

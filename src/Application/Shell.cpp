@@ -1,7 +1,10 @@
 #include <Application/Shell.hpp>
 #include <Application/Application.hpp>
+#include <Application/Constants.hpp>
 #include <Application/Utility.hpp>
 #include <KPFoundation.hpp>
+#include <SD.h>
+#include <ArduinoJson.h>
 #define cmnd_lambda [](Application & app, const std::string * args)
 #define CALL		(app, args)
 
@@ -67,6 +70,21 @@ void Shell::setup() {
 		"mem",
 		0,
 		cmnd_lambda { Serial.println(free_ram()); });
+
+	addFunction(
+		"state_read",
+		0,
+		cmnd_lambda {
+			File file = SD.open("state.js", FILE_READ);
+			Serial.println(Utility::readEntireFile(file).c_str());
+		});
+
+	addFunction(
+		"check_sample_flush_time",
+		0,
+		cmnd_lambda {
+			Serial.println(app.sm.getState<SampleStateFlush>(SampleStateNames::FLUSH).time);
+		});
 };
 
 void Shell::addFunction(const char * name, const unsigned short n_args, ShellSpace::func function) {
