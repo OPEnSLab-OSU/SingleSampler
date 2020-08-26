@@ -1,5 +1,6 @@
 #include <KPFoundation.hpp>
 #include <Components/StateMachine.hpp>
+#include <Application/Constants.hpp>
 class Button {
 public:
 	const unsigned short pin;
