@@ -29,7 +29,5 @@ public:
 		}
 		lastButtonState = reading;
 	}
-	void act(StateMachine & sm) {
-		sm.begin();
-	};
+	void act(StateMachine & sm);
 };

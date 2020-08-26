@@ -62,8 +62,10 @@ public:
 	}
 
 	void update() override {
-		if (!isBusy()) {
+		if (!csm.isBusy()) {
 			run_button.listen(sm);
+		}
+		if (!sm.isBusy()) {
 			clean_button.listen(csm);
 		}
 		if (sm.isBusy()) {

@@ -32,6 +32,7 @@ void CleanStateFlush::enter(KPStateMachine & sm) {
 	setTimeCondition(time, [&]() { sm.transitionTo(CleanStateNames::SAMPLE); });
 }
 
+// Sample
 void CleanStateSample::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 	app.shift.setAllRegistersLow();
@@ -41,11 +42,13 @@ void CleanStateSample::enter(KPStateMachine & sm) {
 	setTimeCondition(time, [&]() { sm.transitionTo(CleanStateNames::STOP); });
 }
 
+// Leave sample
 void CleanStateSample::leave(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 	app.csm.current_cycle += 1;
 }
 
+// Finished
 void CleanStateFinished::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 	app.csm.reset();
