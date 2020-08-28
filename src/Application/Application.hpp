@@ -108,7 +108,19 @@ public:
 			deserializeJson(doc, contents);
 			sm.getState<SampleStateFlush>(SampleStateNames::FLUSH).time
 				= doc["sample"]["flush_time"];
+			sm.getState<SampleStateSample>(SampleStateNames::SAMPLE).time
+				= doc["sample"]["sample_time"];
+			sm.getState<SampleStateIdle>(SampleStateNames::IDLE).time = doc["sample"]["idle_time"];
+			sm.getState<SampleStateSetup>(SampleStateNames::SETUP).time
+				= doc["sample"]["setup_time"];
+			sm.last_cycle = doc["sample"]["last_cycle"];
+			csm.getState<CleanStateSample>(CleanStateNames::SAMPLE).time
+				= doc["clean"]["sample_time"];
+			csm.getState<CleanStateIdle>(CleanStateNames::IDLE).time   = doc["clean"]["idle_time"];
+			csm.getState<CleanStateFlush>(CleanStateNames::FLUSH).time = doc["clean"]["flush_time"];
+			csm.last_cycle = doc["sample"]["last_cycle"];
 		}
+		file.close();
 	}
 };
 
