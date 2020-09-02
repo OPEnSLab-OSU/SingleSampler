@@ -25,12 +25,15 @@
 #include <SD.h>
 #include <ArduinoJson.h>
 
+#include <Application/Power.hpp>
+
 // subclassing?
 
 class Application : public KPController, public KPSerialInputObserver {
 public:
 	//	unsigned short current_sample = 0;	// todo move to the state machines
 	//	unsigned short last_sample	  = 24;
+	Power power{"power"};
 	Logger logger{"logger", this};
 	SampleStateMachine sm;
 	CleanStateMachine csm;
@@ -53,7 +56,7 @@ public:
 		addComponent(KPSerialInput::sharedInstance());
 		addComponent(shell);
 		addComponent(logger);
-		// sm.setup();
+		addComponent(power);
 		KPSerialInput::sharedInstance().addObserver(this);
 		SD.begin(HardwarePins::SD);
 		loadInfo();

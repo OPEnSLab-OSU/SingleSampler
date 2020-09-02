@@ -9,7 +9,7 @@ void Logger::log() {
 	if (millis() - last_time > buffer_time) {
 		Serial.print("Writing...");
 		Application & app  = *static_cast<Application *>(controller);
-		const auto timenow = now();
+		const auto timenow = app.power.getTime();
 		std::stringstream ss;
 		ss << timenow;
 		std::string time_string = ss.str();

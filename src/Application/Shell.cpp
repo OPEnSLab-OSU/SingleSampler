@@ -85,6 +85,22 @@ void Shell::setup() {
 		cmnd_lambda {
 			Serial.println(app.sm.getState<SampleStateFlush>(SampleStateNames::FLUSH).time);
 		});
+
+	addFunction(
+		"set_time",
+		1,
+		cmnd_lambda {
+			if (Utility::msg_posint(args[1].c_str(), 1)) {
+				app.power.set(std::stoi(args[1]));
+			}
+		});
+	addFunction(
+		"get_time",
+		0,
+		cmnd_lambda {
+			std::string time = std::to_string(app.power.getTime());
+			Serial.println(time.c_str());
+		});
 };
 
 void Shell::addFunction(const char * name, const unsigned short n_args, ShellSpace::func function) {
