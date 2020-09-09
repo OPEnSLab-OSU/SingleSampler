@@ -13,7 +13,7 @@ public:
 	DS3232RTC rtc;
 	Power(const char * name) : KPComponent(name), rtc(false) {}
 	void setup() {
-		waitForConnection();
+		// waitForConnection();
 		rtc.begin();
 		rtc.squareWave(SQWAVE_NONE);
 	}

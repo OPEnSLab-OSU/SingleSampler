@@ -53,4 +53,8 @@ public:
 		return !(getCurrentState() == nullptr
 			|| 0 == strcmp(getCurrentState()->getName(), finishedStateName));
 	}
+
+	bool isRunning() const {
+		return (isBusy() && 0 != strcmp(getCurrentState()->getName(), idleStateName));
+	}
 };

@@ -16,7 +16,7 @@
 
 #include <Buttons/Button.hpp>
 
-#include <Application/Shell.hpp>
+#include <Components/Shell.hpp>
 
 #include <string>
 
@@ -73,7 +73,7 @@ public:
 		if (!sm.isBusy()) {
 			clean_button.listen(csm);
 		}
-		if (sm.isBusy()) {
+		if (sm.isRunning()) {
 			logger.log();
 		}
 		KPController::update();
@@ -126,61 +126,3 @@ public:
 		file.close();
 	}
 };
-
-//
-/*
-		// null is eof
-		char str[80];
-		strcpy(str, line);
-		const char delim[2] = " ";
-		const char * tok	= strtok(str, delim);
-		char cmd[30];
-		int arg1 = -1;
-
-		serial.print("recieved: ");
-		serial.print(str);
-		serial.print("\n");
-
-		strcpy(cmd, tok);
-		tok = strtok(null, delim);
-		if (tok != null) {
-			arg1 = atoi(tok);
-			tok	 = strtok(null, delim);
-		}
-		if (0 == strcmp(cmd, "run")) {
-			sm.begin();
-		} else if (0 == strcmp(cmd, "sampletime")) {
-			sm.getstate<samplestatesample>(samplestatenames::sample).time = arg1;
-		} else if (0 == strcmp(cmd, "flushtime")) {
-			sm.getstate<samplestateflush>(samplestatenames::flush).time = arg1;
-		} else if (0 == strcmp(cmd, "idletime")) {
-			sm.getstate<samplestateidle>(samplestatenames::idle).time = arg1;
-		} else if (0 == strcmp(cmd, "lastat")) {
-			last_sample = arg1;
-		} else if (0 == strcmp(cmd, "stop")) {
-			current_sample = 24;
-			sm.stop();
-			current_sample = 24;
-			csm.stop();
-		} else if (0 == strcmp(cmd, "setuptime")) {
-			sm.getstate<samplestatesetup>(samplestatenames::setup).time = arg1;
-		} else if (0 == strcmp(cmd, "whereat")) {
-			serial.print(current_sample);
-		} else if (0 == strcmp(cmd, "purgetime")) {
-			sm.getstate<samplestatepurge>(samplestatenames::purge).time = arg1;
-		} else if (0 == strcmp(cmd, "runat")) {
-			current_sample = arg1;
-			last_sample	   = arg1;
-			sm.begin();
-		} else if (0 == strcmp(cmd, "startat")) {
-			current_sample = arg1;
-		} else if (0 == strcmp(cmd, "crun")) {
-			csm.begin();
-		} else if (0 == strcmp(cmd, "cstop")) {
-			current_sample = 24;
-			csm.stop();
-		} else if (0 == strcmp(cmd, "sstop")) {
-			current_sample = 24;
-			sm.stop();
-		}
-		*/
