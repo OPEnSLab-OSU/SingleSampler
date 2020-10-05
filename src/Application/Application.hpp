@@ -27,6 +27,7 @@
 
 #include <Application/Power.hpp>
 #include <Components/LED.hpp>
+#include <Components/PressureSensor.hpp>
 
 // subclassing?
 
@@ -48,6 +49,7 @@ public:
 		HardwarePins::SHFT_REG_LATCH};
 	Shell shell{"shell", this};
 	LED led{"led", this};
+	PressureSensor pressure_sensor{"pressure-sensor", this};
 
 	void setup() override {
 		Serial.begin(115200);
@@ -60,6 +62,7 @@ public:
 		addComponent(logger);
 		addComponent(power);
 		addComponent(led);
+		addComponent(pressure_sensor);
 		KPSerialInput::sharedInstance().addObserver(this);
 		SD.begin(HardwarePins::SD);
 		loadInfo();
