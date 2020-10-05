@@ -101,8 +101,11 @@ void Shell::setup() {
 			std::string time = std::to_string(app.power.getTime());
 			Serial.println(time.c_str());
 		});
-	
-	
+
+	addFunction(
+		"get_pressure",
+		0,
+		cmnd_lambda { Serial.println(app.pressure_sensor.getPressure()); });
 };
 
 void Shell::addFunction(const char * name, const unsigned short n_args, ShellSpace::func function) {
