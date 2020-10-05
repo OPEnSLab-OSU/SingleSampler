@@ -101,7 +101,7 @@ void Shell::setup() {
 			std::string time = std::to_string(app.power.getTime());
 			Serial.println(time.c_str());
 		});
-
+	
 	
 };
 

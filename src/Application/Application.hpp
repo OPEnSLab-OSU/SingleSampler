@@ -26,6 +26,7 @@
 #include <ArduinoJson.h>
 
 #include <Application/Power.hpp>
+#include <Components/LED.hpp>
 
 // subclassing?
 
@@ -46,6 +47,7 @@ public:
 		HardwarePins::SHFT_REG_CLOCK,
 		HardwarePins::SHFT_REG_LATCH};
 	Shell shell{"shell", this};
+	LED led{"led", this};
 
 	void setup() override {
 		Serial.begin(115200);
@@ -57,6 +59,7 @@ public:
 		addComponent(shell);
 		addComponent(logger);
 		addComponent(power);
+		addComponent(led);
 		KPSerialInput::sharedInstance().addObserver(this);
 		SD.begin(HardwarePins::SD);
 		loadInfo();
