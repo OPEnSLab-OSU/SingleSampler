@@ -26,8 +26,8 @@
 #include <ArduinoJson.h>
 
 #include <Application/Power.hpp>
-#include <Components/LED.hpp>
-#include <Components/PressureSensor.hpp>
+//#include <Components/LED.hpp>
+//#include <Components/PressureSensor.hpp>
 
 // subclassing?
 
@@ -48,8 +48,9 @@ public:
 		HardwarePins::SHFT_REG_CLOCK,
 		HardwarePins::SHFT_REG_LATCH};
 	Shell shell{"shell", this};
-	LED led{"led", this};
-	PressureSensor pressure_sensor{"pressure-sensor", this};
+	// LED led{"led", this};
+	// PressureSensor pressure_sensor{"pressure-sensor", this};
+	StaticJsonDocument<512> doc;
 
 	void setup() override {
 		Serial.begin(115200);
@@ -61,8 +62,8 @@ public:
 		addComponent(shell);
 		addComponent(logger);
 		addComponent(power);
-		addComponent(led);
-		addComponent(pressure_sensor);
+		// addComponent(led);
+		// addComponent(pressure_sensor);
 		KPSerialInput::sharedInstance().addObserver(this);
 		SD.begin(HardwarePins::SD);
 		loadInfo();
@@ -110,25 +111,60 @@ public:
 		return contents;
 	}
 	void loadInfo() {
-		File file = SD.open("state.js", FILE_READ);
-		if (file) {
-			StaticJsonDocument<512> doc;
-			std::string contents = readEntireFile(file);
-			deserializeJson(doc, contents);
-			sm.getState<SampleStateFlush>(SampleStateNames::FLUSH).time
-				= doc["sample"]["flush_time"];
-			sm.getState<SampleStateSample>(SampleStateNames::SAMPLE).time
-				= doc["sample"]["sample_time"];
-			sm.getState<SampleStateIdle>(SampleStateNames::IDLE).time = doc["sample"]["idle_time"];
-			sm.getState<SampleStateSetup>(SampleStateNames::SETUP).time
-				= doc["sample"]["setup_time"];
-			sm.last_cycle = doc["sample"]["last_cycle"];
-			csm.getState<CleanStateSample>(CleanStateNames::SAMPLE).time
-				= doc["clean"]["sample_time"];
-			csm.getState<CleanStateIdle>(CleanStateNames::IDLE).time   = doc["clean"]["idle_time"];
-			csm.getState<CleanStateFlush>(CleanStateNames::FLUSH).time = doc["clean"]["flush_time"];
-			csm.last_cycle = doc["sample"]["last_cycle"];
+		if (SD.exists("state.js")) {
+			File file = SD.open("state.js", FILE_READ);
+			if (file) {
+				std::string contents = readEntireFile(file);
+				deserializeJson(doc, contents);
+				sm.getState<SampleStateFlush>(SampleStateNames::FLUSH).time
+					= doc["sample"]["flush_time"];
+				sm.getState<SampleStateSample>(SampleStateNames::SAMPLE).time
+					= doc["sample"]["sample_time"];
+				sm.getState<SampleStateIdle>(SampleStateNames::IDLE).time
+					= doc["sample"]["idle_time"];
+				sm.getState<SampleStateSetup>(SampleStateNames::SETUP).time
+					= doc["sample"]["setup_time"];
+				sm.last_cycle = doc["sample"]["last_cycle"];
+				csm.getState<CleanStateSample>(CleanStateNames::SAMPLE).time
+					= doc["clean"]["sample_time"];
+				csm.getState<CleanStateIdle>(CleanStateNames::IDLE).time
+					= doc["clean"]["idle_time"];
+				csm.getState<CleanStateFlush>(CleanStateNames::FLUSH).time
+					= doc["clean"]["flush_time"];
+				csm.last_cycle = doc["clean"]["last_cycle"];
+			} else {
+				Serial.println("Error file read");
+			}
+			file.close();
+		} else {
+			createStateFile();
 		}
-		file.close();
+	}
+	// Future: more than two "levels" in loc, new value not int?
+	// Rewrites into the JSON and file
+	void reWrite(const char ** loc, int & value, int new_value) {
+		value				= new_value;
+		doc[loc[0]][loc[1]] = value;
+		std::string contents;
+		serializeJson(doc, contents);
+		const char * contents_const = contents.c_str();
+		if (SD.exists("state.js"))
+			SD.remove("state.js");
+		File file = SD.open("state.js", FILE_WRITE);
+		file.write(contents_const);
+	}
+
+	void createStateFile() {
+		if (SD.exists("state.js"))
+			SD.remove("state.js");
+		const char * contents = "{\n	\"sample\" : {\n		\"flush_time\" : 50,\n		"
+								"\"sample_time\" : 60,\n	"
+								"	\"idle_time\" : 3490,\n		\"setup_time\" : 0,\n		"
+								"\"last_cycle\" : 24\n	"
+								"},\n	\"clean\" : {\n		\"sample_time\" : 5,\n		"
+								"\"idle_time\" : 0,\n		"
+								"\"flush_time\" : 20,\n		\"last_cycle\" : 24\n	}\n}";
+		File file = SD.open("state.js", FILE_WRITE);
+		file.write(contents);
 	}
 };

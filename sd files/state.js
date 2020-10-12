@@ -1,6 +1,6 @@
 {
 	"sample" : {
-		"flush_time" : 123,
+		"flush_time" : 50,
 		"sample_time" : 60,
 		"idle_time" : 3490,
 		"setup_time" : 0,

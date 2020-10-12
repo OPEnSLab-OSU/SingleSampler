@@ -20,6 +20,7 @@ public:
 		g = ng;
 		b = nb;
 		pixel.setPixelColor(0, r, g, b);
+		// pixel.show();
 	}
 
 	void setRun() {

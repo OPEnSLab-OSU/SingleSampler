@@ -102,10 +102,26 @@ void Shell::setup() {
 			Serial.println(time.c_str());
 		});
 
-	addFunction(
-		"get_pressure",
+	addFunction("get_pressure",
 		0,
-		cmnd_lambda { Serial.println(app.pressure_sensor.getPressure()); });
+		cmnd_lambda{
+			// Serial.println(app.pressure_sensor.getPressure());
+		});
+
+	addFunction(
+		"sample_no_runs",
+		1,
+		cmnd_lambda {
+			const char * loc[2] = {"sample", "last_cycle"};
+			app.reWrite(loc, app.sm.last_cycle, std::stoi(args[1]));
+		});
+
+	
+	// Note: Requires restart
+	addFunction(
+		"factory_file_reset",
+		0,
+		cmnd_lambda { app.createStateFile(); });
 };
 
 void Shell::addFunction(const char * name, const unsigned short n_args, ShellSpace::func function) {

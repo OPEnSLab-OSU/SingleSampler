@@ -2,7 +2,7 @@
 #include <ssc.h>
 #include <KPFoundation.hpp>
 #include <Components/ErrorAble.hpp>
-#define PRESSURE_ADDR 0x77
+#define PRESSURE_ADDR 0x76
 
 inline bool checkForConnection(unsigned char addr) {
 	Wire.begin();
