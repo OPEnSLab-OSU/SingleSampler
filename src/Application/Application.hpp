@@ -26,7 +26,7 @@
 #include <ArduinoJson.h>
 
 #include <Application/Power.hpp>
-//#include <Components/LED.hpp>
+#include <Components/LED.hpp>
 //#include <Components/PressureSensor.hpp>
 
 // subclassing?
@@ -48,7 +48,7 @@ public:
 		HardwarePins::SHFT_REG_CLOCK,
 		HardwarePins::SHFT_REG_LATCH};
 	Shell shell{"shell", this};
-	// LED led{"led", this};
+	LED led{"led", this};
 	// PressureSensor pressure_sensor{"pressure-sensor", this};
 	StaticJsonDocument<512> doc;
 
@@ -62,7 +62,7 @@ public:
 		addComponent(shell);
 		addComponent(logger);
 		addComponent(power);
-		// addComponent(led);
+		addComponent(led);
 		// addComponent(pressure_sensor);
 		KPSerialInput::sharedInstance().addObserver(this);
 		SD.begin(HardwarePins::SD);
@@ -156,6 +156,7 @@ public:
 		file.close();
 	}
 
+	// Broken
 	void createStateFile() {
 		if (SD.exists("state.js"))
 			SD.remove("state.js");

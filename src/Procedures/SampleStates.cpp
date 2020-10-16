@@ -59,7 +59,7 @@ void SampleStateSample::leave(KPStateMachine & sm) {
 // Finished
 void SampleStateFinished::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
-	// app.led.setFinished();
+	app.led.setFinished();
 	app.sm.reset();
 }
 // Purge (obsolete)
@@ -75,6 +75,6 @@ void SampleStatePurge::enter(KPStateMachine & sm) {
 // Setup
 void SampleStateSetup::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
-	// app.led.setRun();
+	app.led.setRun();
 	setTimeCondition(time, [&]() { sm.next(); });
 }

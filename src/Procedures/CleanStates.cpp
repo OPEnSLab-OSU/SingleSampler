@@ -28,6 +28,7 @@ void CleanStateFlush::enter(KPStateMachine & sm) {
 	app.shift.setPin(TPICDevices::FLUSH_VALVE, HIGH);  // write in skinny
 	app.shift.write();								   // write shifts wide
 	app.pump.on();
+	app.led.setClean();
 
 	setTimeCondition(time, [&]() { sm.transitionTo(CleanStateNames::SAMPLE); });
 }
@@ -51,5 +52,6 @@ void CleanStateSample::leave(KPStateMachine & sm) {
 // Finished
 void CleanStateFinished::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
+	app.led.setFinished();
 	app.csm.reset();
 }
