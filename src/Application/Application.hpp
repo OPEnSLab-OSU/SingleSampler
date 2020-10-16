@@ -137,7 +137,8 @@ public:
 			}
 			file.close();
 		} else {
-			createStateFile();
+			// createStateFile();
+			Serial.println("Error file read");
 		}
 	}
 	// Future: more than two "levels" in loc, new value not int?
@@ -152,6 +153,7 @@ public:
 			SD.remove("state.js");
 		File file = SD.open("state.js", FILE_WRITE);
 		file.write(contents_const);
+		file.close();
 	}
 
 	void createStateFile() {

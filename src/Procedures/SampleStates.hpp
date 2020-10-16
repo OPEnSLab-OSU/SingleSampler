@@ -15,20 +15,20 @@ namespace SampleStateNames {
 class SampleStateIdle : public KPState {
 public:
 	void enter(KPStateMachine & sm) override;
-	unsigned long time = DefaultTimes::IDLE_TIME;
+	int time = DefaultTimes::IDLE_TIME;
 };
 
 class SampleStateFlush : public KPState {
 public:
 	void enter(KPStateMachine & sm) override;
-	unsigned long time = DefaultTimes::FLUSH_TIME;
+	int time = DefaultTimes::FLUSH_TIME;
 };
 
 class SampleStateSample : public KPState {
 public:
 	void enter(KPStateMachine & sm) override;
 	void leave(KPStateMachine & sm) override;
-	unsigned long time = DefaultTimes::SAMPLE_TIME;
+	int time = DefaultTimes::SAMPLE_TIME;
 };
 
 class SampleStateStop : public KPState {
@@ -41,6 +41,7 @@ public:
 	void enter(KPStateMachine & sm) override;
 };
 
+// Obsolete
 class SampleStatePurge : public KPState {
 public:
 	void enter(KPStateMachine & sm) override;
@@ -51,5 +52,5 @@ public:
 class SampleStateSetup : public KPState {
 public:
 	void enter(KPStateMachine & sm) override;
-	unsigned long time = DefaultTimes::SETUP_TIME;
+	int time = DefaultTimes::SETUP_TIME;
 };

@@ -116,7 +116,46 @@ void Shell::setup() {
 			app.reWrite(loc, app.sm.last_cycle, std::stoi(args[1]));
 		});
 
-	
+	addFunction(
+		"sample_flush_time",
+		1,
+		cmnd_lambda {
+			const char * loc[2] = {"sample", "flush_time"};
+			app.reWrite(loc,
+				app.sm.getState<SampleStateFlush>(SampleStateNames::FLUSH).time,
+				std::stoi(args[1]));
+		});
+
+	addFunction(
+		"sample_sample_time",
+		1,
+		cmnd_lambda {
+			const char * loc[2] = {"sample", "flush_time"};
+			app.reWrite(loc,
+				app.sm.getState<SampleStateSample>(SampleStateNames::SAMPLE).time,
+				std::stoi(args[1]));
+		});
+
+	addFunction(
+		"sample_idle_time",
+		1,
+		cmnd_lambda {
+			const char * loc[2] = {"sample", "idle_time"};
+			app.reWrite(loc,
+				app.sm.getState<SampleStateIdle>(SampleStateNames::IDLE).time,
+				std::stoi(args[1]));
+		});
+
+	addFunction(
+		"sample_setup_time",
+		1,
+		cmnd_lambda {
+			const char * loc[2] = {"sample", "setup_time"};
+			app.reWrite(loc,
+				app.sm.getState<SampleStateSetup>(SampleStateNames::SETUP).time,
+				std::stoi(args[1]));
+		});
+
 	// Note: Requires restart
 	addFunction(
 		"factory_file_reset",
