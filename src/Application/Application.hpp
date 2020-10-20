@@ -27,9 +27,7 @@
 
 #include <Application/Power.hpp>
 #include <Components/LED.hpp>
-//#include <Components/PressureSensor.hpp>
-
-// subclassing?
+#include <Components/PressureSensor.hpp>
 
 class Application : public KPController, public KPSerialInputObserver {
 public:
@@ -49,7 +47,7 @@ public:
 		HardwarePins::SHFT_REG_LATCH};
 	Shell shell{"shell", this};
 	LED led{"led", this};
-	// PressureSensor pressure_sensor{"pressure-sensor", this};
+	PressureSensor pressure_sensor{"pressure-sensor", this};
 	StaticJsonDocument<512> doc;
 
 	void setup() override {
@@ -63,7 +61,7 @@ public:
 		addComponent(logger);
 		addComponent(power);
 		addComponent(led);
-		// addComponent(pressure_sensor);
+		addComponent(pressure_sensor);
 		KPSerialInput::sharedInstance().addObserver(this);
 		SD.begin(HardwarePins::SD);
 		loadInfo();

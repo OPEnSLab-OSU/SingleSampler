@@ -102,11 +102,10 @@ void Shell::setup() {
 			Serial.println(time.c_str());
 		});
 
-	addFunction("get_pressure",
+	addFunction(
+		"get_pressure",
 		0,
-		cmnd_lambda{
-			// Serial.println(app.pressure_sensor.getPressure());
-		});
+		cmnd_lambda { Serial.println(app.pressure_sensor.getPressure()); });
 
 	addFunction(
 		"sample_no_runs",
