@@ -28,6 +28,7 @@ class SampleStateSample : public KPState {
 public:
 	void enter(KPStateMachine & sm) override;
 	void leave(KPStateMachine & sm) override;
+	bool badPressure();
 	int time = DefaultTimes::SAMPLE_TIME;
 };
 

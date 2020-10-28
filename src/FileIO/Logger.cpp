@@ -19,3 +19,8 @@ void Logger::log() {
 		last_time = millis();
 	}
 }
+void Logger::update() {
+	Application & app = *static_cast<Application *>(controller);
+	if (app.sm.isRunning())
+		log();
+}

@@ -2,6 +2,16 @@
 //#include <Application/Application.hpp>
 #include <SD.h>
 #include <string>
+#include <Application/Constants.hpp>
+
+namespace SensorUtility {
+	bool isWithinPressure(int p) {
+		return (p >= DefaultPressures::MIN_PRESSURE && p <= DefaultPressures::MAX_PRESSURE);
+	}
+
+	bool voltageToGrams() {}
+}  // namespace SensorUtility
+
 namespace Utility {
 	// returns true if str is a pos int
 	// assumes string correctness

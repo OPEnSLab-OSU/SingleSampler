@@ -1,4 +1,4 @@
-#include <Buttons/Button.hpp>
+#include <Components/Button.hpp>
 
 void Button::act(StateMachine & sm) {
 	if (sm.isBusy()) {

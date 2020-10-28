@@ -12,5 +12,6 @@ public:
 		last_time = millis();
 	}
 	void setup() override {}
+	void update();
 	void log();
 };

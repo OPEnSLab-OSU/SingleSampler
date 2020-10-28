@@ -38,3 +38,8 @@ namespace TPICDevices {
 	constexpr int WATER_VALVE = 7;
 	constexpr int PIXEL		  = A4;
 }  // namespace TPICDevices
+
+namespace DefaultPressures {
+	constexpr int MIN_PRESSURE = 1000;
+	constexpr int MAX_PRESSURE = 2000;
+}

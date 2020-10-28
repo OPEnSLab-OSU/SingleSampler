@@ -1,8 +1,8 @@
 #pragma once
-#include <ssc.h>
+#include <MS5803_02.h>
 #include <KPFoundation.hpp>
 #include <Components/ErrorAble.hpp>
-#define PRESSURE_ADDR 0x76
+#define PRESSURE_ADDR 0x77
 
 inline bool checkForConnection(unsigned char addr) {
 	Wire.begin();
@@ -11,32 +11,32 @@ inline bool checkForConnection(unsigned char addr) {
 }
 
 class PressureSensor : public KPComponent, public ErrorAble {
-	SSC sensor;
+	bool connected;
+	MS_5803 sensor;
 
 public:
 	PressureSensor(const char * name, KPController * controller)
 		: KPComponent(name, controller), sensor(PRESSURE_ADDR) {}
 
 	void setup() override {
-		bool enabled = checkForConnection(PRESSURE_ADDR);
-		if (enabled) {
-			sensor.setMinRaw(1638);
-			sensor.setMaxRaw(14745);
-			sensor.setMinPressure(0);
-			sensor.setMaxPressure(30);
-			sensor.start();
+		if (sensor.initializeMS_5803()) {
+			Serial.println("OK: MS5803 pressure sensor online");
+		} else {
+			Serial.println("ERR: MS5803 pressure sensor offline");
 		}
 	}
 
-	void update() override {
-		sensor.update();
-	}
+	void update() override {}
 
-	int getPressure() {
+	float getPressure() {
+		sensor.readSensor();
 		return sensor.pressure();
 	}
 
-	int error_code() {
-		return sensor.error();
+	float getTemp() {
+		sensor.readSensor();
+		return sensor.temperature();
 	}
+
+	int error_code() { return 0;}
 };

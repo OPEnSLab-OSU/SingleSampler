@@ -14,7 +14,7 @@
 #include <Components/ShiftRegister.hpp>
 #include <Components/Pump.hpp>
 
-#include <Buttons/Button.hpp>
+#include <Components/Button.hpp>
 
 #include <Components/Shell.hpp>
 
@@ -31,14 +31,13 @@
 
 class Application : public KPController, public KPSerialInputObserver {
 public:
-	//	unsigned short current_sample = 0;	// todo move to the state machines
-	//	unsigned short last_sample	  = 24;
+	// Component add
 	Power power{"power"};
 	Logger logger{"logger", this};
 	SampleStateMachine sm;
 	CleanStateMachine csm;
-	Button run_button{HardwarePins::RUN_BUTTON};
-	Button clean_button{HardwarePins::CLEAN_BUTTON};
+	Button run_button{"run-button", this, HardwarePins::RUN_BUTTON, sm};
+	Button clean_button{"clean-button", this, HardwarePins::CLEAN_BUTTON, csm};
 	Pump pump{"pump", HardwarePins::MOTOR_FORWARDS, HardwarePins::MOTOR_REVERSE};
 	ShiftRegister shift{"shift-register",
 		32,
@@ -51,7 +50,10 @@ public:
 	StaticJsonDocument<512> doc;
 
 	void setup() override {
-		Serial.begin(115200);
+		Serial.begin(9600);
+		delay(3000);
+		// Component setup
+		Serial.println("OK: Serial monitor online");
 		addComponent(sm);
 		addComponent(csm);
 		addComponent(pump);
@@ -73,13 +75,10 @@ public:
 
 	void update() override {
 		if (!csm.isBusy()) {
-			run_button.listen(sm);
+			run_button.listen();
 		}
 		if (!sm.isBusy()) {
-			clean_button.listen(csm);
-		}
-		if (sm.isRunning()) {
-			logger.log();
+			clean_button.listen();
 		}
 		KPController::update();
 	}
