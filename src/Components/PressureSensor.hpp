@@ -2,6 +2,7 @@
 #include <MS5803_02.h>
 #include <KPFoundation.hpp>
 #include <Components/ErrorAble.hpp>
+#include <application/Constants.hpp>
 #define PRESSURE_ADDR 0x77
 
 inline bool checkForConnection(unsigned char addr) {
@@ -38,5 +39,17 @@ public:
 		return sensor.temperature();
 	}
 
-	int error_code() { return 0;}
+	int error_code() {
+		return 0;
+	}
+
+	bool isWithinPressure() {
+		int p = getPressure();
+		if (p >= DefaultPressures::MIN_PRESSURE && p <= DefaultPressures::MAX_PRESSURE) {
+			return true;
+		} else {
+			Serial.println("Not within pressure");
+			return false;
+		}
+	}
 };

@@ -1,6 +1,5 @@
 #include <Procedures/SampleStates.hpp>
 #include <Application/Application.hpp>
-#include <Application/Utility.hpp>
 
 void writeLatch(bool controlPin, ShiftRegister & shift) {
 	shift.setPin(controlPin, HIGH);
@@ -38,15 +37,7 @@ void SampleStateFlush::enter(KPStateMachine & sm) {
 	app.shift.write();								   // write shifts wide
 	app.pump.on();
 
-	auto const condition = [&]() {
-		int p = app.pressure_sensor.getPressure();
-		if (!SensorUtility::isWithinPressure(p)) {
-			Serial.println("Pressure error");
-		}
-
-		return timeSinceLastTransition() >= secsToMillis(time)
-			|| SensorUtility::isWithinPressure(p);
-	};
+	auto const condition = [&]() { return timeSinceLastTransition() >= secsToMillis(time); };
 
 	setCondition(condition, [&]() { sm.next(); });
 }
@@ -60,7 +51,7 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 	app.pump.on();
 	auto const condition = [&]() {
 		return timeSinceLastTransition() >= secsToMillis(time)
-			|| app.pressure_sensor.getPressure() < 1000;
+			|| !app.pressure_sensor.isWithinPressure();
 	};
 	setCondition(condition, [&]() { sm.next(); });
 }

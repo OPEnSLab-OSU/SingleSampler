@@ -33,7 +33,7 @@ public:
 	}
 	void setSoftwareError() {}	//
 	void setBlockage() {
-		setColor(30, 0, 0);
+		setColor(15, 15, 0);
 	}
 	void setFinished() {
 		setIdle();

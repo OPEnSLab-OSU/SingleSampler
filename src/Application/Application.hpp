@@ -152,19 +152,4 @@ public:
 		file.write(contents_const);
 		file.close();
 	}
-
-	// Broken
-	void createStateFile() {
-		if (SD.exists("state.js"))
-			SD.remove("state.js");
-		const char * contents = "{\n	\"sample\" : {\n		\"flush_time\" : 50,\n		"
-								"\"sample_time\" : 60,\n	"
-								"	\"idle_time\" : 3490,\n		\"setup_time\" : 0,\n		"
-								"\"last_cycle\" : 24\n	"
-								"},\n	\"clean\" : {\n		\"sample_time\" : 5,\n		"
-								"\"idle_time\" : 0,\n		"
-								"\"flush_time\" : 20,\n		\"last_cycle\" : 24\n	}\n}";
-		File file = SD.open("state.js", FILE_WRITE);
-		file.write(contents);
-	}
 };
