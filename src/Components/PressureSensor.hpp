@@ -14,6 +14,8 @@ inline bool checkForConnection(unsigned char addr) {
 class PressureSensor : public KPComponent, public ErrorAble {
 	bool connected;
 	MS_5803 sensor;
+	int min_pressure = DefaultPressures::MIN_PRESSURE;
+	int max_pressure = DefaultPressures::MAX_PRESSURE;
 
 public:
 	PressureSensor(const char * name, KPController * controller)
@@ -45,7 +47,7 @@ public:
 
 	bool isWithinPressure() {
 		int p = getPressure();
-		if (p >= DefaultPressures::MIN_PRESSURE && p <= DefaultPressures::MAX_PRESSURE) {
+		if (p >= min_pressure && p <= max_pressure) {
 			return true;
 		} else {
 			Serial.println("Not within pressure");

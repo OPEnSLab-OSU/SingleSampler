@@ -41,5 +41,5 @@ namespace TPICDevices {
 
 namespace DefaultPressures {
 	constexpr int MIN_PRESSURE = 1000;
-	constexpr int MAX_PRESSURE = 2000;
+	constexpr int MAX_PRESSURE = 1020;
 }
