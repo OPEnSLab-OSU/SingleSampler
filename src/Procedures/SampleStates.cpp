@@ -51,7 +51,7 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 	app.pump.on();
 	auto const condition = [&]() {
 		return timeSinceLastTransition() >= secsToMillis(time)
-			|| !app.pressure_sensor.isWithinPressure();
+			|| !app.pressure_sensor.checkPressure() || app.load_cell.getTaredLoad() >= volume;
 	};
 	setCondition(condition, [&]() { sm.next(); });
 }
@@ -60,6 +60,7 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 void SampleStateSample::leave(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 	app.sm.current_cycle += 1;
+	app.load_cell.reTare();
 }
 
 // Finished

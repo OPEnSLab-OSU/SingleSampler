@@ -14,8 +14,11 @@ inline bool checkForConnection(unsigned char addr) {
 class PressureSensor : public KPComponent, public ErrorAble {
 	bool connected;
 	MS_5803 sensor;
-	int min_pressure = DefaultPressures::MIN_PRESSURE;
-	int max_pressure = DefaultPressures::MAX_PRESSURE;
+	int min_pressure			  = DefaultPressures::MIN_PRESSURE;
+	int max_pressure			  = DefaultPressures::MAX_PRESSURE;
+	bool kill_clock				  = false;
+	unsigned int kill_time_offset = 5;
+	unsigned int kill_time;
 
 public:
 	PressureSensor(const char * name, KPController * controller)
@@ -53,5 +56,21 @@ public:
 			Serial.println("Not within pressure");
 			return false;
 		}
+	}
+
+	bool checkPressure() {
+		bool within_pressure = isWithinPressure();
+		if (!kill_clock && !within_pressure) {
+			kill_clock = true;
+			kill_time  = millis() + kill_time_offset;
+		} else if (kill_clock && !within_pressure) {
+			if (millis() >= kill_time) {
+				kill_clock = false;
+				return false;
+			}
+		} else if (kill_clock && within_pressure) {
+			kill_clock = false;
+		}
+		return true;
 	}
 };

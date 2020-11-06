@@ -3,12 +3,14 @@
 #include <Adafruit_ADS1015.h>
 
 class LoadCell : public KPComponent {
+public:
 	Adafruit_ADS1115 ads;
 	int32_t tare;
 
 	const float scale = 1 / 1.9403;
 	const int adjust  = 19489;
-	LoadCell(const char * name, KPController * controller) : KPComponent(name, controller) {}
+	LoadCell(const char * name, KPController * controller)
+		: KPComponent(name, controller), ads(0x48) {}
 	void setup() override {
 		ads.setGain(GAIN_ONE);
 		ads.begin();
@@ -26,6 +28,10 @@ class LoadCell : public KPComponent {
 	}
 	int getTaredLoad() {
 		return getLoad() - tare;
+	}
+
+	int getVoltage() {
+		return ads.readADC_SingleEnded(0);
 	}
 
 	int32_t readGrams() {

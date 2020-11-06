@@ -28,6 +28,7 @@
 #include <Application/Power.hpp>
 #include <Components/LED.hpp>
 #include <Components/PressureSensor.hpp>
+#include <Components/LoadCell.hpp>
 
 class Application : public KPController, public KPSerialInputObserver {
 public:
@@ -48,7 +49,7 @@ public:
 	LED led{"led", this};
 	PressureSensor pressure_sensor{"pressure-sensor", this};
 	StaticJsonDocument<512> doc;
-
+	LoadCell load_cell{"load-cell", this};
 	void setup() override {
 		Serial.begin(9600);
 		delay(3000);
@@ -64,6 +65,7 @@ public:
 		addComponent(power);
 		addComponent(led);
 		addComponent(pressure_sensor);
+		addComponent(load_cell);
 		KPSerialInput::sharedInstance().addObserver(this);
 		SD.begin(HardwarePins::SD);
 		loadInfo();
@@ -117,6 +119,8 @@ public:
 					= doc["sample"]["flush_time"];
 				sm.getState<SampleStateSample>(SampleStateNames::SAMPLE).time
 					= doc["sample"]["sample_time"];
+				sm.getState<SampleStateSample>(SampleStateNames::SAMPLE).volume
+					= doc["sample"]["sample_volume"];
 				sm.getState<SampleStateIdle>(SampleStateNames::IDLE).time
 					= doc["sample"]["idle_time"];
 				sm.getState<SampleStateSetup>(SampleStateNames::SETUP).time

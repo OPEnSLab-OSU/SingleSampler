@@ -140,6 +140,16 @@ void Shell::setup() {
 		cmnd_lambda { Serial.println(app.pressure_sensor.getPressure()); });
 
 	addFunction(
+		"get_load",
+		0,
+		cmnd_lambda { Serial.println(app.load_cell.getLoad()); });
+
+	addFunction(
+		"volt_load",
+		0,
+		cmnd_lambda { Serial.println(app.load_cell.getVoltage()); });
+
+	addFunction(
 		"sample_no_runs",
 		1,
 		cmnd_lambda {
@@ -161,9 +171,19 @@ void Shell::setup() {
 		"sample_sample_time",
 		1,
 		cmnd_lambda {
-			const char * loc[2] = {"sample", "flush_time"};
+			const char * loc[2] = {"sample", "sample_time"};
 			app.reWrite(loc,
 				app.sm.getState<SampleStateSample>(SampleStateNames::SAMPLE).time,
+				std::stoi(args[1]));
+		});
+
+	addFunction(
+		"sample_sample_volume",
+		1,
+		cmnd_lambda {
+			const char * loc[2] = {"sample", "sample_volume"};
+			app.reWrite(loc,
+				app.sm.getState<SampleStateSample>(SampleStateNames::SAMPLE).volume,
 				std::stoi(args[1]));
 		});
 
