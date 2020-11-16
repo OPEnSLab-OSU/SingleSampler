@@ -4,6 +4,7 @@
 #include <KPFoundation.hpp>
 #include <SD.h>
 #include <ArduinoJson.h>
+#include <time.h>
 #define cmnd_lambda [](Application & app, const std::string * args)
 #define CALL		(app, args)
 
@@ -145,6 +146,11 @@ void Shell::setup() {
 		cmnd_lambda { Serial.println(app.load_cell.getLoad()); });
 
 	addFunction(
+		"get_tared_load",
+		0,
+		cmnd_lambda { Serial.println(app.load_cell.getTaredLoad()); });
+
+	addFunction(
 		"volt_load",
 		0,
 		cmnd_lambda { Serial.println(app.load_cell.getVoltage()); });
@@ -207,6 +213,24 @@ void Shell::setup() {
 				std::stoi(args[1]));
 		});
 
+	addFunction(
+		"sample_setup_tod_enabled",
+		1,
+		cmnd_lambda {
+			const char * loc[2] = {"sample", "setup_tod_enabled"};
+			app.reWrite(loc,
+				app.sm.getState<SampleStateSetup>(SampleStateNames::SETUP).tod_enabled,
+				std::stoi(args[1]));
+		});
+	addFunction(
+		"sample_setup_tod",
+		1,
+		cmnd_lambda {
+			const char * loc[2] = {"sample", "setup_tod"};
+			app.reWrite(loc,
+				app.sm.getState<SampleStateSetup>(SampleStateNames::SETUP).tod,
+				std::stoi(args[1]));
+		});
 	// Note: Requires restart
 	// addFunction("factory_file_reset", 0, cmnd_lambda{/*app.createStateFile();*/});
 };

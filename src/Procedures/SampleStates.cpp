@@ -37,9 +37,7 @@ void SampleStateFlush::enter(KPStateMachine & sm) {
 	app.shift.write();								   // write shifts wide
 	app.pump.on();
 
-	auto const condition = [&]() { return timeSinceLastTransition() >= secsToMillis(time); };
-
-	setCondition(condition, [&]() { sm.next(); });
+	setTimeCondition(time, [&]() { sm.next(); });
 }
 
 // Sample
@@ -50,6 +48,7 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 	app.shift.write();
 	app.pump.on();
 	auto const condition = [&]() {
+		Serial.println(app.load_cell.getTaredLoad());
 		return timeSinceLastTransition() >= secsToMillis(time)
 			|| !app.pressure_sensor.checkPressure() || app.load_cell.getTaredLoad() >= volume;
 	};

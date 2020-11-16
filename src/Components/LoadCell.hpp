@@ -15,6 +15,7 @@ public:
 		ads.setGain(GAIN_ONE);
 		ads.begin();
 		tare = 0;
+		reTare();
 	}
 	int getLoad() {
 		int32_t adcTotal = 0;

@@ -55,4 +55,6 @@ class SampleStateSetup : public KPState {
 public:
 	void enter(KPStateMachine & sm) override;
 	int time = DefaultTimes::SETUP_TIME;
+	int tod_enabled;
+	int tod;
 };

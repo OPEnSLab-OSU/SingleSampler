@@ -5,6 +5,7 @@
 #include <Application/Constants.hpp>
 #include <Wire.h>
 #include <SPI.h>
+#include <time.h>
 
 #define RTC_ADDR 0x68
 
@@ -16,12 +17,23 @@ public:
 		// waitForConnection();
 		rtc.begin();
 		rtc.squareWave(SQWAVE_NONE);
+		setTime(rtc.get());
 	}
 	void set(unsigned long long seconds) {
 		rtc.set(seconds);
+		setTime(rtc.get());
 	}
-	unsigned long getTime() {
-		return rtc.get();
+
+	time_t cmpTime(time_t cmp) {
+		return cmp - now();
+	}
+
+	time_t cmpTime(const tmElements_t & cmp) {
+		return makeTime(cmp) - now();
+	}
+
+	time_t getTime() {
+		return now();
 	}
 
 	// don't need
