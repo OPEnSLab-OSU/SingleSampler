@@ -7,8 +7,8 @@ public:
 	Adafruit_ADS1115 ads;
 	int32_t tare;
 
-	const float scale = 1 / 1.9403;
-	const int adjust  = 19489;
+	const float scale = 0.4872;
+	const int offset  = 9513;
 	LoadCell(const char * name, KPController * controller)
 		: KPComponent(name, controller), ads(0x48) {}
 	void setup() override {
@@ -36,6 +36,6 @@ public:
 	}
 
 	int32_t readGrams() {
-		return (ads.readADC_SingleEnded(0) - adjust) * scale;
+		return ads.readADC_SingleEnded(0) * scale - offset;
 	}
 };
