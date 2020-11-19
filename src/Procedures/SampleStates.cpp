@@ -47,6 +47,13 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 	app.shift.setPin(TPICDevices::WATER_VALVE, HIGH);
 	app.shift.write();
 	app.pump.on();
+
+	// testing
+	Serial.print("Load @ beginning of cycle ");
+	Serial.print(app.sm.current_cycle);
+	Serial.print(": ");
+	Serial.println(app.load_cell.getLoad());
+
 	auto const condition = [&]() {
 		Serial.println(app.load_cell.getTaredLoad());
 		return timeSinceLastTransition() >= secsToMillis(time)
@@ -58,6 +65,13 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 // Sample leave
 void SampleStateSample::leave(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
+
+	// testing
+	Serial.print("Load @ end of cycle ");
+	Serial.print(app.sm.current_cycle);
+	Serial.print(": ");
+	Serial.println(app.load_cell.getLoad());
+
 	app.sm.current_cycle += 1;
 	app.load_cell.reTare();
 }
