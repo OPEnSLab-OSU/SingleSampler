@@ -28,13 +28,20 @@ void SampleStateStop::enter(KPStateMachine & sm) {
 	sm.next();
 }
 
-// Flush
-void SampleStateFlush::enter(KPStateMachine & sm) {
+void SampleStateOnramp::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 
 	app.shift.setAllRegistersLow();
 	app.shift.setPin(TPICDevices::FLUSH_VALVE, HIGH);  // write in skinny
 	app.shift.write();								   // write shifts wide
+
+	setTimeCondition(time, [&]() { sm.next(); });
+}
+
+// Flush
+void SampleStateFlush::enter(KPStateMachine & sm) {
+	Application & app = *static_cast<Application *>(sm.controller);
+
 	app.pump.on();
 
 	setTimeCondition(time, [&]() { sm.next(); });
@@ -96,5 +103,6 @@ void SampleStatePurge::enter(KPStateMachine & sm) {
 void SampleStateSetup::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 	app.led.setRun();
+	app.load_cell.reTare();
 	setTimeCondition(time, [&]() { sm.next(); });
 }

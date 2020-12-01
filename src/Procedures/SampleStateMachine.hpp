@@ -14,7 +14,8 @@ public:
 		registerState(SampleStateStop(), SampleStateNames::STOP, SampleStateNames::IDLE);
 		registerState(SampleStateFinished(), SampleStateNames::FINISHED);
 
-		registerState(SampleStateSetup(), SampleStateNames::SETUP, SampleStateNames::FLUSH);
+		registerState(SampleStateSetup(), SampleStateNames::SETUP, SampleStateNames::ONRAMP);
+		registerState(SampleStateOnramp(), SampleStateNames::ONRAMP, SampleStateNames::FLUSH);
 		registerState(SampleStatePurge(), SampleStateNames::PURGE, SampleStateNames::FLUSH);
 		registerState(SampleStateFlush(), SampleStateNames::FLUSH, SampleStateNames::SAMPLE);
 		registerState(SampleStateSample(), SampleStateNames::SAMPLE, SampleStateNames::STOP);
