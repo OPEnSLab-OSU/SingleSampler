@@ -11,6 +11,7 @@ namespace SampleStateNames {
 	constexpr const char * PURGE	= "sample-state-purge";
 	constexpr const char * SETUP	= "sample-state-setup";
 	constexpr const char * ONRAMP	= "sample-state-onramp";
+	constexpr const char * PAUSE	= "sample-state-pause";
 };	// namespace SampleStateNames
 
 class SampleStateIdle : public KPState {
@@ -63,5 +64,11 @@ public:
 class SampleStateOnramp : public KPState {
 public:
 	void enter(KPStateMachine & sm) override;
-	int time = 7;
+	int time = 4;
+};
+
+class SampleStatePause : public KPState {
+public:
+	void enter(KPStateMachine & sm) override;
+	int time = 15;
 };

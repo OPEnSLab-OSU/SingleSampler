@@ -12,8 +12,11 @@ void writeLatch(bool controlPin, ShiftRegister & shift) {
 // Idle
 void SampleStateIdle::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
+	app.sm.current_cycle += 1;
+	app.load_cell.reTare();
+	app.sm.current_sample_cycles = 0;
 	if (app.sm.current_cycle < app.sm.last_cycle)
-		setTimeCondition(time, [&]() { sm.transitionTo(SampleStateNames::PURGE); });
+		setTimeCondition(time, [&]() { sm.transitionTo(SampleStateNames::ONRAMP); });
 	else
 		sm.transitionTo(SampleStateNames::FINISHED);
 }
@@ -64,9 +67,17 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 	auto const condition = [&]() {
 		Serial.println(app.load_cell.getTaredLoad());
 		return timeSinceLastTransition() >= secsToMillis(time)
-			|| !app.pressure_sensor.checkPressure() || app.load_cell.getTaredLoad() >= volume;
+			|| !app.pressure_sensor.checkPressure() || app.load_cell.getTaredLoad() >= volume
+			|| app.sm.current_sample_cycles > app.sm.sample_cycles;
 	};
-	setCondition(condition, [&]() { sm.next(); });
+
+	setCondition(condition, [&]() {
+		if (timeSinceLastTransition() >= secsToMillis(time)) {
+			sm.transitionTo(SampleStateNames::PAUSE);
+		} else {
+			sm.next();
+		}
+	});
 }
 
 // Sample leave
@@ -79,8 +90,14 @@ void SampleStateSample::leave(KPStateMachine & sm) {
 	Serial.print(": ");
 	Serial.println(app.load_cell.getLoad());
 
-	app.sm.current_cycle += 1;
-	app.load_cell.reTare();
+	++app.sm.current_sample_cycles;
+}
+
+void SampleStatePause::enter(KPStateMachine & sm) {
+	Application & app = *static_cast<Application *>(sm.controller);
+	app.pump.off();
+
+	setTimeCondition(time, [&]() { sm.next(); });
 }
 
 // Finished
