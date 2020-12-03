@@ -27,6 +27,11 @@ void SampleStateStop::enter(KPStateMachine & sm) {
 	app.pump.off();
 	app.shift.writeAllRegistersLow();
 	app.shift.writeLatchOut();
+	// testing
+	Serial.print("Load @ end of cycle ");
+	Serial.print(app.sm.current_cycle);
+	Serial.print(": ");
+	Serial.println(app.load_cell.getLoad());
 
 	sm.next();
 }
@@ -58,16 +63,16 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 	app.shift.write();
 	app.pump.on();
 
+	/*
 	// testing
 	Serial.print("Load @ beginning of cycle ");
 	Serial.print(app.sm.current_cycle);
 	Serial.print(": ");
-	Serial.println(app.load_cell.getLoad());
+	Serial.println(app.load_cell.getLoad());*/
 
 	auto const condition = [&]() {
-		Serial.println(app.load_cell.getTaredLoad());
 		return timeSinceLastTransition() >= secsToMillis(time)
-			|| !app.pressure_sensor.checkPressure() || app.load_cell.getTaredLoad() >= volume
+			|| !app.pressure_sensor.checkPressure()
 			|| app.sm.current_sample_cycles > app.sm.sample_cycles;
 	};
 
@@ -84,12 +89,6 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 void SampleStateSample::leave(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 
-	// testing
-	Serial.print("Load @ end of cycle ");
-	Serial.print(app.sm.current_cycle);
-	Serial.print(": ");
-	Serial.println(app.load_cell.getLoad());
-
 	++app.sm.current_sample_cycles;
 }
 
@@ -97,7 +96,13 @@ void SampleStatePause::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 	app.pump.off();
 
-	setTimeCondition(time, [&]() { sm.next(); });
+	setTimeCondition(time, [&]() {
+		if (app.load_cell.getTaredLoad()
+			>= app.sm.getState<SampleStateSample>(SampleStateNames::SAMPLE).volume)
+			sm.transitionTo(SampleStateNames::STOP);
+		else
+			sm.next();
+	});
 }
 
 // Finished
