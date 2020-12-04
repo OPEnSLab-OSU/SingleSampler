@@ -18,13 +18,6 @@ public:
 		registerState(SampleStateOnramp(), SampleStateNames::ONRAMP, SampleStateNames::FLUSH);
 		registerState(SampleStatePurge(), SampleStateNames::PURGE, SampleStateNames::FLUSH);
 		registerState(SampleStateFlush(), SampleStateNames::FLUSH, SampleStateNames::SAMPLE);
-<<<<<<< HEAD
-		registerState(SampleStateSample(), SampleStateNames::SAMPLE, SampleStateNames::PAUSE);
-		registerState(SampleStatePause(), SampleStateNames::PAUSE, SampleStateNames::SAMPLE);
-
-		registerState(SampleStatePurge(), SampleStateNames::PURGE, SampleStateNames::FLUSH);
-=======
 		registerState(SampleStateSample(), SampleStateNames::SAMPLE, SampleStateNames::STOP);
->>>>>>> parent of 426b838... add sample-pause cycling
 	}
 };
