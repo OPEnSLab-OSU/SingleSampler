@@ -15,7 +15,7 @@ namespace HardwarePins {
 
 namespace DefaultTimes {
 	const int FLUSH_TIME  = 50;
-	const int SAMPLE_TIME = 10;
+	const int SAMPLE_TIME = 60;
 	const int PURGE_TIME  = 0;
 	const int IDLE_TIME	  = 3600 - FLUSH_TIME - SAMPLE_TIME - PURGE_TIME;
 	const int SETUP_TIME  = 0;
