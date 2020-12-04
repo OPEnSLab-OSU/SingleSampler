@@ -13,7 +13,7 @@ void writeLatch(bool controlPin, ShiftRegister & shift) {
 void SampleStateIdle::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 	if (app.sm.current_cycle < app.sm.last_cycle)
-		setTimeCondition(time, [&]() { sm.transitionTo(SampleStateNames::PURGE); });
+		setTimeCondition(time, [&]() { sm.transitionTo(SampleStateNames::ONRAMP); });
 	else
 		sm.transitionTo(SampleStateNames::FINISHED);
 }

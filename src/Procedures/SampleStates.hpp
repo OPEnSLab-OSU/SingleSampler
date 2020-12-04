@@ -63,5 +63,5 @@ public:
 class SampleStateOnramp : public KPState {
 public:
 	void enter(KPStateMachine & sm) override;
-	int time = 7;
+	int time = 4;
 };

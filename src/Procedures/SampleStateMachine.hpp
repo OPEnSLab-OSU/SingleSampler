@@ -16,8 +16,9 @@ public:
 
 		registerState(SampleStateSetup(), SampleStateNames::SETUP, SampleStateNames::ONRAMP);
 		registerState(SampleStateOnramp(), SampleStateNames::ONRAMP, SampleStateNames::FLUSH);
-		registerState(SampleStatePurge(), SampleStateNames::PURGE, SampleStateNames::FLUSH);
 		registerState(SampleStateFlush(), SampleStateNames::FLUSH, SampleStateNames::SAMPLE);
 		registerState(SampleStateSample(), SampleStateNames::SAMPLE, SampleStateNames::STOP);
+
+		registerState(SampleStatePurge(), SampleStateNames::PURGE, SampleStateNames::FLUSH);
 	}
 };
