@@ -47,6 +47,9 @@ void SampleStateOnramp::enter(KPStateMachine & sm) {
 void SampleStateFlush::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 
+	app.shift.setAllRegistersLow();
+	app.shift.setPin(TPICDevices::FLUSH_VALVE, HIGH);  // write in skinny
+	app.shift.write();								   // write shifts wide
 	app.pump.on();
 
 	setTimeCondition(time, [&]() { sm.next(); });
@@ -109,5 +112,19 @@ void SampleStateSetup::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 	app.led.setRun();
 	app.load_cell.reTare();
+	setTimeCondition(time, [&]() { sm.next(); });
+}
+
+void SampleStateBetweenPump::enter(KPStateMachine & sm) {
+	Application & app = *static_cast<Application *>(sm.controller);
+	app.pump.off();
+	setTimeCondition(time, [&]() { sm.next(); });
+}
+
+void SampleStateBetweenValve::enter(KPStateMachine & sm) {
+	Application & app = *static_cast<Application *>(sm.controller);
+	app.shift.setAllRegistersLow();
+	app.shift.setPin(TPICDevices::WATER_VALVE, HIGH);
+	app.shift.write();
 	setTimeCondition(time, [&]() { sm.next(); });
 }

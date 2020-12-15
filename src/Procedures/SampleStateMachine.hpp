@@ -16,7 +16,13 @@ public:
 
 		registerState(SampleStateSetup(), SampleStateNames::SETUP, SampleStateNames::ONRAMP);
 		registerState(SampleStateOnramp(), SampleStateNames::ONRAMP, SampleStateNames::FLUSH);
-		registerState(SampleStateFlush(), SampleStateNames::FLUSH, SampleStateNames::SAMPLE);
+		registerState(SampleStateFlush(), SampleStateNames::FLUSH, SampleStateNames::BETWEEN_PUMP);
+		registerState(SampleStateBetweenPump(),
+			SampleStateNames::BETWEEN_PUMP,
+			SampleStateNames::BETWEEN_VALVE);
+		registerState(SampleStateBetweenValve(),
+			SampleStateNames::BETWEEN_VALVE,
+			SampleStateNames::SAMPLE);
 		registerState(SampleStateSample(), SampleStateNames::SAMPLE, SampleStateNames::STOP);
 
 		registerState(SampleStatePurge(), SampleStateNames::PURGE, SampleStateNames::FLUSH);
