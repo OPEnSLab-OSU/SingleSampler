@@ -204,6 +204,19 @@ void Shell::setup() {
 		});
 
 	addFunction(
+		"sample_between_time",
+		1,
+		cmnd_lambda {
+			const char * loc[2] = {"sample", "idle_time"};
+			app.reWrite(loc,
+				app.sm.getState<SampleStateIdle>(SampleStateNames::IDLE).time,
+				std::stoi(args[1])
+					- app.sm.getState<SampleStateOnramp>(SampleStateNames::ONRAMP).time
+					- app.sm.getState<SampleStateFlush>(SampleStateNames::FLUSH).time
+					- app.sm.getState<SampleStateSample>(SampleStateNames::SAMPLE).time);
+		});
+
+	addFunction(
 		"sample_setup_time",
 		1,
 		cmnd_lambda {
