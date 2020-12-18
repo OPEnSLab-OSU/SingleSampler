@@ -57,20 +57,5 @@ public:
 			return false;
 		}
 	}
-
-	bool checkPressure() {
-		bool within_pressure = isWithinPressure();
-		if (!kill_clock && !within_pressure) {
-			kill_clock = true;
-			kill_time  = millis() + kill_time_offset;
-		} else if (kill_clock && !within_pressure) {
-			if (millis() >= kill_time) {
-				kill_clock = false;
-				return false;
-			}
-		} else if (kill_clock && within_pressure) {
-			kill_clock = false;
-		}
-		return true;
-	}
+	bool checkPressure();
 };

@@ -19,6 +19,11 @@ void Logger::log() {
 		last_time = millis();
 	}
 }
+
+void Logger::writeStrings(const std::string * strs, int len) {
+	writer.writeStrings(strs, len);
+}
+
 void Logger::update() {
 	Application & app = *static_cast<Application *>(controller);
 	if (app.sm.isRunning())

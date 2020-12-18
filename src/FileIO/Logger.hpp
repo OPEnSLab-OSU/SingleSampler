@@ -14,4 +14,5 @@ public:
 	void setup() override {}
 	void update();
 	void log();
+	void writeStrings(const std::string * strs, int len);
 };
