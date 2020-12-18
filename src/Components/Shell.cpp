@@ -47,7 +47,7 @@ void Shell::runFunction(const std::string * args, const unsigned short length) {
 			Application & app = *static_cast<Application *>(controller);
 			commands.at(args[0]).function(app, args);
 		} else {
-			Serial.print("Bad arguments");
+			Serial.print("Bad arguments\n");
 		}
 	} else {
 		Serial.print("Bad command.\n");
