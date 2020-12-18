@@ -89,7 +89,7 @@ public:
 		std::string * args = new std::string[5];
 		char str[80];
 		strcpy(str, line);
-		println("Recieved: ", str);
+		println("Received: ", str);
 		const char delim[2] = " ";
 		const char * tok	= strtok(str, delim);
 		int i				= 0;
