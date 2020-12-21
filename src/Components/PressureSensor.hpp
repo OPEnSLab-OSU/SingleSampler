@@ -3,6 +3,7 @@
 #include <KPFoundation.hpp>
 #include <Components/ErrorAble.hpp>
 #include <application/Constants.hpp>
+#include <Wire.h>
 #define PRESSURE_ADDR 0x77
 
 inline bool checkForConnection(unsigned char addr) {
