@@ -25,11 +25,12 @@ void SampleStateStop::enter(KPStateMachine & sm) {
 	app.shift.writeAllRegistersLow();
 	app.shift.writeLatchOut();
 	// testing
+	/*
 	Serial.print("Load @ end of cycle ");
 	Serial.print(app.sm.current_cycle);
 	Serial.print(": ");
 	Serial.println(app.load_cell.getLoad());
-
+	*/
 	sm.next();
 }
 
