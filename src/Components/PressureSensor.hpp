@@ -53,7 +53,8 @@ public:
 		if (p >= min_pressure && p <= max_pressure) {
 			return true;
 		} else {
-			Serial.println("Not within pressure");
+			Serial.print("Not within pressure, value: ");
+			Serial.println(p);
 			return false;
 		}
 	}
