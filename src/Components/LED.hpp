@@ -3,6 +3,7 @@
 #include <KPFoundation.hpp>
 #include <Application/Constants.hpp>
 #include <Adafruit_NeoPixel.h>
+/*
 #include <array>
 #include <map>
 
@@ -20,25 +21,25 @@ namespace LEDNames {
 	constexpr const char * RUN	   = "run";
 	constexpr const char * BATTERY = "battery";
 };	// namespace LEDNames
-
+*/
 class LED : public KPComponent {
 public:
 	unsigned short r;
 	unsigned short g;
 	unsigned short b;
 	Adafruit_NeoPixel pixel;
-	const unsigned short no_levels		 = 3;
-	std::array<Light *, 3> lights_active = {nullptr, nullptr, nullptr};
-	std::map<const char *, Light> lights;
+	// const unsigned short no_levels		 = 3;
+	// std::array<Light *, 3> lights_active = {nullptr, nullptr, nullptr};
+	// std::map<const char *, Light> lights;
 	LED(const char * name, KPController * controller)
 		: KPComponent(name, controller), pixel(1, TPICDevices::PIXEL, NEO_RGB + NEO_KHZ800) {}
 	void setup() {
 		pixel.begin();
 		setIdle();
 
-		lights.at(LEDNames::IDLE)	 = Light(2, 0, 30, 0);
-		lights.at(LEDNames::RUN)	 = Light(2, 0, 30, 0);
-		lights.at(LEDNames::BATTERY) = Light(0, 30, 0, 0);
+		// lights.at(LEDNames::IDLE)	 = Light(2, 0, 30, 0);
+		// lights.at(LEDNames::RUN)	 = Light(2, 0, 30, 0);
+		// lights.at(LEDNames::BATTERY) = Light(0, 30, 0, 0);
 	}
 
 	void setColor(unsigned short nr, unsigned short ng, unsigned short nb) {
@@ -50,6 +51,7 @@ public:
 		pixel.show();
 	}
 
+	/*
 	void refreshLights() {
 		bool finished = false;
 		for (int i = 0; i < no_levels && false == finished; ++i) {
@@ -68,6 +70,7 @@ public:
 	void setLight(const char * name) {
 		setLight(&(lights.at(name)));
 	}
+	*/
 
 	void setRun() {
 		setColor(0, 30, 0);
