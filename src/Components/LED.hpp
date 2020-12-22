@@ -3,6 +3,7 @@
 #include <KPFoundation.hpp>
 #include <Application/Constants.hpp>
 #include <Adafruit_NeoPixel.h>
+<<<<<<< HEAD
 /*
 #include <array>
 #include <map>
@@ -22,24 +23,32 @@ namespace LEDNames {
 	constexpr const char * BATTERY = "battery";
 };	// namespace LEDNames
 */
+=======
+>>>>>>> parent of d9569e1... LED priority system testing for Hadi
 class LED : public KPComponent {
 public:
 	unsigned short r;
 	unsigned short g;
 	unsigned short b;
 	Adafruit_NeoPixel pixel;
+<<<<<<< HEAD
 	// const unsigned short no_levels		 = 3;
 	// std::array<Light *, 3> lights_active = {nullptr, nullptr, nullptr};
 	// std::map<const char *, Light> lights;
+=======
+>>>>>>> parent of d9569e1... LED priority system testing for Hadi
 	LED(const char * name, KPController * controller)
 		: KPComponent(name, controller), pixel(1, TPICDevices::PIXEL, NEO_RGB + NEO_KHZ800) {}
 	void setup() {
 		pixel.begin();
 		setIdle();
+<<<<<<< HEAD
 
 		// lights.at(LEDNames::IDLE)	 = Light(2, 0, 30, 0);
 		// lights.at(LEDNames::RUN)	 = Light(2, 0, 30, 0);
 		// lights.at(LEDNames::BATTERY) = Light(0, 30, 0, 0);
+=======
+>>>>>>> parent of d9569e1... LED priority system testing for Hadi
 	}
 
 	void setColor(unsigned short nr, unsigned short ng, unsigned short nb) {
@@ -51,6 +60,7 @@ public:
 		pixel.show();
 	}
 
+<<<<<<< HEAD
 	/*
 	void refreshLights() {
 		bool finished = false;
@@ -72,6 +82,8 @@ public:
 	}
 	*/
 
+=======
+>>>>>>> parent of d9569e1... LED priority system testing for Hadi
 	void setRun() {
 		setColor(0, 30, 0);
 	}
