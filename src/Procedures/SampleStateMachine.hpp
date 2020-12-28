@@ -24,7 +24,5 @@ public:
 			SampleStateNames::BETWEEN_VALVE,
 			SampleStateNames::SAMPLE);
 		registerState(SampleStateSample(), SampleStateNames::SAMPLE, SampleStateNames::STOP);
-
-		registerState(SampleStatePurge(), SampleStateNames::PURGE, SampleStateNames::FLUSH);
 	}
 };
