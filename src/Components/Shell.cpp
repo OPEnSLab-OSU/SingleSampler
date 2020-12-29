@@ -244,6 +244,15 @@ void Shell::setup() {
 				app.sm.getState<SampleStateSetup>(SampleStateNames::SETUP).tod,
 				std::stoi(args[1]));
 		});
+
+	addFunction(
+		"led_set",
+		1,
+		cmnd_lambda { app.led.setLight(args[1].c_str()); });
+	addFunction(
+		"led_clear",
+		0,
+		cmnd_lambda { app.led.strip(); });
 	// Note: Requires restart
 	// addFunction("factory_file_reset", 0, cmnd_lambda{/*app.createStateFile();*/});
 };
