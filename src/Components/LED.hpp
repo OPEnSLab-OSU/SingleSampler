@@ -36,9 +36,9 @@ public:
 		pixel.begin();
 		setIdle();
 
-		lights.at(LEDNames::IDLE)	 = Light(2, 0, 30, 0);
-		lights.at(LEDNames::RUN)	 = Light(2, 0, 30, 0);
-		lights.at(LEDNames::BATTERY) = Light(0, 30, 0, 0);
+		lights.insert(std::make_pair(LEDNames::BATTERY, Light(0, 30, 0, 0)));
+		lights.insert(std::make_pair(LEDNames::IDLE, Light(2, 0, 0, 30)));
+		lights.insert(std::make_pair(LEDNames::RUN, Light(2, 0, 30, 0)));
 	}
 
 	void setColor(unsigned short nr, unsigned short ng, unsigned short nb) {
