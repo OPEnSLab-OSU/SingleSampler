@@ -123,6 +123,12 @@ public:
 		digitalWrite(latchPin, LOW);
 		for (int i = registersCount - 1; i >= 0; i--) {
 			shiftOut(dataPin, clockPin, bitOrder, registers[i]);
+#ifdef SHIFTDEBUG
+			Serial.print("Changing register: ");
+			Serial.print(i);
+			Serial.print(" to ");
+			Serial.println(registers[i]);
+#endif
 		}
 		digitalWrite(latchPin, HIGH);
 	}
