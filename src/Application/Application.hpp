@@ -132,7 +132,9 @@ public:
 					= doc["clean"]["idle_time"];
 				csm.getState<CleanStateFlush>(CleanStateNames::FLUSH).time
 					= doc["clean"]["flush_time"];
-				csm.last_cycle = doc["clean"]["last_cycle"];
+				csm.last_cycle				 = doc["clean"]["last_cycle"];
+				pressure_sensor.max_pressure = doc["max_pressure"];
+				pressure_sensor.min_pressure = doc["min_pressure"];
 			} else {
 				Serial.println("Error file read");
 			}

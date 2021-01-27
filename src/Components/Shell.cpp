@@ -244,6 +244,21 @@ void Shell::setup() {
 				app.sm.getState<SampleStateSetup>(SampleStateNames::SETUP).tod,
 				std::stoi(args[1]));
 		});
+	addFunction(
+		"min_pressure",
+		1,
+		cmnd_lambda {
+			const char * loc[1] = {"min_pressure"};
+			app.reWrite(loc, app.pressure_sensor.min_pressure, std::stoi(args[1]));
+		});
+
+	addFunction(
+		"max_pressure",
+		1,
+		cmnd_lambda {
+			const char * loc[1] = {"max_pressure"};
+			app.reWrite(loc, app.pressure_sensor.max_pressure, std::stoi(args[1]));
+		});
 
 	addFunction(
 		"led_set",

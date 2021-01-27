@@ -13,6 +13,7 @@ inline bool checkForConnection(unsigned char addr) {
 }
 
 class PressureSensor : public KPComponent, public ErrorAble {
+public:
 	bool connected;
 	MS_5803 sensor;
 	int min_pressure			  = DefaultPressures::MIN_PRESSURE;
@@ -21,7 +22,6 @@ class PressureSensor : public KPComponent, public ErrorAble {
 	unsigned int kill_time_offset = 5;
 	unsigned int kill_time;
 
-public:
 	PressureSensor(const char * name, KPController * controller)
 		: KPComponent(name, controller), sensor(PRESSURE_ADDR) {}
 
