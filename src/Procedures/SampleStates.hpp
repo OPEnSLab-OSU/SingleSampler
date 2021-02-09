@@ -3,16 +3,19 @@
 #include <Application/Constants.hpp>
 
 namespace SampleStateNames {
-	constexpr const char * IDLE			 = "sample-state-idle";
-	constexpr const char * FLUSH		 = "sample-state-flush";
-	constexpr const char * SAMPLE		 = "sample-state-sample";
-	constexpr const char * STOP			 = "sample-state-stop";
-	constexpr const char * FINISHED		 = "sample-state-finished";
-	constexpr const char * PURGE		 = "sample-state-purge";
-	constexpr const char * SETUP		 = "sample-state-setup";
-	constexpr const char * ONRAMP		 = "sample-state-onramp";
-	constexpr const char * BETWEEN_PUMP	 = "sample-state-between-pump";
-	constexpr const char * BETWEEN_VALVE = "sample-state-between-valve";
+	constexpr const char * IDLE				= "sample-state-idle";
+	constexpr const char * FLUSH			= "sample-state-flush";
+	constexpr const char * SAMPLE			= "sample-state-sample";
+	constexpr const char * STOP				= "sample-state-stop";
+	constexpr const char * FINISHED			= "sample-state-finished";
+	constexpr const char * PURGE			= "sample-state-purge";
+	constexpr const char * SETUP			= "sample-state-setup";
+	constexpr const char * ONRAMP			= "sample-state-onramp";
+	constexpr const char * BETWEEN_PUMP		= "sample-state-between-pump";
+	constexpr const char * BETWEEN_VALVE	= "sample-state-between-valve";
+	constexpr const char * FILL_TUBE_ONRAMP = "sample-state-fill-tube-onramp";
+	constexpr const char * FILL_TUBE		= "sample-state-fill-tube";
+	constexpr const char * PRESSURE_TARE	= "sample-state-pressure-tare";
 };	// namespace SampleStateNames
 
 class SampleStateIdle : public KPState {
@@ -78,4 +81,27 @@ class SampleStateBetweenValve : public KPState {
 public:
 	void enter(KPStateMachine & sm) override;
 	int time = 5;
+};
+
+class SampleStateFillTubeOnramp : public KPState {
+public:
+	void enter(KPStateMachine & sm) override;
+	int time = 5;
+};
+
+class SampleStateFillTube : public KPState {
+public:
+	void enter(KPStateMachine & sm) override;
+	int time = 40;
+};
+
+// This sets the normal pressure range on the first cycle
+class SampleStatePressureTare : public KPState {
+	void enter(KPStateMachine & sm) override;
+	void update(KPStateMachine & sm) override;
+	void leave(KPStateMachine & sm) override;
+	int time = 5;
+	long sum;
+	int count;
+	int range_size = 200;
 };

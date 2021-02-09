@@ -129,3 +129,49 @@ void SampleStateBetweenValve::enter(KPStateMachine & sm) {
 	app.shift.write();
 	setTimeCondition(time, [&]() { sm.next(); });
 }
+
+void SampleStateFillTubeOnramp::enter(KPStateMachine & sm) {
+	Application & app = *static_cast<Application *>(sm.controller);
+
+	app.shift.setAllRegistersLow();
+	app.shift.setPin(TPICDevices::FLUSH_VALVE, HIGH);  // write in skinny
+	app.shift.write();								   // write shifts wide
+
+	setTimeCondition(time, [&]() { sm.next(); });
+}
+
+void SampleStateFillTube::enter(KPStateMachine & sm) {
+	Application & app = *static_cast<Application *>(sm.controller);
+	app.shift.setAllRegistersLow();
+	app.shift.setPin(TPICDevices::FLUSH_VALVE, HIGH);  // write in skinny
+	app.shift.write();								   // write shifts wide
+	app.pump.on();
+
+	setTimeCondition(time, [&]() { sm.next(); });
+}
+
+void SampleStatePressureTare::enter(KPStateMachine & sm) {
+	Application & app = *static_cast<Application *>(sm.controller);
+	app.shift.setAllRegistersLow();
+	app.shift.setPin(TPICDevices::FLUSH_VALVE, HIGH);  // write in skinny
+	app.shift.write();								   // write shifts wide
+	app.pump.on();
+
+	sum	  = 0;
+	count = 0;
+
+	setTimeCondition(time, [&]() { sm.next(); });
+}
+
+void SampleStatePressureTare::update(KPStateMachine & sm) {
+	Application & app = *static_cast<Application *>(sm.controller);
+	sum += app.pressure_sensor.getPressure();
+	++count;
+}
+
+void SampleStatePressureTare::leave(KPStateMachine & sm) {
+	Application & app				 = *static_cast<Application *>(sm.controller);
+	int avg							 = sum / count;
+	app.pressure_sensor.max_pressure = avg + range_size;
+	app.pressure_sensor.max_pressure = avg - range_size;
+}
