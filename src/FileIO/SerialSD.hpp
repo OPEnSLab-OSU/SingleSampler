@@ -1,7 +1,7 @@
 #include <KPFoundation.hpp>
 #include <FileIO/CSVWriter.hpp>
 #include <String>
-class SerialSD : public KPComponent {
+class SerialSD {
 public:
 	CSVWriter csvw{"serial.csv"};
 
