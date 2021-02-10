@@ -1,5 +1,6 @@
 #include <Procedures/SampleStates.hpp>
 #include <Application/Application.hpp>
+#include <FileIO/SerialSD.hpp>
 
 void writeLatch(bool controlPin, ShiftRegister & shift) {
 	shift.setPin(controlPin, HIGH);
@@ -83,10 +84,10 @@ void SampleStateSample::leave(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 
 	// testing
-	Serial.print("Load @ end of cycle ");
-	Serial.print(app.sm.current_cycle);
-	Serial.print(": ");
-	Serial.println(app.load_cell.getLoad());
+	SSD.print("Load @ end of cycle ");
+	SSD.print(app.sm.current_cycle);
+	SSD.print(": ");
+	SSD.println(app.load_cell.getLoad());
 
 	app.sm.current_cycle += 1;
 	app.load_cell.reTare();
@@ -170,8 +171,10 @@ void SampleStatePressureTare::update(KPStateMachine & sm) {
 }
 
 void SampleStatePressureTare::leave(KPStateMachine & sm) {
-	Application & app				 = *static_cast<Application *>(sm.controller);
-	int avg							 = sum / count;
+	Application & app = *static_cast<Application *>(sm.controller);
+	int avg			  = sum / count;
+	SSD.print("Normal pressure set to value: ");
+	SSD.println(avg);
 	app.pressure_sensor.max_pressure = avg + range_size;
 	app.pressure_sensor.max_pressure = avg - range_size;
 }

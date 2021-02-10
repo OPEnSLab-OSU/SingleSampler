@@ -17,11 +17,13 @@ public:
 				file.print(", ");
 		}
 		file.write("\n");
+#ifdef WRITERDEBUG
 		if (file) {
 			Serial.print("Written to ");
 			Serial.print(dir);
 			Serial.print("\n");
 		}
+#endif
 		file.close();
 	}
 };

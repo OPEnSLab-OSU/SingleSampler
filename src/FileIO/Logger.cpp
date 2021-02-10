@@ -7,7 +7,9 @@
 void Logger::log() {
 	// Only every buffer_time millis
 	if (millis() - last_time > buffer_time) {
+#ifdef WRITERDEBUG
 		Serial.print("Writing...");
+#endif
 		Application & app  = *static_cast<Application *>(controller);
 		const auto timenow = app.power.getTime();
 		std::stringstream ss;
