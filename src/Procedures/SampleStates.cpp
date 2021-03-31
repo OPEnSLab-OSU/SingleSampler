@@ -23,8 +23,11 @@ void SampleStateIdle::enter(KPStateMachine & sm) {
 void SampleStateStop::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 	app.pump.off();
+	/*
 	app.shift.writeAllRegistersLow();
-	app.shift.writeLatchOut();
+	app.shift.writeLatchOut();*/
+	digitalWrite(HardwarePins::WATER_VALVE, LOW);
+	digitalWrite(HardwarePins::FLUSH_VALVE, LOW);
 	// testing
 	/*
 	Serial.print("Load @ end of cycle ");
@@ -38,9 +41,11 @@ void SampleStateStop::enter(KPStateMachine & sm) {
 void SampleStateOnramp::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 
-	app.shift.setAllRegistersLow();
+	/*app.shift.setAllRegistersLow();
 	app.shift.setPin(TPICDevices::FLUSH_VALVE, HIGH);  // write in skinny
-	app.shift.write();								   // write shifts wide
+	app.shift.write();								   // write shifts wide*/
+	digitalWrite(HardwarePins::WATER_VALVE, LOW);
+	digitalWrite(HardwarePins::FLUSH_VALVE, HIGH);
 
 	setTimeCondition(time, [&]() { sm.next(); });
 }
@@ -49,9 +54,11 @@ void SampleStateOnramp::enter(KPStateMachine & sm) {
 void SampleStateFlush::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 
-	app.shift.setAllRegistersLow();
+	/*app.shift.setAllRegistersLow();
 	app.shift.setPin(TPICDevices::FLUSH_VALVE, HIGH);  // write in skinny
-	app.shift.write();								   // write shifts wide
+	app.shift.write();								   // write shifts wide*/
+	digitalWrite(HardwarePins::WATER_VALVE, LOW);
+	digitalWrite(HardwarePins::FLUSH_VALVE, HIGH);
 	app.pump.on();
 
 	setTimeCondition(time, [&]() { sm.next(); });
@@ -60,9 +67,11 @@ void SampleStateFlush::enter(KPStateMachine & sm) {
 // Sample
 void SampleStateSample::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
-	app.shift.setAllRegistersLow();
+	/*app.shift.setAllRegistersLow();
 	app.shift.setPin(TPICDevices::WATER_VALVE, HIGH);
-	app.shift.write();
+	app.shift.write();*/
+	digitalWrite(HardwarePins::WATER_VALVE, HIGH);
+	digitalWrite(HardwarePins::FLUSH_VALVE, LOW);
 	app.pump.on();
 
 	/*
@@ -102,9 +111,11 @@ void SampleStateFinished::enter(KPStateMachine & sm) {
 // Purge (obsolete)
 void SampleStatePurge::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
-	app.shift.setAllRegistersLow();
+	/*app.shift.setAllRegistersLow();
 	app.shift.setPin(TPICDevices::WATER_VALVE, HIGH);
-	app.shift.write();
+	app.shift.write();*/
+	digitalWrite(HardwarePins::WATER_VALVE, HIGH);
+	digitalWrite(HardwarePins::FLUSH_VALVE, LOW);
 	app.pump.on(Direction::reverse);
 	setTimeCondition(time, [&]() { sm.next(); });
 }
@@ -125,27 +136,33 @@ void SampleStateBetweenPump::enter(KPStateMachine & sm) {
 
 void SampleStateBetweenValve::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
-	app.shift.setAllRegistersLow();
+	/*app.shift.setAllRegistersLow();
 	app.shift.setPin(TPICDevices::WATER_VALVE, HIGH);
-	app.shift.write();
+	app.shift.write();*/
+	digitalWrite(HardwarePins::FLUSH_VALVE, LOW);
+	digitalWrite(HardwarePins::WATER_VALVE, HIGH);
 	setTimeCondition(time, [&]() { sm.next(); });
 }
 
 void SampleStateFillTubeOnramp::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 
-	app.shift.setAllRegistersLow();
+	/*app.shift.setAllRegistersLow();
 	app.shift.setPin(TPICDevices::FLUSH_VALVE, HIGH);  // write in skinny
-	app.shift.write();								   // write shifts wide
+	app.shift.write();								   // write shifts wide*/
+	digitalWrite(HardwarePins::FLUSH_VALVE, HIGH);
 
 	setTimeCondition(time, [&]() { sm.next(); });
 }
 
 void SampleStateFillTube::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
+	/*
 	app.shift.setAllRegistersLow();
 	app.shift.setPin(TPICDevices::FLUSH_VALVE, HIGH);  // write in skinny
-	app.shift.write();								   // write shifts wide
+	app.shift.write();								   // write shifts wide*/
+	digitalWrite(HardwarePins::FLUSH_VALVE, HIGH);
+
 	app.pump.on();
 
 	setTimeCondition(time, [&]() { sm.next(); });
@@ -153,9 +170,12 @@ void SampleStateFillTube::enter(KPStateMachine & sm) {
 
 void SampleStatePressureTare::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
-	app.shift.setAllRegistersLow();
+	/*app.shift.setAllRegistersLow();
 	app.shift.setPin(TPICDevices::FLUSH_VALVE, HIGH);  // write in skinny
-	app.shift.write();								   // write shifts wide
+	app.shift.write();								   // write shifts wide*/
+	digitalWrite(HardwarePins::WATER_VALVE, LOW);
+	digitalWrite(HardwarePins::FLUSH_VALVE, HIGH);
+
 	app.pump.on();
 
 	sum	  = 0;

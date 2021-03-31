@@ -1,6 +1,9 @@
 #pragma once
 
 namespace HardwarePins {
+	constexpr int FLUSH_VALVE	 = A1;
+	constexpr int WATER_VALVE	 = A2;
+	constexpr int PIXEL			 = A3;
 	constexpr int SHFT_REG_LATCH = 9;
 	constexpr int SHFT_REG_CLOCK = 11;
 	constexpr int SHFT_REG_DATA	 = 12;
@@ -41,5 +44,5 @@ namespace TPICDevices {
 
 namespace DefaultPressures {
 	constexpr int MIN_PRESSURE = 400;	// 600
-	constexpr int MAX_PRESSURE = 1000;	// 990
+	constexpr int MAX_PRESSURE = 1300;	// 990
 }  // namespace DefaultPressures
