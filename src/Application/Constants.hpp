@@ -37,8 +37,8 @@ namespace DefaultTimesButton {
 namespace TPICDevices {
 	constexpr int INTAKE_POS  = 0;
 	constexpr int INTAKE_NEG  = 1;
-	constexpr int FLUSH_VALVE = 6;
-	constexpr int WATER_VALVE = 7;
+	constexpr int FLUSH_VALVE = 2;
+	constexpr int WATER_VALVE = 3;
 	constexpr int PIXEL		  = A4;
 }  // namespace TPICDevices
 
