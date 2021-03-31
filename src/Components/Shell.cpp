@@ -110,6 +110,7 @@ void Shell::setup() {
 		cmnd_lambda {
 			File file = SD.open("state.js", FILE_READ);
 			Serial.println(Utility::readEntireFile(file).c_str());
+			file.close();
 		});
 
 	addFunction(
@@ -268,6 +269,15 @@ void Shell::setup() {
 		"led_clear",
 		0,
 		cmnd_lambda { app.led.strip(); });
+
+	addFunction(
+		"file_read",
+		1,
+		cmnd_lambda {
+			File file = SD.open(args[1].c_str());
+			Utility::readEntireFile(file);
+			file.close();
+		});
 	// Note: Requires restart
 	// addFunction("factory_file_reset", 0, cmnd_lambda{/*app.createStateFile();*/});
 };
