@@ -275,7 +275,7 @@ void Shell::setup() {
 		1,
 		cmnd_lambda {
 			File file = SD.open(args[1].c_str());
-			Utility::readEntireFile(file);
+			Serial.println(Utility::readEntireFile(file).c_str());
 			file.close();
 		});
 	// Note: Requires restart
