@@ -20,9 +20,19 @@ public:
 		csvw.writeStrings(temp, 1);
 		Serial.println(str);
 	}
-	void println(float num) {
+	void println(double num) {
 		std::string temp[1] = {std::to_string(num)};
+#ifdef SSDTEST
+		Serial.println("Writing to SD...");
+#endif
 		csvw.writeStrings(temp, 1);
+#ifdef SSDTEST
+		Serial.println("Written to SD!");
+		Serial.println("Writing to serial...");
+#endif
 		Serial.println(num);
+#ifdef SSDTEST
+		Serial.println("Written to serial!");
+#endif
 	}
 } SSD;
