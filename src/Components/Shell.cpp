@@ -302,6 +302,15 @@ void Shell::setup() {
 		"led_manip",
 		3,
 		cmnd_lambda { app.led.setColor(stoi(args[1]), stoi(args[2]), stoi(args[3])); });
+	addFunction(
+		"pump_on",
+		0,
+		cmnd_lambda { app.pump.on(); });
+
+	addFunction(
+		"pump_off",
+		0,
+		cmnd_lambda { app.pump.off(); });
 	// Note: Requires restart
 	// addFunction("factory_file_reset", 0, cmnd_lambda{/*app.createStateFile();*/});
 }
