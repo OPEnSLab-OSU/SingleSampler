@@ -3,7 +3,7 @@
 namespace HardwarePins {
 	constexpr int FLUSH_VALVE	 = A1;
 	constexpr int WATER_VALVE	 = A2;
-	constexpr int PIXEL			 = A3;
+	constexpr int PIXEL			 = A4;
 	constexpr int SHFT_REG_LATCH = 9;
 	constexpr int SHFT_REG_CLOCK = 11;
 	constexpr int SHFT_REG_DATA	 = 12;
