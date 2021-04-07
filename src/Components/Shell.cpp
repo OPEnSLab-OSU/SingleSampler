@@ -283,9 +283,23 @@ void Shell::setup() {
 		"temp_read",
 		0,
 		cmnd_lambda { Serial.println(app.pressure_sensor.getTemp()); });
+
+	addFunction(
+		"shift_manip",
+		2,
+		cmnd_lambda {
+			app.shift.setAllRegistersLow();
+			app.shift.setPin(std::stoi(args[1]), stoi(args[2]));  // write in skinny
+			app.shift.write();									  // write shifts wide*/
+		});
+
+	addFunction(
+		"pin_manip",
+		2,
+		cmnd_lambda { digitalWrite(stoi(args[1]), stoi(args[2])); });
 	// Note: Requires restart
 	// addFunction("factory_file_reset", 0, cmnd_lambda{/*app.createStateFile();*/});
-};
+}
 
 void Shell::addFunction(const char * name, const unsigned short n_args, ShellSpace::func function) {
 	ShellSpace::func_args entry;
