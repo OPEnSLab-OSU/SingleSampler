@@ -278,6 +278,11 @@ void Shell::setup() {
 			Serial.println(Utility::readEntireFile(file).c_str());
 			file.close();
 		});
+
+	addFunction(
+		"temp_read",
+		0,
+		cmnd_lambda { Serial.println(app.pressure_sensor.getTemp()); });
 	// Note: Requires restart
 	// addFunction("factory_file_reset", 0, cmnd_lambda{/*app.createStateFile();*/});
 };
