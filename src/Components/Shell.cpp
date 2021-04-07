@@ -289,8 +289,8 @@ void Shell::setup() {
 		2,
 		cmnd_lambda {
 			app.shift.setAllRegistersLow();
-			app.shift.setPin(std::stoi(args[1]), stoi(args[2]));  // write in skinny
-			app.shift.write();									  // write shifts wide*/
+			app.shift.setPin(std::stoi(args[1]), std::stoi(args[2]));  // write in skinny
+			app.shift.write();										   // write shifts wide*/
 		});
 
 	addFunction(
