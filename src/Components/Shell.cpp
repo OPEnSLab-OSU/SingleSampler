@@ -297,6 +297,11 @@ void Shell::setup() {
 		"pin_manip",
 		2,
 		cmnd_lambda { digitalWrite(stoi(args[1]), stoi(args[2])); });
+
+	addFunction(
+		"led_manip",
+		3,
+		cmnd_lambda { app.led.setColor(stoi(args[1]), stoi(args[2]), stoi(args[3])); });
 	// Note: Requires restart
 	// addFunction("factory_file_reset", 0, cmnd_lambda{/*app.createStateFile();*/});
 }
