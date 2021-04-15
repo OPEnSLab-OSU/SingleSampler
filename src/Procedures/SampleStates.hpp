@@ -92,7 +92,7 @@ public:
 class SampleStateFillTube : public KPState {
 public:
 	void enter(KPStateMachine & sm) override;
-	int time = 40;
+	int time = 5;
 };
 
 // This sets the normal pressure range on the first cycle

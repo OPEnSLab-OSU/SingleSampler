@@ -73,6 +73,10 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 	/*digitalWrite(HardwarePins::WATER_VALVE, HIGH);
 	digitalWrite(HardwarePins::FLUSH_VALVE, LOW);*/
 	app.pump.on();
+	Serial.print("Max pressure: ");
+	Serial.println(app.pressure_sensor.max_pressure);
+	Serial.print("Min pressure: ");
+	Serial.println(app.pressure_sensor.min_pressure);
 
 	/*
 	// testing
@@ -82,8 +86,16 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 	Serial.println(app.load_cell.getLoad());*/
 
 	auto const condition = [&]() {
-		return timeSinceLastTransition() >= secsToMillis(time)
-			|| !app.pressure_sensor.checkPressure() || app.load_cell.getTaredLoad() >= volume;
+		bool t		  = timeSinceLastTransition() >= secsToMillis(time);
+		bool pressure = !app.pressure_sensor.checkPressure();
+		bool load	  = app.load_cell.getTaredLoad() >= volume;
+		if (t)
+			Serial.println("Time!");
+		if (pressure)
+			Serial.println("Pressure!");
+		if (load)
+			Serial.println("Load!");
+		return t || load || pressure;
 	};
 	setCondition(condition, [&]() { sm.next(); });
 }
@@ -93,10 +105,10 @@ void SampleStateSample::leave(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 
 	// testing
-	SSD.print("Load @ end of cycle ");
-	SSD.print(app.sm.current_cycle);
-	SSD.print(": ");
-	SSD.println(app.load_cell.getLoad());
+	Serial.print("Load @ end of cycle ");
+	Serial.print(app.sm.current_cycle);
+	Serial.print(": ");
+	Serial.println(app.load_cell.getLoad());
 
 	app.sm.current_cycle += 1;
 	app.load_cell.reTare();
@@ -193,8 +205,9 @@ void SampleStatePressureTare::update(KPStateMachine & sm) {
 void SampleStatePressureTare::leave(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 	int avg			  = sum / count;
-	SSD.print("Normal pressure set to value: ");
-	SSD.println(avg);
+	Serial.print("Normal pressure set to value: ");
+	Serial.println(avg);
+
 	app.pressure_sensor.max_pressure = avg + range_size;
-	app.pressure_sensor.max_pressure = avg - range_size;
+	app.pressure_sensor.min_pressure = avg - range_size;
 }

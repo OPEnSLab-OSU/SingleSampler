@@ -50,7 +50,7 @@ public:
 	}
 
 	bool isWithinPressure() {
-		int p = getPressure();
+		float p = getPressure();
 		if (p >= min_pressure && p <= max_pressure) {
 			return true;
 		} else {
