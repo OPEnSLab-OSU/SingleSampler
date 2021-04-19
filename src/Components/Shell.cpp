@@ -228,6 +228,36 @@ void Shell::setup() {
 		});
 
 	addFunction(
+		"clean_sample_time",
+		1,
+		cmnd_lambda {
+			const char * loc[2] = {"clean", "sample_time"};
+			app.reWrite(loc,
+				app.csm.getState<CleanStateSample>(CleanStateNames::SAMPLE).time,
+				std::stoi(args[1]));
+		});
+
+	addFunction(
+		"clean_idle_time",
+		1,
+		cmnd_lambda {
+			const char * loc[2] = {"clean", "idle_time"};
+			app.reWrite(loc,
+				app.csm.getState<CleanStateIdle>(CleanStateNames::IDLE).time,
+				std::stoi(args[1]));
+		});
+
+	addFunction(
+		"clean_flush_time",
+		1,
+		cmnd_lambda {
+			const char * loc[2] = {"clean", "flush_time"};
+			app.reWrite(loc,
+				app.csm.getState<CleanStateFlush>(CleanStateNames::FLUSH).time,
+				std::stoi(args[1]));
+		});
+
+	addFunction(
 		"sample_setup_tod_enabled",
 		1,
 		cmnd_lambda {

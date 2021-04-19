@@ -13,20 +13,20 @@ namespace CleanStateNames {
 class CleanStateIdle : public KPState {
 public:
 	void enter(KPStateMachine & sm) override;
-	unsigned long time = DefaultTimesClean::IDLE_TIME;
+	int time = DefaultTimesClean::IDLE_TIME;
 };
 
 class CleanStateFlush : public KPState {
 public:
 	void enter(KPStateMachine & sm) override;
-	unsigned long time = DefaultTimesClean::FLUSH_TIME;
+	int time = DefaultTimesClean::FLUSH_TIME;
 };
 
 class CleanStateSample : public KPState {
 public:
 	void enter(KPStateMachine & sm) override;
 	void leave(KPStateMachine & sm) override;
-	unsigned long time = DefaultTimesClean::SAMPLE_TIME;
+	int time = DefaultTimesClean::SAMPLE_TIME;
 };
 
 class CleanStateStop : public KPState {
