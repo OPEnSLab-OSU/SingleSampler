@@ -90,11 +90,11 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 		bool pressure = !app.pressure_sensor.checkPressure();
 		bool load	  = app.load_cell.getTaredLoad() >= volume;
 		if (t)
-			Serial.println("Time!");
+			Serial.println("Sample state ended due to: time");
 		if (pressure)
-			Serial.println("Pressure!");
+			Serial.println("Sample state ended due to: pressure");
 		if (load)
-			Serial.println("Load!");
+			Serial.println("Sample state ended due to: load");
 		return t || load || pressure;
 	};
 	setCondition(condition, [&]() { sm.next(); });
