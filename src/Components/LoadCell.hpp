@@ -7,8 +7,8 @@ public:
 	Adafruit_ADS1115 ads;
 	int32_t tare;
 
-	const float factor = 0.0799;
-	const float offset = 95.861;
+	const float factor = 0.0832;
+	const float offset = 279.56;
 	LoadCell(const char * name, KPController * controller)
 		: KPComponent(name, controller), ads(0x48) {}
 	void setup() override {
