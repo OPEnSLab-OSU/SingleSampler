@@ -204,10 +204,21 @@ void SampleStatePressureTare::update(KPStateMachine & sm) {
 
 void SampleStatePressureTare::leave(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
-	int avg			  = sum / count;
+#ifndef DISABLE_PRESSURE_TARE
+	int avg = sum / count;
 	Serial.print("Normal pressure set to value: ");
 	Serial.println(avg);
 
 	app.pressure_sensor.max_pressure = avg + range_size;
 	app.pressure_sensor.min_pressure = avg - range_size;
+#endif
+#ifdef DISABLE_PRESSURE_TARE
+	Serial.println("Pressure tare state is disabled.");
+	Serial.println(
+		"If this is a mistake, please remove DISABLE_PRESSURE_TARE from the buildflags.");
+	Serial.print("Max pressure (set manually): ");
+	Serial.println(app.pressure_sensor.max_pressure);
+	Serial.print("Min pressure (set manually): ");
+	Serial.println(app.pressure_sensor.min_pressure) :
+#endif
 }
