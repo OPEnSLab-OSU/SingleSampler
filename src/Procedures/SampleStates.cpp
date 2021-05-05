@@ -75,10 +75,6 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 	/*digitalWrite(HardwarePins::WATER_VALVE, HIGH);
 	digitalWrite(HardwarePins::FLUSH_VALVE, LOW);*/
 	app.pump.on();
-	SSD.print("Max pressure: ");
-	SSD.println(app.pressure_sensor.max_pressure);
-	SSD.print("Min pressure: ");
-	SSD.println(app.pressure_sensor.min_pressure);
 
 	/*
 	// testing
@@ -110,7 +106,10 @@ void SampleStateSample::leave(KPStateMachine & sm) {
 	SSD.print("Load @ end of cycle ");
 	SSD.print(app.sm.current_cycle);
 	SSD.print(": ");
-	SSD.println(app.load_cell.getLoad());
+	SSD.println((double)app.load_cell.getLoad());
+
+	SSD.print("Temp: ");
+	SSD.println((double)app.pressure_sensor.getTemp());
 
 	app.sm.current_cycle += 1;
 	app.load_cell.reTare();
@@ -213,6 +212,10 @@ void SampleStatePressureTare::leave(KPStateMachine & sm) {
 
 	app.pressure_sensor.max_pressure = avg + range_size;
 	app.pressure_sensor.min_pressure = avg - range_size;
+	SSD.print("Max pressure: ");
+	SSD.println(app.pressure_sensor.max_pressure);
+	SSD.print("Min pressure: ");
+	SSD.println(app.pressure_sensor.min_pressure);
 #endif
 #ifdef DISABLE_PRESSURE_TARE
 	SSD.println("Pressure tare state is disabled.");
