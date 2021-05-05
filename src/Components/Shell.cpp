@@ -5,6 +5,7 @@
 #include <SD.h>
 #include <ArduinoJson.h>
 #include <time.h>
+#include <FileIO/SerialSD.hpp>
 #define cmnd_lambda [](Application & app, const std::string * args)
 #define CALL		(app, args)
 
@@ -341,8 +342,26 @@ void Shell::setup() {
 		"pump_off",
 		0,
 		cmnd_lambda { app.pump.off(); });
-	// Note: Requires restart
-	// addFunction("factory_file_reset", 0, cmnd_lambda{/*app.createStateFile();*/});
+	addFunction(
+		"load_cell_offset",
+		1,
+		cmnd_lambda {
+			const char * loc[2] = {"load_cell", "offset"};
+			app.reWrite(loc, app.load_cell.offset, std::stof(args[1]));
+		});
+
+	addFunction(
+		"load_cell_factor",
+		1,
+		cmnd_lambda {
+			const char * loc[2] = {"load_cell", "factor"};
+			app.reWrite(loc, app.load_cell.factor, std::stof(args[1]));
+		});
+	/*
+		addFunction(
+			"write_float_test",
+			1,
+			cmnd_lambda { SSD.println((double)std::stof(args[1])); });*/
 }
 
 void Shell::addFunction(const char * name, const unsigned short n_args, ShellSpace::func function) {

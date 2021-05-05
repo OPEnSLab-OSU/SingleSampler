@@ -2,6 +2,8 @@
 #include <Application/Application.hpp>
 #include <FileIO/SerialSD.hpp>
 
+SerialSD SSD;
+
 void writeLatch(bool controlPin, ShiftRegister & shift) {
 	shift.setPin(controlPin, HIGH);
 	shift.write();
@@ -30,10 +32,10 @@ void SampleStateStop::enter(KPStateMachine & sm) {
 		digitalWrite(HardwarePins::FLUSH_VALVE, LOW);*/
 	// testing
 	/*
-	Serial.print("Load @ end of cycle ");
-	Serial.print(app.sm.current_cycle);
-	Serial.print(": ");
-	Serial.println(app.load_cell.getLoad());
+	SSD.print("Load @ end of cycle ");
+	SSD.print(app.sm.current_cycle);
+	SSD.print(": ");
+	SSD.println(app.load_cell.getLoad());
 	*/
 	sm.next();
 }
@@ -73,28 +75,28 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 	/*digitalWrite(HardwarePins::WATER_VALVE, HIGH);
 	digitalWrite(HardwarePins::FLUSH_VALVE, LOW);*/
 	app.pump.on();
-	Serial.print("Max pressure: ");
-	Serial.println(app.pressure_sensor.max_pressure);
-	Serial.print("Min pressure: ");
-	Serial.println(app.pressure_sensor.min_pressure);
+	SSD.print("Max pressure: ");
+	SSD.println(app.pressure_sensor.max_pressure);
+	SSD.print("Min pressure: ");
+	SSD.println(app.pressure_sensor.min_pressure);
 
 	/*
 	// testing
-	Serial.print("Load @ beginning of cycle ");
-	Serial.print(app.sm.current_cycle);
-	Serial.print(": ");
-	Serial.println(app.load_cell.getLoad());*/
+	SSD.print("Load @ beginning of cycle ");
+	SSD.print(app.sm.current_cycle);
+	SSD.print(": ");
+	SSD.println(app.load_cell.getLoad());*/
 
 	auto const condition = [&]() {
 		bool t		  = timeSinceLastTransition() >= secsToMillis(time);
 		bool pressure = !app.pressure_sensor.checkPressure();
 		bool load	  = app.load_cell.getTaredLoad() >= volume;
 		if (t)
-			Serial.println("Sample state ended due to: time");
+			SSD.println("Sample state ended due to: time");
 		if (pressure)
-			Serial.println("Sample state ended due to: pressure");
+			SSD.println("Sample state ended due to: pressure");
 		if (load)
-			Serial.println("Sample state ended due to: load");
+			SSD.println("Sample state ended due to: load");
 		return t || load || pressure;
 	};
 	setCondition(condition, [&]() { sm.next(); });
@@ -105,10 +107,10 @@ void SampleStateSample::leave(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 
 	// testing
-	Serial.print("Load @ end of cycle ");
-	Serial.print(app.sm.current_cycle);
-	Serial.print(": ");
-	Serial.println(app.load_cell.getLoad());
+	SSD.print("Load @ end of cycle ");
+	SSD.print(app.sm.current_cycle);
+	SSD.print(": ");
+	SSD.println(app.load_cell.getLoad());
 
 	app.sm.current_cycle += 1;
 	app.load_cell.reTare();
@@ -206,19 +208,18 @@ void SampleStatePressureTare::leave(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 #ifndef DISABLE_PRESSURE_TARE
 	int avg = sum / count;
-	Serial.print("Normal pressure set to value: ");
-	Serial.println(avg);
+	SSD.print("Normal pressure set to value: ");
+	SSD.println(avg);
 
 	app.pressure_sensor.max_pressure = avg + range_size;
 	app.pressure_sensor.min_pressure = avg - range_size;
 #endif
 #ifdef DISABLE_PRESSURE_TARE
-	Serial.println("Pressure tare state is disabled.");
-	Serial.println(
-		"If this is a mistake, please remove DISABLE_PRESSURE_TARE from the buildflags.");
-	Serial.print("Max pressure (set manually): ");
-	Serial.println(app.pressure_sensor.max_pressure);
-	Serial.print("Min pressure (set manually): ");
-	Serial.println(app.pressure_sensor.min_pressure) :
+	SSD.println("Pressure tare state is disabled.");
+	SSD.println("If this is a mistake, please remove DISABLE_PRESSURE_TARE from the buildflags.");
+	SSD.print("Max pressure (set manually): ");
+	SSD.println(app.pressure_sensor.max_pressure);
+	SSD.print("Min pressure (set manually): ");
+	SSD.println(app.pressure_sensor.min_pressure);
 #endif
 }
