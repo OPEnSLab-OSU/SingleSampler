@@ -140,10 +140,10 @@ public:
 
 				// this is an alternative way of doing containsKey
 				// which is more efficient when checking indiv objs
-				JsonVariant pressure = doc["max_pressure"];
+				JsonVariant pressure = doc["pressure"]["max_pressure"];
 				if (!pressure.isNull())
 					pressure_sensor.max_pressure = pressure;
-				pressure = doc["min_pressure"];
+				pressure = doc["pressure"]["min_pressure"];
 				if (!pressure.isNull())
 					pressure_sensor.min_pressure = pressure;
 

@@ -280,7 +280,7 @@ void Shell::setup() {
 		"min_pressure",
 		1,
 		cmnd_lambda {
-			const char * loc[1] = {"min_pressure"};
+			const char * loc[2] = {"pressure", "min_pressure"};
 			app.reWrite(loc, app.pressure_sensor.min_pressure, std::stoi(args[1]));
 		});
 
@@ -288,7 +288,7 @@ void Shell::setup() {
 		"max_pressure",
 		1,
 		cmnd_lambda {
-			const char * loc[1] = {"max_pressure"};
+			const char * loc[2] = {"pressure", "max_pressure"};
 			app.reWrite(loc, app.pressure_sensor.max_pressure, std::stoi(args[1]));
 		});
 
@@ -357,6 +357,11 @@ void Shell::setup() {
 			const char * loc[2] = {"load_cell", "factor"};
 			app.reWrite(loc, app.load_cell.factor, std::stof(args[1]));
 		});
+
+	addFunction(
+		"file_reset",
+		1,
+		cmnd_lambda { SD.remove(args[1].c_str()); });
 	/*
 		addFunction(
 			"write_float_test",
