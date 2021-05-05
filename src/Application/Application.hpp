@@ -115,26 +115,42 @@ public:
 			if (file) {
 				std::string contents = readEntireFile(file);
 				deserializeJson(doc, contents);
-				sm.getState<SampleStateFlush>(SampleStateNames::FLUSH).time
-					= doc["sample"]["flush_time"];
-				sm.getState<SampleStateSample>(SampleStateNames::SAMPLE).time
-					= doc["sample"]["sample_time"];
-				sm.getState<SampleStateSample>(SampleStateNames::SAMPLE).volume
-					= doc["sample"]["sample_volume"];
-				sm.getState<SampleStateIdle>(SampleStateNames::IDLE).time
-					= doc["sample"]["idle_time"];
-				sm.getState<SampleStateSetup>(SampleStateNames::SETUP).time
-					= doc["sample"]["setup_time"];
-				sm.last_cycle = doc["sample"]["last_cycle"];
-				csm.getState<CleanStateSample>(CleanStateNames::SAMPLE).time
-					= doc["clean"]["sample_time"];
-				csm.getState<CleanStateIdle>(CleanStateNames::IDLE).time
-					= doc["clean"]["idle_time"];
-				csm.getState<CleanStateFlush>(CleanStateNames::FLUSH).time
-					= doc["clean"]["flush_time"];
-				csm.last_cycle				 = doc["clean"]["last_cycle"];
-				pressure_sensor.max_pressure = doc["max_pressure"];
-				pressure_sensor.min_pressure = doc["min_pressure"];
+				if (doc.containsKey("sample")) {
+					sm.getState<SampleStateFlush>(SampleStateNames::FLUSH).time
+						= doc["sample"]["flush_time"];
+					sm.getState<SampleStateSample>(SampleStateNames::SAMPLE).time
+						= doc["sample"]["sample_time"];
+					sm.getState<SampleStateSample>(SampleStateNames::SAMPLE).volume
+						= doc["sample"]["sample_volume"];
+					sm.getState<SampleStateIdle>(SampleStateNames::IDLE).time
+						= doc["sample"]["idle_time"];
+					sm.getState<SampleStateSetup>(SampleStateNames::SETUP).time
+						= doc["sample"]["setup_time"];
+					sm.last_cycle = doc["sample"]["last_cycle"];
+				}
+				if (doc.containsKey("clean")) {
+					csm.getState<CleanStateSample>(CleanStateNames::SAMPLE).time
+						= doc["clean"]["sample_time"];
+					csm.getState<CleanStateIdle>(CleanStateNames::IDLE).time
+						= doc["clean"]["idle_time"];
+					csm.getState<CleanStateFlush>(CleanStateNames::FLUSH).time
+						= doc["clean"]["flush_time"];
+					csm.last_cycle = doc["clean"]["last_cycle"];
+				}
+
+				// this is an alternative way of doing containsKey
+				// which is more efficient when checking indiv objs
+				JsonVariant pressure = doc["max_pressure"];
+				if (!pressure.isNull())
+					pressure_sensor.max_pressure = pressure;
+				pressure = doc["min_pressure"];
+				if (!pressure.isNull())
+					pressure_sensor.min_pressure = pressure;
+
+				if (doc.containsKey("load_cell")) {
+					load_cell.factor = doc["load_cell"]["factor"];
+					load_cell.offset = doc["load_cell"]["offset"];
+				}
 			} else {
 				Serial.println("Error file read");
 			}
@@ -146,7 +162,21 @@ public:
 	}
 	// Future: more than two "levels" in loc, new value not int?
 	// Rewrites into the JSON and file
+	// Make it a template
 	void reWrite(const char ** loc, int & value, int new_value) {
+		value				= new_value;
+		doc[loc[0]][loc[1]] = value;
+		std::string contents;
+		serializeJson(doc, contents);
+		const char * contents_const = contents.c_str();
+		if (SD.exists("state.js"))
+			SD.remove("state.js");
+		File file = SD.open("state.js", FILE_WRITE);
+		file.write(contents_const);
+		file.close();
+	}
+
+	void reWrite(const char ** loc, float & value, float new_value) {
 		value				= new_value;
 		doc[loc[0]][loc[1]] = value;
 		std::string contents;
