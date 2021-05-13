@@ -1,6 +1,10 @@
 #pragma once
 #include <KPFoundation.hpp>
 #include <Adafruit_ADS1015.h>
+#include <array>
+#include <algorithm>
+#include <iterator>
+#define AVG 10
 
 class LoadCell : public KPComponent {
 public:
@@ -17,12 +21,16 @@ public:
 		tare = 0;
 		reTare();
 	}
-	int getLoad() {
-		int32_t adcTotal = 0;
-		for (int i = 0; i < 10; ++i) {
-			adcTotal += readGrams();
+	float read() {
+		std::array<float, AVG> load_arr;
+		for (int i = 0; i < AVG; ++i) {
+			load_arr.at(i) = (float)ads.readADC_SingleEnded(0);
 		}
-		return adcTotal / 10;
+		std::sort(load_arr.begin(), load_arr.end());
+		return load_arr.at(load_arr.size() / 2);
+	}
+	float getLoad() {
+		return read() * factor - offset;
 	}
 	void reTare() {
 		tare = getLoad();
@@ -35,7 +43,7 @@ public:
 		return ads.readADC_SingleEnded(0);
 	}
 
-	int32_t readGrams() {
-		return ads.readADC_SingleEnded(0) * factor - offset;
+	float readGrams() {
+		return ((float)ads.readADC_SingleEnded(0)) * factor - offset;
 	}
 };
