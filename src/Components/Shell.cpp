@@ -362,6 +362,18 @@ void Shell::setup() {
 		"file_reset",
 		1,
 		cmnd_lambda { SD.remove(args[1].c_str()); });
+
+	addFunction(
+		"load_spam",
+		1,
+		cmnd_lambda {
+			int no = stoi(args[1]);
+			for (int i = 0; i < no; ++i) {
+				Serial.print(i + 1);
+				Serial.print(". ");
+				Serial.println(app.load_cell.readGrams());
+			}
+		});
 	/*
 		addFunction(
 			"write_float_test",
