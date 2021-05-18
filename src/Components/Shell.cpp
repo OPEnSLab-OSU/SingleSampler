@@ -359,6 +359,11 @@ void Shell::setup() {
 		});
 
 	addFunction(
+		"tare_load",
+		0,
+		cmnd_lambda { app.load_cell.reTare(); });
+
+	addFunction(
 		"file_reset",
 		1,
 		cmnd_lambda { SD.remove(args[1].c_str()); });
