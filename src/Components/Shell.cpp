@@ -359,6 +359,14 @@ void Shell::setup() {
 		});
 
 	addFunction(
+		"load_cell_offset_auto",
+		0,
+		cmnd_lambda {
+			const char * loc[2] = {"load_cell", "offset"};
+			app.reWrite(loc, app.load_cell.offset, app.load_cell.getLoad());
+		});
+
+	addFunction(
 		"tare_load",
 		0,
 		cmnd_lambda { app.load_cell.reTare(); });
@@ -379,6 +387,7 @@ void Shell::setup() {
 				Serial.println(app.load_cell.readGrams());
 			}
 		});
+
 	/*
 		addFunction(
 			"write_float_test",
