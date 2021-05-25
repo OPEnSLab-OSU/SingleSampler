@@ -1,10 +1,12 @@
 #pragma once
 #include <KPFoundation.hpp>
 #include <Adafruit_ADS1015.h>
+#ifdef MEDIAN
 #include <array>
 #include <algorithm>
 #include <iterator>
-#define AVG 10
+#endif
+#define AVG 41
 
 class LoadCell : public KPComponent {
 public:
@@ -22,12 +24,22 @@ public:
 		reTare();
 	}
 	float read() {
+		#ifdef MEDIAN
 		std::array<float, AVG> load_arr;
 		for (int i = 0; i < AVG; ++i) {
 			load_arr.at(i) = (float)ads.readADC_SingleEnded(0);
 		}
 		std::sort(load_arr.begin(), load_arr.end());
 		return load_arr.at(load_arr.size() / 2);
+		#endif
+		#ifndef MEDIAN
+		float sum = 0;
+		for (int i = 0; i < AVG; ++i)
+		{
+			sum += (float) ads.readADC_SingleEnded(0);
+		}
+		return sum / AVG;
+		#endif
 	}
 	float getLoad() {
 		return read() * factor - offset;
