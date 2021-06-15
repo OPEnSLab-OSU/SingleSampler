@@ -1,11 +1,24 @@
 #include <Application/Application.hpp>
-
+#ifdef WATCHDOG
+	#include <Adafruit_SleepyDog.h>
+#endif
 Application app;
 
 void setup() {
-  app.setup();
+	app.setup();
+
+	// Watchdog timer
+
+#ifdef WATCHDOG
+	Watchdog.enable(4000);
+#endif
 }
 
 void loop() {
-  app.update();
+	app.update();
+
+	// Watchdog timer
+#ifdef WATCHDOG
+	Watchdog.reset();
+#endif
 }

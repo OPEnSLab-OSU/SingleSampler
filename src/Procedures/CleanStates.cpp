@@ -4,7 +4,7 @@
 // Idle
 void CleanStateIdle::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
-	if (app.current_sample < app.last_sample)
+	if (app.csm.current_cycle < app.csm.last_cycle)
 		setTimeCondition(time, [&]() { sm.transitionTo(CleanStateNames::SAMPLE); });
 	else
 		sm.transitionTo(CleanStateNames::FINISHED);
@@ -28,10 +28,12 @@ void CleanStateFlush::enter(KPStateMachine & sm) {
 	app.shift.setPin(TPICDevices::FLUSH_VALVE, HIGH);  // write in skinny
 	app.shift.write();								   // write shifts wide
 	app.pump.on();
+	app.led.setClean();
 
 	setTimeCondition(time, [&]() { sm.transitionTo(CleanStateNames::SAMPLE); });
 }
 
+// Sample
 void CleanStateSample::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 	app.shift.setAllRegistersLow();
@@ -41,12 +43,15 @@ void CleanStateSample::enter(KPStateMachine & sm) {
 	setTimeCondition(time, [&]() { sm.transitionTo(CleanStateNames::STOP); });
 }
 
+// Leave sample
 void CleanStateSample::leave(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
-	app.iterateValve();
+	app.csm.current_cycle += 1;
 }
 
+// Finished
 void CleanStateFinished::enter(KPStateMachine & sm) {
-	Application & app  = *static_cast<Application *>(sm.controller);
-	app.current_sample = 0;
+	Application & app = *static_cast<Application *>(sm.controller);
+	app.led.setFinished();
+	app.csm.reset();
 }

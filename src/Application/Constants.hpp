@@ -1,14 +1,17 @@
 #pragma once
 
 namespace HardwarePins {
+	constexpr int FLUSH_VALVE	 = A1;
+	constexpr int WATER_VALVE	 = A2;
+	constexpr int PIXEL			 = A3;
 	constexpr int SHFT_REG_LATCH = 9;
 	constexpr int SHFT_REG_CLOCK = 11;
 	constexpr int SHFT_REG_DATA	 = 12;
 	constexpr int MOTOR_REVERSE	 = 5;
 	constexpr int MOTOR_FORWARDS = 6;
 	constexpr int RUN_BUTTON	 = 13;
-	constexpr int PURGE_BUTTON	 = A4;
-	constexpr int CLEAN_BUTTON	 = A3;
+	constexpr int CLEAN_BUTTON	 = A4;
+	constexpr int SD			 = 10;
 }  // namespace HardwarePins
 
 // flush pin is the same
@@ -16,15 +19,10 @@ namespace HardwarePins {
 namespace DefaultTimes {
 	const int FLUSH_TIME  = 50;
 	const int SAMPLE_TIME = 60;
-	const int PURGE_TIME  = 2;
+	const int PURGE_TIME  = 0;
 	const int IDLE_TIME	  = 3600 - FLUSH_TIME - SAMPLE_TIME - PURGE_TIME;
 	const int SETUP_TIME  = 0;
 }  // namespace DefaultTimes
-
-namespace DefaultTimesEmpty {
-	const int PURGE_TIME = 40;
-	const int IDLE_TIME	 = 0;
-}  // namespace DefaultTimesEmpty
 
 namespace DefaultTimesClean {
 	const int SAMPLE_TIME = 5;
@@ -37,10 +35,14 @@ namespace DefaultTimesButton {
 }
 
 namespace TPICDevices {
-	constexpr int INTAKE_POS	= 0;
-	constexpr int INTAKE_NEG	= 1;
-	constexpr int AIR_VALVE		= 2;
-	constexpr int ALCOHOL_VALVE = 3;
-	constexpr int FLUSH_VALVE	= 5;
-	constexpr int WATER_VALVE	= 8;
+	constexpr int INTAKE_POS  = 0;
+	constexpr int INTAKE_NEG  = 1;
+	constexpr int FLUSH_VALVE = 3;
+	constexpr int WATER_VALVE = 2;
+	constexpr int PIXEL		  = A3;
 }  // namespace TPICDevices
+
+namespace DefaultPressures {
+	constexpr int MIN_PRESSURE = 400;	// 600
+	constexpr int MAX_PRESSURE = 1300;	// 990
+}  // namespace DefaultPressures

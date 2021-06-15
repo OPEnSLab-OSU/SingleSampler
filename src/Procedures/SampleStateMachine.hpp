@@ -11,11 +11,30 @@ public:
 
 	void setup() override {
 		registerState(SampleStateIdle(), SampleStateNames::IDLE);
-		registerState(SampleStateStop(), SampleStateNames::STOP);
-		registerState(SampleStateFlush(), SampleStateNames::FLUSH);
-		registerState(SampleStateSample(), SampleStateNames::SAMPLE);
+		registerState(SampleStateStop(), SampleStateNames::STOP, SampleStateNames::IDLE);
 		registerState(SampleStateFinished(), SampleStateNames::FINISHED);
-		registerState(SampleStatePurge(), SampleStateNames::PURGE);
-		registerState(SampleStateSetup(), SampleStateNames::SETUP);
+
+		registerState(SampleStateSetup(),
+			SampleStateNames::SETUP,
+			SampleStateNames::FILL_TUBE_ONRAMP);
+		registerState(SampleStateFillTubeOnramp(),
+			SampleStateNames::FILL_TUBE_ONRAMP,
+			SampleStateNames::FILL_TUBE);
+		registerState(SampleStateFillTube(),
+			SampleStateNames::FILL_TUBE,
+			SampleStateNames::PRESSURE_TARE);
+		registerState(SampleStatePressureTare(),
+			SampleStateNames::PRESSURE_TARE,
+			SampleStateNames::ONRAMP);
+
+		registerState(SampleStateOnramp(), SampleStateNames::ONRAMP, SampleStateNames::FLUSH);
+		registerState(SampleStateFlush(), SampleStateNames::FLUSH, SampleStateNames::BETWEEN_PUMP);
+		registerState(SampleStateBetweenPump(),
+			SampleStateNames::BETWEEN_PUMP,
+			SampleStateNames::BETWEEN_VALVE);
+		registerState(SampleStateBetweenValve(),
+			SampleStateNames::BETWEEN_VALVE,
+			SampleStateNames::SAMPLE);
+		registerState(SampleStateSample(), SampleStateNames::SAMPLE, SampleStateNames::STOP);
 	}
 };

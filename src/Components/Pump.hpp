@@ -1,5 +1,10 @@
 #pragma once
 #include <KPFoundation.hpp>
+#include <Application/Application.hpp>
+#include <Application/Constants.hpp>
+#include <KPFoundation.hpp>
+#include <SD.h>
+#include <ArduinoJson.h>
 
 enum class Direction { normal, reverse };
 
