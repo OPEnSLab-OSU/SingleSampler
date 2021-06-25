@@ -1,16 +1,13 @@
 #pragma once
 
 namespace HardwarePins {
-	constexpr int FLUSH_VALVE	 = A1;
-	constexpr int WATER_VALVE	 = A2;
-	constexpr int PIXEL			 = A3;
 	constexpr int SHFT_REG_LATCH = 9;
 	constexpr int SHFT_REG_CLOCK = 11;
 	constexpr int SHFT_REG_DATA	 = 12;
 	constexpr int MOTOR_REVERSE	 = 5;
 	constexpr int MOTOR_FORWARDS = 6;
 	constexpr int RUN_BUTTON	 = 13;
-	constexpr int CLEAN_BUTTON	 = A4;
+	constexpr int CLEAN_BUTTON	 = A3;
 	constexpr int SD			 = 10;
 }  // namespace HardwarePins
 
@@ -39,7 +36,7 @@ namespace TPICDevices {
 	constexpr int INTAKE_NEG  = 1;
 	constexpr int FLUSH_VALVE = 3;
 	constexpr int WATER_VALVE = 2;
-	constexpr int PIXEL		  = A3;
+	constexpr int PIXEL		  = A4;
 }  // namespace TPICDevices
 
 namespace DefaultPressures {
