@@ -16,6 +16,7 @@ namespace SampleStateNames {
 	constexpr const char * FILL_TUBE_ONRAMP = "sample-state-fill-tube-onramp";
 	constexpr const char * FILL_TUBE		= "sample-state-fill-tube";
 	constexpr const char * PRESSURE_TARE	= "sample-state-pressure-tare";
+	constexpr const char * LOG_BUFFER		= "sample-state-log-buffer";
 };	// namespace SampleStateNames
 
 class SampleStateIdle : public KPState {
@@ -104,4 +105,10 @@ class SampleStatePressureTare : public KPState {
 	long sum;
 	int count;
 	int range_size = 200;
+};
+
+class SampleStateLogBuffer : public KPState {
+	void enter(KPStateMachine & sm) override;
+	void leave(KPStateMachine & sm) override;
+	int time = 1;
 };

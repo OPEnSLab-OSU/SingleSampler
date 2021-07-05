@@ -102,12 +102,6 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 void SampleStateSample::leave(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 
-	// testing
-	SSD.print("Load @ end of cycle ");
-	SSD.print(app.sm.current_cycle);
-	SSD.print(": ");
-	SSD.println((double)app.load_cell.getLoad());
-
 	SSD.print("Temp: ");
 	SSD.println((double)app.pressure_sensor.getTemp());
 
@@ -225,4 +219,17 @@ void SampleStatePressureTare::leave(KPStateMachine & sm) {
 	SSD.print("Min pressure (set manually): ");
 	SSD.println(app.pressure_sensor.min_pressure);
 #endif
+}
+
+void SampleStateLogBuffer::enter(KPStateMachine & sm) {
+	Application & app = *static_cast<Application *>(sm.controller);
+	setTimeCondition(time, [&]() { sm.next(); });
+}
+
+void SampleStateLogBuffer::leave(KPStateMachine & sm) {
+	Application & app = *static_cast<Application *>(sm.controller);
+	SSD.print("Load @ end of cycle ");
+	SSD.print(app.sm.current_cycle);
+	SSD.print(": ");
+	SSD.println((double)app.load_cell.getLoad());
 }
