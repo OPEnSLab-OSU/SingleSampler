@@ -342,6 +342,7 @@ void Shell::setup() {
 		"pump_off",
 		0,
 		cmnd_lambda { app.pump.off(); });
+
 	addFunction(
 		"load_cell_offset",
 		1,
