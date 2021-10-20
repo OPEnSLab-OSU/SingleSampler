@@ -2,9 +2,9 @@
 #include <KPFoundation.hpp>
 #include <Adafruit_ADS1015.h>
 #ifdef MEDIAN
-#include <array>
-#include <algorithm>
-#include <iterator>
+	#include <array>
+	#include <algorithm>
+	#include <iterator>
 #endif
 #define AVG 41
 
@@ -24,29 +24,44 @@ public:
 		reTare();
 	}
 	float read() {
-		#ifdef MEDIAN
+#ifdef MEDIAN
 		std::array<float, AVG> load_arr;
 		for (int i = 0; i < AVG; ++i) {
 			load_arr.at(i) = (float)ads.readADC_SingleEnded(0);
 		}
 		std::sort(load_arr.begin(), load_arr.end());
 		return load_arr.at(load_arr.size() / 2);
-		#endif
-		#ifndef MEDIAN
+#endif
+#ifndef MEDIAN
 		float sum = 0;
-		for (int i = 0; i < AVG; ++i)
-		{
-			sum += (float) ads.readADC_SingleEnded(0);
+		for (int i = 0; i < AVG; ++i) {
+			sum += (float)ads.readADC_SingleEnded(0);
 		}
 		return sum / AVG;
-		#endif
+#endif
 	}
+
 	float getLoad() {
 		return read() * factor - offset;
 	}
-	void reTare() {
-		tare = getLoad();
+
+#ifdef INFO_SPAM
+	float getLoadPrint() {
+		float load = getLoad();
+		Serial.println("FLAGGED LOAD: ", load);
+		return load;
 	}
+#endif
+
+	void reTare() {
+#ifndef INFO_SPAM
+		tare = getLoad();
+#endif
+#ifdef INFO_SPAM
+		tare = getLoadPrint();
+#endif
+	}
+
 	int getTaredLoad() {
 		return getLoad() - tare;
 	}

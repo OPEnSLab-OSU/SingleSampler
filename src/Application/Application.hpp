@@ -83,6 +83,12 @@ public:
 			clean_button.listen();
 		}
 		KPController::update();
+#ifdef INFO_SPAM
+		// Note: this probably has severe impacts on performance.
+		// Only use in the case of a weird load/pressure bug.
+		print("Load: ", load_cell.getLoad());
+		println("; Pressure: ", pressure_sensor.getPressure());
+#endif
 	}
 	// Serial Monitor
 	void commandReceived(const char * line, size_t size) override {
