@@ -48,7 +48,8 @@ public:
 #ifdef INFO_SPAM
 	float getLoadPrint() {
 		float load = getLoad();
-		Serial.println("FLAGGED LOAD: ", load);
+		Serial.print("FLAGGED LOAD: ");
+		Serial.println(load);
 		return load;
 	}
 #endif
