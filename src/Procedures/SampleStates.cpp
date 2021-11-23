@@ -87,7 +87,6 @@ void SampleStateSample::leave(KPStateMachine & sm) {
 	SSD.println((double)app.pressure_sensor.getTemp());
 
 	app.sm.current_cycle += 1;
-	app.load_cell.reTare();
 }
 
 // Finished
@@ -111,7 +110,6 @@ void SampleStatePurge::enter(KPStateMachine & sm) {
 void SampleStateSetup::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 	app.led.setRun();
-	app.load_cell.reTare();
 	setTimeCondition(time, [&]() { sm.next(); });
 }
 
@@ -207,4 +205,10 @@ void SampleStateLogBuffer::leave(KPStateMachine & sm) {
 	SSD.print(app.sm.current_cycle);
 	SSD.print(": ");
 	SSD.println((double)app.load_cell.getLoad());
+}
+
+void SampleStateLoadBuffer::enter(KPStateMachine & sm) {
+	Application & app = *static_cast<Application *>(sm.controller);
+	app.load_cell.reTare();
+	setTimeCondition(time, [&]() { sm.next(); });
 }

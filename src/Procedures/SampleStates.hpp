@@ -17,6 +17,7 @@ namespace SampleStateNames {
 	constexpr const char * FILL_TUBE		= "sample-state-fill-tube";
 	constexpr const char * PRESSURE_TARE	= "sample-state-pressure-tare";
 	constexpr const char * LOG_BUFFER		= "sample-state-log-buffer";
+	constexpr const char * LOAD_BUFFER		= "sample-state-load-buffer";
 };	// namespace SampleStateNames
 
 class SampleStateIdle : public KPState {
@@ -98,6 +99,7 @@ public:
 
 // This sets the normal pressure range on the first cycle
 class SampleStatePressureTare : public KPState {
+public:
 	void enter(KPStateMachine & sm) override;
 	void update(KPStateMachine & sm) override;
 	void leave(KPStateMachine & sm) override;
@@ -108,7 +110,14 @@ class SampleStatePressureTare : public KPState {
 };
 
 class SampleStateLogBuffer : public KPState {
+public:
 	void enter(KPStateMachine & sm) override;
 	void leave(KPStateMachine & sm) override;
+	int time = 1;
+};
+
+class SampleStateLoadBuffer : public KPState {
+public:
+	void enter(KPStateMachine & sm) override;
 	int time = 1;
 };
