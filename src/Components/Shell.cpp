@@ -145,12 +145,12 @@ void Shell::setup() {
 	addFunction(
 		"get_load",
 		0,
-		cmnd_lambda { Serial.println(app.load_cell.getLoad()); });
+		cmnd_lambda { Serial.println(app.load_cell.getLoad(100)); });
 
 	addFunction(
 		"get_tared_load",
 		0,
-		cmnd_lambda { Serial.println(app.load_cell.getTaredLoad()); });
+		cmnd_lambda { Serial.println(app.load_cell.getTaredLoad(200)); });
 
 	addFunction(
 		"volt_load",
@@ -364,13 +364,13 @@ void Shell::setup() {
 		0,
 		cmnd_lambda {
 			const char * loc[2] = {"load_cell", "offset"};
-			app.reWrite(loc, app.load_cell.offset, app.load_cell.getLoad());
+			app.reWrite(loc, app.load_cell.offset, app.load_cell.getLoad(200));
 		});
 
 	addFunction(
 		"tare_load",
 		0,
-		cmnd_lambda { app.load_cell.reTare(); });
+		cmnd_lambda { app.load_cell.reTare(200); });
 
 	addFunction(
 		"file_reset",

@@ -86,7 +86,8 @@ public:
 #ifdef INFO_SPAM
 		// Note: this probably has severe impacts on performance.
 		// Only use in the case of a weird load/pressure bug.
-		print("Load: ", load_cell.getLoad());
+		print("Load 100: ");
+		load_cell.getLoadPrint(100);
 		println("; Pressure: ", pressure_sensor.getPressure());
 #endif
 	}
@@ -124,38 +125,67 @@ public:
 				if (doc.containsKey("sample")) {
 					sm.getState<SampleStateFlush>(SampleStateNames::FLUSH).time
 						= doc["sample"]["flush_time"];
+					Serial.print("Flush time loaded from SD: ");
+					Serial.println(sm.getState<SampleStateFlush>(SampleStateNames::FLUSH).time);
 					sm.getState<SampleStateSample>(SampleStateNames::SAMPLE).time
 						= doc["sample"]["sample_time"];
+					Serial.print("Sample time loaded from SD: ");
+					Serial.println(sm.getState<SampleStateSample>(SampleStateNames::SAMPLE).time);	
 					sm.getState<SampleStateSample>(SampleStateNames::SAMPLE).volume
 						= doc["sample"]["sample_volume"];
+					Serial.print("Sample mass loaded from SD: ");
+					Serial.println(sm.getState<SampleStateSample>(SampleStateNames::SAMPLE).volume);
 					sm.getState<SampleStateIdle>(SampleStateNames::IDLE).time
 						= doc["sample"]["idle_time"];
+					Serial.print("Idle time loaded from SD: ");
+					Serial.println(sm.getState<SampleStateIdle>(SampleStateNames::IDLE).time);
 					sm.getState<SampleStateSetup>(SampleStateNames::SETUP).time
 						= doc["sample"]["setup_time"];
+					Serial.print("Setup time loaded from SD: ");
+					Serial.println(sm.getState<SampleStateSetup>(SampleStateNames::SETUP).time);
 					sm.last_cycle = doc["sample"]["last_cycle"];
+					Serial.print("Last sample cycle number loaded from SD: ");
+					Serial.println(sm.last_cycle);
 				}
 				if (doc.containsKey("clean")) {
 					csm.getState<CleanStateSample>(CleanStateNames::SAMPLE).time
 						= doc["clean"]["sample_time"];
+					Serial.print("Clean sample time loaded from SD: ");
+					Serial.println(csm.getState<CleanStateSample>(CleanStateNames::SAMPLE).time);
 					csm.getState<CleanStateIdle>(CleanStateNames::IDLE).time
 						= doc["clean"]["idle_time"];
+					Serial.print("Clean idle time loaded from SD: ");
+					Serial.println(csm.getState<CleanStateIdle>(CleanStateNames::IDLE).time);
 					csm.getState<CleanStateFlush>(CleanStateNames::FLUSH).time
 						= doc["clean"]["flush_time"];
+					Serial.print("Clean flush time loaded from SD: ");
+					Serial.println(csm.getState<CleanStateFlush>(CleanStateNames::FLUSH).time);	
 					csm.last_cycle = doc["clean"]["last_cycle"];
+					Serial.print("Last clean cycle number loaded from SD: ");
+					Serial.println(csm.last_cycle);
 				}
 
 				// this is an alternative way of doing containsKey
 				// which is more efficient when checking indiv objs
 				JsonVariant pressure = doc["pressure"]["max_pressure"];
-				if (!pressure.isNull())
+				if (!pressure.isNull()){
 					pressure_sensor.max_pressure = pressure;
+					Serial.print("Max pressure loaded from SD: ");
+					Serial.println(pressure_sensor.max_pressure);
+				}
 				pressure = doc["pressure"]["min_pressure"];
-				if (!pressure.isNull())
+				if (!pressure.isNull()){
 					pressure_sensor.min_pressure = pressure;
-
+					Serial.print("Min pressure loaded from SD: ");
+					Serial.println(pressure_sensor.min_pressure);
+				}
 				if (doc.containsKey("load_cell")) {
 					load_cell.factor = doc["load_cell"]["factor"];
 					load_cell.offset = doc["load_cell"]["offset"];
+					Serial.print("From SD card: Load cell factor ");
+					Serial.print(load_cell.factor);
+					Serial.print(" and offset ");
+					Serial.println(load_cell.offset);
 				}
 			} else {
 				Serial.println("Error file read");

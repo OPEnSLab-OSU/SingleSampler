@@ -11,8 +11,6 @@ public:
 
 	void setup() override {
 		registerState(SampleStateIdle(), SampleStateNames::IDLE);
-		registerState(SampleStateStop(), SampleStateNames::STOP, SampleStateNames::LOG_BUFFER);
-		registerState(SampleStateLogBuffer(), SampleStateNames::LOG_BUFFER, SampleStateNames::IDLE);
 		registerState(SampleStateFinished(), SampleStateNames::FINISHED);
 
 		registerState(SampleStateSetup(),
@@ -44,5 +42,8 @@ public:
 			SampleStateNames::SAMPLE);
 
 		registerState(SampleStateSample(), SampleStateNames::SAMPLE, SampleStateNames::STOP);
+
+		registerState(SampleStateStop(), SampleStateNames::STOP, SampleStateNames::LOG_BUFFER);
+		registerState(SampleStateLogBuffer(), SampleStateNames::LOG_BUFFER, SampleStateNames::IDLE);
 	}
 };
