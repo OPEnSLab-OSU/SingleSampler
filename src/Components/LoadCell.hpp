@@ -1,79 +1,48 @@
 #pragma once
 #include <KPFoundation.hpp>
-#include <Adafruit_ADS1015.h>
-#ifdef MEDIAN
-	#include <array>
-	#include <algorithm>
-	#include <iterator>
-#endif
+#include <ADS1232.h>
+
+#define _dout 0
+#define _sclk 1
+#define _pdwn 5
 
 class LoadCell : public KPComponent {
 public:
-	Adafruit_ADS1115 ads;
+	ADS1232 weight = ADS1232(_pdwn, _sclk, _dout);
 	float tare;
 
 	float factor = 7378.478054;
 	float offset = -73328.85841;
 
-
 	LoadCell(const char * name, KPController * controller)
-		: KPComponent(name, controller), ads(0x48) {}
+		: KPComponent(name, controller) {}
 	void setup() override {
-		ads.setGain(GAIN_ONE);
-		ads.begin();
+		weight.power_up();
 		tare = 0;
 		print("Initial load; ");
 		println(reTare(200));
 	}
-	float read(int qty) {
-		#ifdef MEDIAN
-			std::array<float, qty> load_arr;
+	long read(int qty) {
+		#ifdef LOAD_CAL
+			//display every reading
 			for (int i = 0; i < qty; ++i) {
-				load_arr.at(i) = (float)ads.readADC_SingleEnded(0);
+				long reading = weight.raw_read(1);
+				println();
+				print("Load reading ");
+				print(i);
+				print(";; ");
+				println(reading);
 			}
-				std::sort(load_arr.begin(), load_arr.end());
-			return load_arr.at(load_arr.size() / 2);
 		#endif
-		#ifndef MEDIAN
-				float sum = 0;
-				int count = 0;
-				for (int i = 0; i < qty; ++i) {
-					//sum += (float)ads.readADC_SingleEnded(0);
-					int16_t reading = ads.readADC_SingleEnded(0);
-					#ifdef LOAD_CAL
-						println();
-						print("Load reading ");
-						print(i);
-						print(";; ");
-						println(reading);
-					#endif
-					if (qty<70){
-						sum += reading;
-						count += 1;
-						//print("Averaging all values over less than 70 readings, current sum: ");
-						//println(sum);
-					}				
-					else{
-						if (i>70){
-							sum += reading;
-							count += 1;
-							//print("Averaging starting with value 71, current sum: ");
-							//print(sum);
-							//print(", count ");
-							//println(count);
-						}
-					}
-
-				}
-				return sum / count;
+		#ifndef LOAD_CAL
+			// get average value for qty reads
+			long reading = weight.raw_read(qty);
 		#endif
+		return reading;
 	}
 
 	float getLoad(int qty) {
 		// gets factor and offset from this file during setup, gets factor and offset from SD after
-		//return read(qty) * factor - offset;
-		//factor = 7378.478054;
-		//offset = -73328.85841;
 		return factor * log(read(qty)) + offset;
 	}
 
@@ -93,12 +62,11 @@ public:
 		return getLoad(qty) - tare;
 	}
 
-	float getVoltage() {
-		return ads.readADC_SingleEnded(0);
+	long getVoltage() {
+		return weight.raw_read(1);
 	}
 
 	float readGrams() {
-		//return ((float)ads.readADC_SingleEnded(0)) * factor - offset;
-		return factor * log(((float)ads.readADC_SingleEnded(0))) + offset;
+		return factor * log(((float)weight.raw_read(1))) + offset;
 	}
 };
