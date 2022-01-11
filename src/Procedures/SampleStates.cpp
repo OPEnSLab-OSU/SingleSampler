@@ -1,6 +1,7 @@
 #include <Procedures/SampleStates.hpp>
 #include <Application/Application.hpp>
 #include <FileIO/SerialSD.hpp>
+#include <time.h>
 
 bool pumpOff = 1;
 bool flushVOff = 1;
@@ -29,6 +30,8 @@ void SampleStateIdle::enter(KPStateMachine & sm) {
 void SampleStateStop::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 	app.pump.off();
+	SSD.println("Sample Stop Time");
+	SSD.println(app.power.getTime());
 	pumpOff = 1;
 	SSD.println("Pump off");
 
@@ -81,6 +84,9 @@ void SampleStateFlush::enter(KPStateMachine & sm) {
 void SampleStateSample::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 	
+	SSD.println("Sample Start Time");
+	SSD.println(app.power.getTime());
+
 	if (sampleVOff){
 		app.shift.setAllRegistersLow();
 		app.shift.setPin(TPICDevices::WATER_VALVE, HIGH);
@@ -98,7 +104,7 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 
 	auto const condition = [&]() {
 		bool t		  = timeSinceLastTransition() >= secsToMillis(time);
-		bool load	  = app.load_cell.getTaredLoad(85) >= volume;
+		bool load	  = app.load_cell.getTaredLoad(1) >= volume;
 		bool pressure = !app.pressure_sensor.checkPressure();
 		if (t)
 			SSD.println("Sample state ended due to: time");
@@ -261,15 +267,17 @@ void SampleStateLogBuffer::enter(KPStateMachine & sm) {
 	SSD.print("Load at end of cycle ");//+ app.sm.current_cycle + ": " + (double)app.load_cell.getLoad());
 	SSD.print(app.sm.current_cycle);
 	SSD.print("; ");
-	SSD.println((float)app.load_cell.getLoad(200));
+	SSD.println((float)app.load_cell.getLoad(5));
 	sm.next();
 }
 
 void SampleStateLoadBuffer::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
-	SSD.print("Tare load; ");
-	SSD.println((float)app.load_cell.reTare(200));
+	SSD.println("Start Time");
+	SSD.println(now());
 	SSD.print("Temp: ");
 	SSD.println((float)app.pressure_sensor.getTemp());
+	SSD.print("Tare load; ");
+	SSD.println((float)app.load_cell.reTare(5));
 	sm.next();
 }

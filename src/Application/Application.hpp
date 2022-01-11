@@ -65,9 +65,9 @@ public:
 		addComponent(power);
 		addComponent(led);
 		addComponent(pressure_sensor);
+		SD.begin(HardwarePins::SD);
 		addComponent(load_cell);
 		KPSerialInput::sharedInstance().addObserver(this);
-		SD.begin(HardwarePins::SD);
 		loadInfo();
 	}
 
@@ -183,9 +183,9 @@ public:
 					load_cell.factor = doc["load_cell"]["factor"];
 					load_cell.offset = doc["load_cell"]["offset"];
 					Serial.print("From SD card: Load cell factor ");
-					Serial.print(load_cell.factor);
+					Serial.print(load_cell.factor,6);
 					Serial.print(" and offset ");
-					Serial.println(load_cell.offset);
+					Serial.println(load_cell.offset,3);
 				}
 			} else {
 				Serial.println("Error file read");
