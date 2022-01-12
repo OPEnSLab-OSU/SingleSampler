@@ -1,28 +1,40 @@
 #pragma once
 #include <KPFoundation.hpp>
-#include <ADS123X.h>
+#include <SPI.h>
+#include <ADS1232.h>
 #include <FileIO/SerialSD.hpp>
 #include <time.h>
 
-#define SCALE_DOUT   5
-#define SCALE_SCLK   0
+#define SPI_SCK     13
+#define SPI_MOSI    11
+
+//SPI_MISO same as DOUT
+//SPI_CS same as SCLK
+#define SPI_MISO     5
+#define SCALE_CS     0
 #define SCALE_PDWN   A3
+
+
 
 class LoadCell : public KPComponent {
 public:
 
-	ADS123X weigh;
-
 	float tare;
 	float factor = 0.002377;
 	float offset = -19954.570;
-	long reading = 0;
-	long sum;
+  	int32_t reading;
+	int32_t sum;
 
 	LoadCell(const char * name, KPController * controller)
 		: KPComponent(name, controller) {}
 	void setup() override {
-		weigh.begin(SCALE_DOUT, SCALE_SCLK, SCALE_PDWN);
+ 		/* Initialize SPI bus */
+  		SPI.setSCK(SPI_SCK);
+  		SPI.setMOSI(SPI_MOSI);
+  		SPI.setMISO(SPI_MISO);
+  		SPI.begin();
+
+		scale_adc.init(ADS1232::GAIN1);
 		tare = 0;
 		SSD.println("Start Time");
 		SSD.println(now());
@@ -30,24 +42,21 @@ public:
 		SSD.println(reTare(50));
 	}
 	long read(int qty) {
-		#ifdef LOAD_CAL
+
 			println();
 			sum = 0;
 			//display every reading and print to SD
 			for (int i = 0; i < qty; ++i) {
-  				weigh.read(AIN1, reading);
+				reading = scale_adc.read();
+				#ifdef LOAD_CAL
 				SSD.print("Load reading ");
 				SSD.print(i);
 				SSD.print(";; ");
 				SSD.println(reading);
+				#endif
 				sum += reading;
 			}
 			reading = sum/qty;
-		#endif
-		#ifndef LOAD_CAL
-			// get average value for qty reads
-			weigh.read(AIN1, reading);
-		#endif
 		return reading;
 	}
 
@@ -73,10 +82,10 @@ public:
 	}
 
 	long getVoltage() {
-		return weigh.read(AIN1, reading);
+		return reading = scale_adc.read();
 	}
 
 	float readGrams() {
-		return factor * weigh.read(AIN1, reading) + offset;
+		return factor * reading = scale_adc.read() + offset;
 	}
 };
