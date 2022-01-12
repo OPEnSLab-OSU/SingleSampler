@@ -106,12 +106,13 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 		bool t		  = timeSinceLastTransition() >= secsToMillis(time);
 		bool load	  = app.load_cell.getTaredLoad(1) >= volume;
 		bool pressure = !app.pressure_sensor.checkPressure();
+		if (load)
+			SSD.println("Sample state ended due to: load ");
 		if (t)
 			SSD.println("Sample state ended due to: time");
 		if (pressure)
 			SSD.println("Sample state ended due to: pressure");
-		if (load)
-			SSD.println("Sample state ended due to: load ");
+
 		return t || load || pressure;
 	};
 	setCondition(condition, [&]() { sm.next(); });
@@ -267,8 +268,8 @@ void SampleStateLogBuffer::enter(KPStateMachine & sm) {
 	SSD.print("Load at end of cycle ");//+ app.sm.current_cycle + ": " + (double)app.load_cell.getLoad());
 	SSD.print(app.sm.current_cycle);
 	SSD.print("; ");
-	// need to keep under 4 seconds to not trigger watchdog timer
-	SSD.println((float)app.load_cell.getLoad(5));
+	// need to keep under 5 seconds to not trigger watchdog timer
+	SSD.println((float)app.load_cell.getLoad(3));
 	sm.next();
 }
 
@@ -279,7 +280,7 @@ void SampleStateLoadBuffer::enter(KPStateMachine & sm) {
 	SSD.print("Temp: ");
 	SSD.println((float)app.pressure_sensor.getTemp());
 	SSD.print("Tare load; ");
-	// need to keep under 4 seconds to not trigger watchdog timer
-	SSD.println((float)app.load_cell.reTare(5));
+	// need to keep under 5 seconds to not trigger watchdog timer
+	SSD.println((float)app.load_cell.reTare(3));
 	sm.next();
 }
