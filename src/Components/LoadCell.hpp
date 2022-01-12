@@ -8,10 +8,12 @@
 #define SCALE_SCLK   1
 #define SCALE_PDWN   5
 
-ADS123X weigh;
+
 
 class LoadCell : public KPComponent {
 public:
+
+	ADS123X weigh;
 
 	float tare;
 	float factor = 0.002377;

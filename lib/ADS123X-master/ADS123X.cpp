@@ -20,7 +20,7 @@ ADS123X::ADS123X() {
 ADS123X::~ADS123X() {
 }
 
-void ADS123X::begin(byte pin_DOUT, byte pin_SCLK, byte pin_PDWN, Gain gain, Speed speed){
+void ADS123X::begin(byte pin_DOUT, byte pin_SCLK, byte pin_PDWN){
   _pin_DOUT = pin_DOUT;
   _pin_SCLK = pin_SCLK;
   _pin_PDWN = pin_PDWN;
@@ -29,9 +29,6 @@ void ADS123X::begin(byte pin_DOUT, byte pin_SCLK, byte pin_PDWN, Gain gain, Spee
   pinMode(_pin_DOUT,  INPUT_PULLUP);
   pinMode(_pin_SCLK, OUTPUT);
   pinMode(_pin_PDWN, OUTPUT);
-  
- // setGain(gain);
- // setSpeed(speed);
   
   power_up();
 
@@ -158,7 +155,7 @@ ERROR_t ADS123X::read(Channel channel,long& value, bool Calibrating)
     int i=0;
     unsigned long start;
 	unsigned int waitingTime;
-	unsigned int SettlingTimeAfterChangeChannel=0;
+	unsigned int SettlingTimeAfterChangeChannel=405;
 
 /*	if(channel!=lastChannel){
 		setChannel(channel);
