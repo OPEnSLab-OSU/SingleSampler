@@ -1,17 +1,18 @@
 #pragma once
 #include <KPFoundation.hpp>
-#include <ADS1232.h>
+#include <ADS123X.h>
 #include <FileIO/SerialSD.hpp>
 #include <time.h>
 
-#define _dout 0
-#define _sclk 1
-#define _pdwn 5
+#define SCALE_DOUT   0
+#define SCALE_SCLK   1
+#define SCALE_PDWN   5
+
+ADS123X weigh;
 
 class LoadCell : public KPComponent {
 public:
 
-	ADS1232 weight = ADS1232(_pdwn, _sclk, _dout);
 	float tare;
 	float factor = 0.002377;
 	float offset = -19954.570;
@@ -21,7 +22,7 @@ public:
 	LoadCell(const char * name, KPController * controller)
 		: KPComponent(name, controller) {}
 	void setup() override {
-		weight.power_up();
+		weigh.begin(SCALE_DOUT, SCALE_SCLK, SCALE_PDWN);
 		tare = 0;
 		SSD.println("Start Time");
 		SSD.println(now());
@@ -35,7 +36,7 @@ public:
 			sum = 0;
 			//display every reading and print to SD
 			for (int i = 0; i < qty; ++i) {
-				reading = weight.raw_read(1);
+  				weigh.read(AIN1, reading);
 				SSD.print("Load reading ");
 				SSD.print(i);
 				SSD.print(";; ");
@@ -46,7 +47,7 @@ public:
 		#endif
 		#ifndef LOAD_CAL
 			// get average value for qty reads
-			reading = weight.raw_read(qty);
+			weigh.read(AIN1, reading);
 		#endif
 		return reading;
 	}
@@ -75,10 +76,10 @@ public:
 	}
 
 	long getVoltage() {
-		return weight.raw_read(1);
+		return weigh.read(AIN1, reading);
 	}
 
 	float readGrams() {
-		return factor * (long)weight.raw_read(1) + offset;
+		return factor * weigh.read(AIN1, reading) + offset;
 	}
 };
