@@ -22,8 +22,10 @@ class ADS1232
     ADS1232(byte pdwn, byte sclk, byte dout);
     ~ADS1232();
     bool is_ready();
+    bool safeWait();
     void power_up();
     void power_down();
+    void calibrateADC(); //this is the internal calibration method of the ADC , not the calculation of the calFactor
     void set_offset(long offset = 0);
     void set_scale(float scale = 1.0f);
     long _raw_read();

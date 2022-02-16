@@ -4,9 +4,9 @@
 #include <FileIO/SerialSD.hpp>
 #include <time.h>
 
-#define _dout 0
-#define _sclk 1
-#define _pdwn 5
+#define _dout A3
+#define _sclk 0
+#define _pdwn 1
 
 class LoadCell : public KPComponent {
 public:
@@ -29,7 +29,7 @@ public:
 		SSD.println(reTare(50));
 	}
 	long read(int qty) {
-		println("in read");
+		//println("in read");
 		#ifdef LOAD_CAL
 			println();
 			sum = 0;
@@ -53,7 +53,7 @@ public:
 
 	float getLoad(int qty) {
 		// gets factor and offset from this file during setup, gets factor and offset from SD after
-		println("in getLoad");
+		//println("in getLoad");
 		return factor * read(qty) + offset;
 	}
 
@@ -65,7 +65,7 @@ public:
 	}
 
 	float reTare(int qty) {
-		println("in reTare");
+		//println("in reTare");
 		tare = getLoad(qty);
 		return tare;
 	}
@@ -79,6 +79,7 @@ public:
 	}
 
 	float readGrams() {
+		//println("in readGrams");
 		return factor * (long)weight.raw_read(1) + offset;
 	}
 };

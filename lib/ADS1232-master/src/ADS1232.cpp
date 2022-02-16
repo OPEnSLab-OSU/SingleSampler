@@ -15,7 +15,7 @@ ADS1232::ADS1232(byte pdwn, byte sclk, byte dout) {
 
   pinMode(PDWN, OUTPUT);
   pinMode(SCLK, OUTPUT);
-  pinMode(DOUT, INPUT);
+  pinMode(DOUT, INPUT_PULLUP);
 }
 
 ADS1232::~ADS1232() {
@@ -24,14 +24,42 @@ ADS1232::~ADS1232() {
 bool ADS1232::is_ready() {
   return digitalRead(DOUT) == LOW;
 }
+
+//from jousis library
+bool ADS1232::safeWait()
+{
+  //if you want to implement a more robust and sophisticated timeout, please check out:
+  //https://github.com/HamidSaffari/ADS123X    
+  uint32_t elapsed;
+  elapsed = millis();
+  while (!is_ready()) {
+    if (millis() > elapsed + 2000) {
+      //timeout
+      Serial.println("Error while waiting for ADC");
+      return false;
+    }
+  }
+  return true;    
+}
+
   
 void ADS1232::power_up() {
   digitalWrite(PDWN, HIGH);
-  while (!is_ready()) {};
+  //from jousis library
+  digitalWrite(SCLK,LOW);
+ // while (!is_ready()) {};
+   //from jousis library
+/*  if (!safeWait()) {
+    Serial.println("Power on error");
+    return;
+  }*/
+  //calibrateADC();
 }
 
 void ADS1232::power_down() {
   digitalWrite(PDWN, LOW);
+  //from jousis library
+  digitalWrite(SCLK,HIGH);
 }
 
 void ADS1232::set_offset(long offset) {
@@ -48,8 +76,17 @@ long ADS1232::_raw_read() {
   // This means that I have to wait DOUT to change from LOW to HIGH and back
   // to LOW (that's the signal I have new data) and get it in 12.5 or 100 ms 100ms
   
+  //from jousis library - led to erratic data, initiation of clean state machine - flush after doing get_load with shift_manip 3 1
+  /*if (!safeWait()) {
+    return 0;
+  }*/
+
+  //while (is_ready()) {Serial.print("in while is ready; ");};
   while (is_ready()) {};
-  while (!is_ready()) {};
+  //Serial.println("after is_ready");
+  //while (!is_ready()) {Serial.print("in while is not ready; ");};
+   while (!is_ready()) {};
+  //Serial.println("after is not ready");
 
   long value = 0;
   long to_add = 0;
