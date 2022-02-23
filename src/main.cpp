@@ -10,7 +10,7 @@ void setup() {
 	// Watchdog timer
 
 #ifdef WATCHDOG
-	Watchdog.enable(4000);
+	Watchdog.enable(12000);
 #endif
 }
 

@@ -118,4 +118,5 @@ public:
 class SampleStateLoadBuffer : public KPState {
 public:
 	void enter(KPStateMachine & sm) override;
+	float current_tare;
 };

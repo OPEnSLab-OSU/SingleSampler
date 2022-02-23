@@ -26,7 +26,7 @@ public:
 		SSD.println("Start Time");
 		SSD.println(now());
 		SSD.print("Initial load; ");
-		SSD.println(reTare(50));
+		SSD.println(reTare(200));
 	}
 	long read(int qty) {
 		//println("in read");
