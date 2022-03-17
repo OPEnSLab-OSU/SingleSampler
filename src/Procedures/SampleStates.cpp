@@ -98,8 +98,10 @@ void SampleStateFlush::enter(KPStateMachine & sm) {
 // Sample
 void SampleStateSample::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
-	print("time var in sample state ms;;;");
-	println(time);
+	SSD.print("Input total sampling volume in ml;;;");
+	SSD.println(volume);
+	SSD.print("Input total sampling time in ms;;;");
+	SSD.println(time);
 	SSD.println("Sample Start Time");
 	SSD.println(app.power.getTime());
 

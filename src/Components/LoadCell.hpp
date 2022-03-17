@@ -14,7 +14,7 @@ public:
 	ADS1232 weight = ADS1232(_pdwn, _sclk, _dout);
 	float tare;
 	float factor = 0.002324227;
-	float offset = -19691.0843;
+	float offset = -19691.0843+464.24;
 	long reading = 0;
 	long sum;
 	short count;

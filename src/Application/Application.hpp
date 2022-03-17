@@ -38,7 +38,7 @@ public:
 	SampleStateMachine sm;
 	CleanStateMachine csm;
 	Button run_button{"run-button", this, HardwarePins::RUN_BUTTON, sm};
-	Button clean_button{"clean-button", this, HardwarePins::CLEAN_BUTTON, csm};
+	//Button clean_button{"clean-button", this, HardwarePins::CLEAN_BUTTON, csm};
 	Pump pump{"pump", HardwarePins::MOTOR_FORWARDS, HardwarePins::MOTOR_REVERSE};
 	ShiftRegister shift{"shift-register",
 		32,
@@ -79,9 +79,9 @@ public:
 		if (!csm.isBusy()) {
 			run_button.listen();
 		}
-		if (!sm.isBusy()) {
+		/*if (!sm.isBusy()) {
 			clean_button.listen();
-		}
+		}*/
 		KPController::update();
 #ifdef INFO_SPAM
 		// Note: this probably has severe impacts on performance.

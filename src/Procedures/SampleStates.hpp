@@ -44,7 +44,7 @@ public:
 class SampleStateStop : public KPState {
 public:
 	void enter(KPStateMachine & sm) override;
-	int time = 10;
+	int time = 30;
 };
 
 class SampleStateFinished : public KPState {

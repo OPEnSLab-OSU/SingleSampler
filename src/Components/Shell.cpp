@@ -73,11 +73,11 @@ void Shell::setup() {
 		cmnd_lambda { app.sm.begin(); });
 
 	// clean button
-	addFunction(
+	/*addFunction(
 		"clean_button_press",
 		0,
 		cmnd_lambda { app.csm.begin(); });
-
+	*/
 	// halt the machine in the sample state
 	addFunction(
 		"sample_halt",
