@@ -14,7 +14,7 @@ public:
 	ADS1232 weight = ADS1232(_pdwn, _sclk, _dout);
 	float tare;
 	float factor = 0.002324227;
-	float offset = -19691.0843+464.24;
+	float offset = -19691.0843;
 	long reading = 0;
 	long sum;
 	short count;
@@ -23,6 +23,9 @@ public:
 		: KPComponent(name, controller) {}
 	void setup() override {
 		weight.power_up();
+		// reset library values to default
+  		weight.OFFSET = 0;
+  		weight.SCALE = 1.0;
 		tare = 0;
 		SSD.println("Start Time");
 		SSD.println(now());
