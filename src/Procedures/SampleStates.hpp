@@ -44,7 +44,7 @@ public:
 class SampleStateStop : public KPState {
 public:
 	void enter(KPStateMachine & sm) override;
-	int time = 30;
+	int time = 60;
 };
 
 class SampleStateFinished : public KPState {
@@ -77,13 +77,13 @@ public:
 class SampleStateBetweenPump : public KPState {
 public:
 	void enter(KPStateMachine & sm) override;
-	int time = 2;
+	int time = 3;
 };
 
 class SampleStateBetweenValve : public KPState {
 public:
 	void enter(KPStateMachine & sm) override;
-	int time = 5;
+	int time = 6;
 };
 
 class SampleStateFillTubeOnramp : public KPState {

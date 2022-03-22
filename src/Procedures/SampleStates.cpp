@@ -135,7 +135,7 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 			//println(current_tare);
 			//print("volume var in sample state;;;; ");
 			//println(volume);
-			load = new_load - current_tare >= volume;
+			load = new_load - current_tare >= (volume - 5);
 		if (load){
 			SSD.println("Sample state ended due to: load ");
 			pressureEnded = 0;
@@ -177,23 +177,23 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 						weight_remaining = volume - (new_load - current_tare);
 						print("Weight remaining (new_load - current_tare);");
 						println(weight_remaining);
-						//check if pumping rate is faster than before
-						if (new_rate > prior_rate){
-							new_time_est = weight_remaining/new_rate;
-							print("Estimated time remaining in ms: weight_remaining/new_rate;;;");
-							println(new_time_est);
-							print("Coded time remaining in millis;;;");
-							code_time_est = time - timeSinceLastTransition();
-							println(code_time_est);
-							// reduce time to match new time est
-/*							if (new_time_est < code_time_est){
-								time = millisToSecs(new_time_est + timeSinceLastTransition());
-								print("Updated sampling time in seconds;;;");
-								println(time);
-							}*/
-							 
+						// calculate new time based upon average rate
+						new_time_est = weight_remaining/((new_load - current_tare)/(new_time - sample_start_time));
+						print("Estimated time remaining in ms: weight_remaining/average rate;;;");
+						println(new_time_est);
+						print("Coded time remaining in millis;;;");
+						code_time_est = time - timeSinceLastTransition();
+						println(code_time_est);
+						// update time if more than 10% off and new load similar to last load
+						if (load_count > 4){
+							if ((new_load - prior_load > 1) & (abs(new_load - prior_load) < 6)){
+								if (abs((code_time_est - new_time_est)/code_time_est) > 0.1){
+									time = new_time_est + timeSinceLastTransition();
+									print("Code time outside 10 percent of estimated time. Updated sampling time in millis;;;");
+									println(time);
+								}
+							}
 						}
-						
 					}
 					prior_load = new_load;
 					prior_time = new_time;
@@ -375,7 +375,7 @@ void SampleStateLogBuffer::enter(KPStateMachine & sm) {
 	println(sample_end_time);
 	int volume = app.sm.getState<SampleStateSample>(SampleStateNames::SAMPLE).volume;
 	int sampledTime = (sample_end_time - sample_start_time);
-	print("sampledTime period in ms;;;");
+	print("sampledTime period in ms;;");
 	println(sampledTime);
 	//calculate average pumping rate
 	float average_pump_rate = sampledLoad / sampledTime;
@@ -392,10 +392,10 @@ void SampleStateLogBuffer::enter(KPStateMachine & sm) {
 		if (abs(volume - sampledLoad)/volume > 0.05){
 			println("Sample volume outside of 5 percent tolerance");
 			sampledTime += (load_diff)/average_pump_rate;
-			print("new sampling time period in ms: load diff/avg rate;");
+			print("new sampling time period in ms: load diff/avg rate;;");
 		}
 		else {
-			print("Sampling time period set to match last sample time;");
+			print("Sampling time period set to match last sample time;;");
 		}
 		println(sampledTime);
 		//set new sample time
