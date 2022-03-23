@@ -131,10 +131,10 @@ public:
 						= doc["sample"]["sample_time"];
 					Serial.print("Sample time loaded from SD: ");
 					Serial.println(sm.getState<SampleStateSample>(SampleStateNames::SAMPLE).time);	
-					sm.getState<SampleStateSample>(SampleStateNames::SAMPLE).volume
-						= doc["sample"]["sample_volume"];
+					sm.getState<SampleStateSample>(SampleStateNames::SAMPLE).mass
+						= doc["sample"]["sample_mass"];
 					Serial.print("Sample mass loaded from SD: ");
-					Serial.println(sm.getState<SampleStateSample>(SampleStateNames::SAMPLE).volume);
+					Serial.println(sm.getState<SampleStateSample>(SampleStateNames::SAMPLE).mass);
 					sm.getState<SampleStateIdle>(SampleStateNames::IDLE).time
 						= doc["sample"]["idle_time"];
 					Serial.print("Idle time loaded from SD: ");

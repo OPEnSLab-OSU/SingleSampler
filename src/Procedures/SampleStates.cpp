@@ -98,8 +98,8 @@ void SampleStateFlush::enter(KPStateMachine & sm) {
 // Sample
 void SampleStateSample::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
-	SSD.print("Input total sampling volume in ml;;;");
-	SSD.println(volume);
+	SSD.print("Input total sampling mass in g;;;");
+	SSD.println(mass);
 	SSD.print("Input total sampling time in ms;;;");
 	SSD.println(time);
 	SSD.println("Sample Start Time");
@@ -123,7 +123,7 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 
 	auto const condition = [&]() {
 		bool load = 0;
-		// check load, exit if matching volume
+		// check load, exit if matching mass
 			new_load = app.load_cell.getLoad(1);
 			new_time = millis();
 			print("New load reading;");
@@ -133,9 +133,9 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 			float current_tare = app.sm.getState<SampleStateLoadBuffer>(SampleStateNames::LOAD_BUFFER).current_tare;
 			//print("Current_tare in sample state;;;; ");
 			//println(current_tare);
-			//print("volume var in sample state;;;; ");
-			//println(volume);
-			load = new_load - current_tare >= (volume - 5);
+			//print("mass var in sample state;;;; ");
+			//println(mass);
+			load = new_load - current_tare >= (mass - 5);
 		if (load){
 			SSD.println("Sample state ended due to: load ");
 			pressureEnded = 0;
@@ -174,7 +174,7 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 						print("average rate: new_load - current_tare / new_time - sample_start_time;;;");
 						println((new_load - current_tare)/(new_time - sample_start_time));
 						//check to see if sampling time is appropriate
-						weight_remaining = volume - (new_load - current_tare);
+						weight_remaining = mass - (new_load - current_tare);
 						print("Weight remaining (new_load - current_tare);");
 						println(weight_remaining);
 						// calculate new time based upon average rate
@@ -373,7 +373,7 @@ void SampleStateLogBuffer::enter(KPStateMachine & sm) {
 	println(sample_start_time);
 	print("sample_end_time ms in log buffer;;;");
 	println(sample_end_time);
-	int volume = app.sm.getState<SampleStateSample>(SampleStateNames::SAMPLE).volume;
+	int mass = app.sm.getState<SampleStateSample>(SampleStateNames::SAMPLE).mass;
 	int sampledTime = (sample_end_time - sample_start_time);
 	print("sampledTime period in ms;;");
 	println(sampledTime);
@@ -382,15 +382,15 @@ void SampleStateLogBuffer::enter(KPStateMachine & sm) {
 	print("Average pumping rate grams/ms: sampledLoad/sampledTime;;;");
 	println(average_pump_rate);
 	//change time opposite sign of load diff (increase for negative, decrease for positive)
-	print("load_diff: volume - sampledLoad;;;");
-	float load_diff = volume - sampledLoad;
+	print("load_diff: mass - sampledLoad;;;");
+	float load_diff = mass - sampledLoad;
 	println(load_diff);
 
 	//update time if sample didn't end due to pressure
 	if (!pressureEnded){	
 		// change sampling time if load was +- 5% off from set weight
-		if (abs(volume - sampledLoad)/volume > 0.05){
-			println("Sample volume outside of 5 percent tolerance");
+		if (abs(mass - sampledLoad)/mass > 0.05){
+			println("Sample mass outside of 5 percent tolerance");
 			sampledTime += (load_diff)/average_pump_rate;
 			print("new sampling time period in ms: load diff/avg rate;;");
 		}

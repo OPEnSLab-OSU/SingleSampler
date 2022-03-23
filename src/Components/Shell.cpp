@@ -120,7 +120,8 @@ void Shell::setup() {
 		cmnd_lambda {
 			Serial.println(app.sm.getState<SampleStateFlush>(SampleStateNames::FLUSH).time);
 		});
-
+	
+	//Set time in Unix Epoch time - number of seconds since 1/1/1970 e.g. https://www.epochconverter.com/
 	addFunction(
 		"set_time",
 		1,
@@ -129,6 +130,8 @@ void Shell::setup() {
 				app.power.set(std::stoi(args[1]));
 			}
 		});
+	
+	//isn't working - displays 1d
 	addFunction(
 		"get_time",
 		0,
@@ -186,12 +189,12 @@ void Shell::setup() {
 		});
 
 	addFunction(
-		"sample_sample_volume",
+		"sample_sample_mass",
 		1,
 		cmnd_lambda {
-			const char * loc[2] = {"sample", "sample_volume"};
+			const char * loc[2] = {"sample", "sample_mass"};
 			app.reWrite(loc,
-				app.sm.getState<SampleStateSample>(SampleStateNames::SAMPLE).volume,
+				app.sm.getState<SampleStateSample>(SampleStateNames::SAMPLE).mass,
 				std::stoi(args[1]));
 		});
 

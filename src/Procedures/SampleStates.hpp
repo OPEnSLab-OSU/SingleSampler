@@ -38,7 +38,7 @@ public:
 	void leave(KPStateMachine & sm) override;
 	bool badPressure();
 	int time   = DefaultTimes::SAMPLE_TIME;
-	int volume = 100;
+	int mass = 100;
 };
 
 class SampleStateStop : public KPState {
