@@ -8,7 +8,6 @@ namespace SampleStateNames {
 	constexpr const char * SAMPLE			= "sample-state-sample";
 	constexpr const char * STOP				= "sample-state-stop";
 	constexpr const char * FINISHED			= "sample-state-finished";
-	constexpr const char * PURGE			= "sample-state-purge";
 	constexpr const char * SETUP			= "sample-state-setup";
 	constexpr const char * ONRAMP			= "sample-state-onramp";
 	constexpr const char * BETWEEN_PUMP		= "sample-state-between-pump";
@@ -50,14 +49,6 @@ public:
 class SampleStateFinished : public KPState {
 public:
 	void enter(KPStateMachine & sm) override;
-};
-
-// Obsolete
-class SampleStatePurge : public KPState {
-public:
-	void enter(KPStateMachine & sm) override;
-	// void leave(KPStateMachine & sm) override;
-	unsigned long time = DefaultTimes::PURGE_TIME;
 };
 
 class SampleStateSetup : public KPState {
@@ -107,7 +98,7 @@ public:
 	int time = 5;
 	long sum;
 	int count;
-	int range_size = 200;
+	int range_size = 350;
 };
 
 class SampleStateLogBuffer : public KPState {

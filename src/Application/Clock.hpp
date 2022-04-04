@@ -9,10 +9,10 @@
 
 #define RTC_ADDR 0x68
 
-class Power : public KPComponent {
+class Clock : public KPComponent {
 public:
 	DS3232RTC rtc;
-	Power(const char * name) : KPComponent(name), rtc(false) {}
+	Clock(const char * name) : KPComponent(name), rtc(false) {}
 	void setup() {
 		//waitForConnection();
 		rtc.begin();

@@ -3,10 +3,11 @@
 #include <ADS1232.h>
 #include <FileIO/SerialSD.hpp>
 #include <time.h>
+#include <Application/Constants.hpp>
 
-#define _dout A3
-#define _sclk 0
-#define _pdwn 1
+#define _dout HardwarePins::DOUT
+#define _sclk HardwarePins::SCLK
+#define _pdwn HardwarePins::PDWN
 
 class LoadCell : public KPComponent {
 public:

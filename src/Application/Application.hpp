@@ -25,7 +25,7 @@
 #include <SD.h>
 #include <ArduinoJson.h>
 
-#include <Application/Power.hpp>
+#include <Application/Clock.hpp>
 #include <Components/LED.hpp>
 #include <Components/PressureSensor.hpp>
 #include <Components/LoadCell.hpp>
@@ -33,7 +33,7 @@
 class Application : public KPController, public KPSerialInputObserver {
 public:
 	// Component add
-	Power power{"power"};
+	Clock clock{"clock"};
 	Logger logger{"logger", this};
 	SampleStateMachine sm;
 	CleanStateMachine csm;
@@ -62,7 +62,7 @@ public:
 		addComponent(KPSerialInput::sharedInstance());
 		addComponent(shell);
 		addComponent(logger);
-		addComponent(power);
+		addComponent(clock);
 		addComponent(led);
 		addComponent(pressure_sensor);
 		SD.begin(HardwarePins::SD);
@@ -108,7 +108,6 @@ public:
 		shell.runFunction(args, i);
 	}
 
-	// this should be in utility but the scope isnt working todo solve
 	std::string readEntireFile(File & file) {
 		std::string contents;
 		while (-1 != file.peek()) {

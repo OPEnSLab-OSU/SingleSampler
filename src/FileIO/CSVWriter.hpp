@@ -1,13 +1,11 @@
 #pragma once
 #include <KPFoundation.hpp>
 #include <SD.h>
-//#include <FileIO/FileLoader.hpp>
 #include <string>
 class CSVWriter {
 public:
 	const char * dir;
 	CSVWriter(const char * dir) : dir(dir) {
-		// createDirectoryIfNeeded(dir);
 	}
 	void writeStrings(const std::string * strs, int len) {
 		File file = SD.open(dir, FILE_WRITE);

@@ -46,7 +46,7 @@ void SampleStateStop::enter(KPStateMachine & sm) {
 	app.pump.off();
 	sample_end_time = millis();
 	SSD.println("Sample Stop Time");
-	SSD.println(app.power.getTime());
+	SSD.println(app.clock.getTime());
 	pumpOff = 1;
 	SSD.println("Pump off");
 
@@ -103,7 +103,7 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 	SSD.print("Input total sampling time in ms;;;");
 	SSD.println(time);
 	SSD.println("Sample Start Time");
-	SSD.println(app.power.getTime());
+	SSD.println(app.clock.getTime());
 
 	if (sampleVOff){
 		app.shift.setAllRegistersLow();
@@ -151,7 +151,7 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 			}
 			//if not exiting due to load and time, check pressure
 			else{
-				bool pressure = !app.pressure_sensor.checkPressure();
+				bool pressure = !app.pressure_sensor.isWithinPressure();
 				if (pressure){
 					SSD.println("Sample state ended due to: pressure");
 					pressureEnded = 1;
@@ -221,22 +221,6 @@ void SampleStateFinished::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 	app.led.setFinished();
 	app.sm.reset();
-}
-// Purge (obsolete)
-void SampleStatePurge::enter(KPStateMachine & sm) {
-	Application & app = *static_cast<Application *>(sm.controller);
-	
-	if (sampleVOff){
-		app.shift.setAllRegistersLow();
-		app.shift.setPin(TPICDevices::WATER_VALVE, HIGH);
-		app.shift.write();
-		sampleVOff = 0;
-		SSD.println("Sample valve turning on");
-		flushVOff = 1;
-	}
-	app.pump.on(Direction::reverse);
-	pumpOff = 0;
-	setTimeCondition(time, [&]() { sm.next(); });
 }
 
 // Setup

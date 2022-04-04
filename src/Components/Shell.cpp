@@ -73,11 +73,11 @@ void Shell::setup() {
 		cmnd_lambda { app.sm.begin(); });
 
 	// clean button
-	/*addFunction(
+	addFunction(
 		"clean_button_press",
 		0,
 		cmnd_lambda { app.csm.begin(); });
-	*/
+	
 	// halt the machine in the sample state
 	addFunction(
 		"sample_halt",
@@ -127,7 +127,7 @@ void Shell::setup() {
 		1,
 		cmnd_lambda {
 			if (Utility::msg_posint(args[1].c_str(), 1)) {
-				app.power.set(std::stoi(args[1]));
+				app.clock.set(std::stoi(args[1]));
 			}
 		});
 	
@@ -136,7 +136,7 @@ void Shell::setup() {
 		"get_time",
 		0,
 		cmnd_lambda {
-			std::string time = std::to_string(app.power.getTime());
+			std::string time = std::to_string(app.clock.getTime());
 			Serial.println(time.c_str());
 		});
 
@@ -392,11 +392,6 @@ void Shell::setup() {
 			}
 		});
 
-	/*
-		addFunction(
-			"write_float_test",
-			1,
-			cmnd_lambda { SSD.println((double)std::stof(args[1])); });*/
 }
 
 void Shell::addFunction(const char * name, const unsigned short n_args, ShellSpace::func function) {
@@ -405,24 +400,3 @@ void Shell::addFunction(const char * name, const unsigned short n_args, ShellSpa
 	entry.n_args   = n_args;
 	commands[name] = entry;
 }
-
-/*
-
-struct BadArgs : public std::exception {
-const char * what() const throw() {
-	return "Bad args";
-}
-};
-try {
-	ShellSpace::func_args access = commands.at(args[0]);
-	if (length != access.args) {
-		throw BadArgs();
-	} else {
-		Application & app = *static_cast<Application *>(controller);
-		access.function(app, args);
-	}
-} catch (std::exception & e) {
-	Serial.print("Exception: ");
-	Serial.print(e.what());
-	Serial.print("\n");
-}*/
