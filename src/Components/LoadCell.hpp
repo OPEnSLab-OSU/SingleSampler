@@ -28,10 +28,10 @@ public:
   		weight.OFFSET = 0;
   		weight.SCALE = 1.0;
 		tare = 0;
-		SSD.println("Start Time");
+		SSD.print("Load Cell Start Time: ");
 		SSD.println(now());
-		SSD.print("Initial load; ");
-		SSD.println(reTare(50));
+		print("Initial load; ");
+		println(reTare(50));
 	}
 	long read(int qty) {
 		//println("in read");
@@ -42,10 +42,10 @@ public:
 			//display every reading and print to SD
 			for (int i = 0; i < qty; ++i) {
 				reading = weight.raw_read(1);
-				SSD.print("Load reading ");
-				SSD.print(i);
-				SSD.print(";; ");
-				SSD.println(reading);
+				print("Load reading ");
+				print(i);
+				print(";; ");
+				println(reading);
 				if (qty>4){
 					//don't include first 5 readings in average due to unreliability
 					if (i>4){

@@ -45,10 +45,10 @@ void SampleStateStop::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 	app.pump.off();
 	sample_end_time = millis();
-	SSD.println("Sample Stop Time");
+	SSD.print("Sample Stop Time: ");
 	SSD.println(app.clock.getTime());
 	pumpOff = 1;
-	SSD.println("Pump off");
+	println("Pump off");
 
 	app.shift.writeAllRegistersLow();
 	app.shift.writeLatchOut();
@@ -66,7 +66,7 @@ void SampleStateOnramp::enter(KPStateMachine & sm) {
 		app.shift.setPin(TPICDevices::FLUSH_VALVE, HIGH);  // write in skinny
 		app.shift.write();								   // write shifts wide*/
 		flushVOff = 0;
-		SSD.println("Flush valve turning on");
+		println("Flush valve turning on");
 		sampleVOff = 1;
 	}
 
@@ -82,14 +82,14 @@ void SampleStateFlush::enter(KPStateMachine & sm) {
 		app.shift.setPin(TPICDevices::FLUSH_VALVE, HIGH);  // write in skinny
 		app.shift.write();								   // write shifts wide*/
 		flushVOff = 0;
-		SSD.println("Flush valve turning on");
+		println("Flush valve turning on");
 		sampleVOff = 1;
 	}
 
 	if (pumpOff){
 		app.pump.on();
 		pumpOff = 0;
-		SSD.println("Pump on");
+		println("Pump on");
 	}
 
 	setTimeCondition(time, [&]() { sm.next(); });
@@ -98,11 +98,11 @@ void SampleStateFlush::enter(KPStateMachine & sm) {
 // Sample
 void SampleStateSample::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
-	SSD.print("Input total sampling mass in g;;;");
-	SSD.println(mass);
-	SSD.print("Input total sampling time in ms;;;");
-	SSD.println(time);
-	SSD.println("Sample Start Time");
+	//SSD.print("Input total sampling mass in g;;;");
+	//SSD.println(mass);
+	//SSD.print("Input total sampling time in ms;;;");
+	//SSD.println(time);
+	SSD.print("Sample Start Time: ");
 	SSD.println(app.clock.getTime());
 
 	if (sampleVOff){
@@ -110,14 +110,14 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 		app.shift.setPin(TPICDevices::WATER_VALVE, HIGH);
 		app.shift.write();
 		sampleVOff = 0;
-		SSD.println("Sample valve turning on");
+		println("Sample valve turning on");
 		flushVOff = 1;
 	}
 
 	if (pumpOff){
 		app.pump.on();
 		pumpOff = 0;
-		SSD.println("Pump on");
+		println("Pump on");
 		sample_start_time = millis();
 	}
 
@@ -135,7 +135,7 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 			//println(current_tare);
 			//print("mass var in sample state;;;; ");
 			//println(mass);
-			load = new_load - current_tare >= (mass - 5);
+			load = new_load - current_tare >= (mass - 2);
 		if (load){
 			SSD.println("Sample state ended due to: load ");
 			pressureEnded = 0;
@@ -234,7 +234,7 @@ void SampleStateBetweenPump::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 	app.pump.off();
 	pumpOff = 1;
-	SSD.println("Pump off");
+	println("Pump off");
 	setTimeCondition(time, [&]() { sm.next(); });
 }
 
@@ -246,7 +246,7 @@ void SampleStateBetweenValve::enter(KPStateMachine & sm) {
 		app.shift.setPin(TPICDevices::WATER_VALVE, HIGH);
 		app.shift.write();
 		sampleVOff = 0;
-		SSD.println("Sample valve turning on");
+		println("Sample valve turning on");
 		flushVOff = 1;
 	}
 	setTimeCondition(time, [&]() { sm.next(); });
@@ -260,7 +260,7 @@ void SampleStateFillTubeOnramp::enter(KPStateMachine & sm) {
 		app.shift.setPin(TPICDevices::FLUSH_VALVE, HIGH);  // write in skinny
 		app.shift.write();								   // write shifts wide*/
 		flushVOff = 0;
-		SSD.println("Flush valve turning on");
+		println("Flush valve turning on");
 		sampleVOff = 1;
 	}
 	setTimeCondition(time, [&]() { sm.next(); });
@@ -274,13 +274,13 @@ void SampleStateFillTube::enter(KPStateMachine & sm) {
 		app.shift.setPin(TPICDevices::FLUSH_VALVE, HIGH);  // write in skinny
 		app.shift.write();								   // write shifts wide*/
 		flushVOff = 0;
-		SSD.println("Flush valve turning on");
+		println("Flush valve turning on");
 		sampleVOff = 1;
 	}
 	if (pumpOff){
 		app.pump.on();
 		pumpOff = 0;
-		SSD.println("Pump on");
+		println("Pump on");
 	}
 
 	setTimeCondition(time, [&]() { sm.next(); });
@@ -293,13 +293,13 @@ void SampleStatePressureTare::enter(KPStateMachine & sm) {
 		app.shift.setPin(TPICDevices::FLUSH_VALVE, HIGH);  // write in skinny
 		app.shift.write();								   // write shifts wide*/
 		flushVOff = 0;
-		SSD.println("Flush valve turning on");
+		println("Flush valve turning on");
 		sampleVOff = 1;		
 	}
 	if (pumpOff){
 		app.pump.on();
 		pumpOff = 0;
-		SSD.println("Pump on");
+		println("Pump on");
 	}
 
 	sum	  = 0;

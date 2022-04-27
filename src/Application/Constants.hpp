@@ -6,8 +6,8 @@ namespace HardwarePins {
 	constexpr int SHFT_REG_DATA	 = 12;
 	constexpr int MOTOR_REVERSE	 = 5;
 	constexpr int MOTOR_FORWARDS = 6;
-	constexpr int RUN_BUTTON	 = 13;
-	constexpr int CLEAN_BUTTON	 = A5;
+	constexpr int RUN_BUTTON	 = A5;
+	constexpr int CLEAN_BUTTON	 = 13;
 	constexpr int SD			 = 10;
 	constexpr int DOUT			 = A3;
 	constexpr int SCLK			 = 0;
