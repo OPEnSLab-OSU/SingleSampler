@@ -5,7 +5,7 @@
 #include <SD.h>
 #include <ArduinoJson.h>
 #include <time.h>
-#include <FileIO/SerialSD.hpp>
+//#include <FileIO/SerialSD.hpp>
 #define cmnd_lambda [](Application & app, const std::string * args)
 #define CALL		(app, args)
 

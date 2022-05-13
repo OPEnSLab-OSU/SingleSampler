@@ -20,7 +20,7 @@
 
 #include <string>
 
-#include <FileIO/Logger.hpp>
+//#include <FileIO/Logger.hpp>
 
 #include <SD.h>
 #include <ArduinoJson.h>
@@ -34,7 +34,7 @@ class Application : public KPController, public KPSerialInputObserver {
 public:
 	// Component add
 	Clock clock{"clock"};
-	Logger logger{"logger", this};
+	//Logger logger{"logger", this};
 	SampleStateMachine sm;
 	CleanStateMachine csm;
 	Button run_button{"run-button", this, HardwarePins::RUN_BUTTON, sm};
@@ -61,7 +61,7 @@ public:
 		addComponent(shift);
 		addComponent(KPSerialInput::sharedInstance());
 		addComponent(shell);
-		addComponent(logger);
+		//addComponent(logger);
 		addComponent(clock);
 		addComponent(led);
 		addComponent(pressure_sensor);
