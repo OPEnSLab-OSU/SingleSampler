@@ -225,7 +225,14 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 								}
 								// check in to see if pumping rate is really slow (half expected rate) meaning getting a lot of air
 								load_rate = avg_rate <= 0.005;
-								
+								if (load_rate){
+									//SSD.println("Sample state ended due to: load ");
+									std::string temp[1] = {"Sample state ended due to: low load rate"};
+									csvw.writeStrings(temp, 1);
+									println("Sample state ended due to: low load rate");
+									pressureEnded = 0;
+									return load_rate;
+								}
 							}
 						}
 					}
