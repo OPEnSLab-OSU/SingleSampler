@@ -37,6 +37,7 @@ public:
 	void leave(KPStateMachine & sm) override;
 	bool badPressure();
 	int time   = DefaultTimes::SAMPLE_TIME;
+	int time_adj_ms = time;
 	int mass = 100;
 };
 

@@ -145,18 +145,19 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 
 	auto const condition = [&]() {
 		bool load = 0;
+		bool load_rate = 0;
 		// check load, exit if matching mass
-			new_load = app.load_cell.getLoad(1);
-			new_time = millis();
-			print("New load reading;");
-			println(new_load);
-			print("New time;;;");
-			println(new_time);
-			//print("Current_tare in sample state;;;; ");
-			//println(current_tare);
-			//print("mass var in sample state;;;; ");
-			//println(mass);
-			load = new_load - current_tare >= (mass - 0.05*mass);
+		new_load = app.load_cell.getLoad(1);
+		new_time = millis();
+		print("New load reading;");
+		println(new_load);
+		print("New time;;;");
+		println(new_time);
+		//print("Current_tare in sample state;;;; ");
+		//println(current_tare);
+		//print("mass var in sample state;;;; ");
+		//println(mass);
+		load = new_load - current_tare >= (mass - 0.05*mass);
 		if (load){
 			//SSD.println("Sample state ended due to: load ");
 			std::string temp[1] = {"Sample state ended due to: load "};
@@ -167,13 +168,14 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 		}
 			//if not exiting due to load, check time and exit if over time
 		else{
-			bool t = timeSinceLastTransition() >= time;
-			if (t){
+			bool t_max = timeSinceLastTransition() >= secsToMillis(time);
+			bool t_adj = timeSinceLastTransition() >= time_adj_ms;
+			if (t_max || t_adj){
 				std::string temp[1] = {"Sample state ended due to: time"};
 				csvw.writeStrings(temp, 1);
 				println("Sample state ended due to: time");
 				pressureEnded = 0;
-				return t;
+				return t_max || t_adj;
 			}
 			//if not exiting due to load and time, check pressure
 			else{
@@ -200,10 +202,11 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 						//print("New rate grams/ms;;;");
 						//println(new_rate);
 						//print("average rate: new_load - current_tare / new_time - sample_start_time;;;");
-						//println((new_load - current_tare)/(new_time - sample_start_time));
+						float avg_rate = (new_load - current_tare)/(new_time - sample_start_time);
+						//println(avg_rate,3);
 						//check to see if sampling time is appropriate
 						print("Coded time remaining in millis;;;");
-						code_time_est = time - timeSinceLastTransition();
+						code_time_est = time_adj_ms - timeSinceLastTransition();
 						println(code_time_est);
 						// update time if more than 10% off and new load - tare > 1
 						if (load_count > 5){
@@ -216,10 +219,13 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 								print("Estimated time remaining in ms: weight_remaining/average rate;;;");
 								println(new_time_est);
 								if (abs((code_time_est - new_time_est)/code_time_est) > 0.1){
-									time = new_time_est + timeSinceLastTransition();
+									time_adj_ms = new_time_est + timeSinceLastTransition();
 									print("Code time outside 10 percent of estimated time. Updated sampling time in millis;;;");
-									println(time);
+									println(time_adj_ms);
 								}
+								// check in to see if pumping rate is really slow (half expected rate) meaning getting a lot of air
+								load_rate = avg_rate <= 0.005;
+								
 							}
 						}
 					}
@@ -228,9 +234,9 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 					prior_rate = new_rate;
 					prior_time_est = new_time_est;
 					load_count += 1;
-					return load || t || pressure;
+					return load || t_max || t_adj || pressure || load_rate;
+					}
 				}
-				}				
 			}
 	};
 	setCondition(condition, [&]() { sm.next(); });
