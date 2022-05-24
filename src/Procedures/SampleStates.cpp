@@ -8,20 +8,12 @@
 bool pumpOff = 1;
 bool flushVOff = 1;
 bool sampleVOff = 1;
-short load_count = 0;
-float prior_load = 0;
-float new_load = 0;
-unsigned long prior_time;
-unsigned long new_time;
-float prior_rate = 0;
-float new_rate;
-float weight_remaining;
-float new_time_est;
-float prior_time_est;
-float code_time_est;
+bool pressureEnded = 0;
 unsigned long sample_start_time;
 unsigned long sample_end_time;
-bool pressureEnded = 0;
+short load_count = 0;
+float prior_load = 0;
+
 
 //SerialSD SSD;
 CSVWriter csvw{"data.csv"};
@@ -114,7 +106,7 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 	//SSD.print("Input total sampling time in ms;;;");
 	//SSD.println(time);
 
-	float current_tare = app.sm.getState<SampleStateLoadBuffer>(SampleStateNames::LOAD_BUFFER).current_tare;
+	current_tare = app.sm.getState<SampleStateLoadBuffer>(SampleStateNames::LOAD_BUFFER).current_tare;
 
 	if (sampleVOff){
 		app.shift.setAllRegistersLow();
@@ -202,7 +194,15 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 						//print("New rate grams/ms;;;");
 						//println(new_rate);
 						//print("average rate: new_load - current_tare / new_time - sample_start_time;;;");
-						float avg_rate = (new_load - current_tare)/(new_time - sample_start_time);
+						accum_load = new_load - current_tare;
+						//print("Accumulated load (g) ");
+						//println(accum_load);
+						accum_time = new_time - sample_start_time;
+						//print("Accumulated time (ms) ");
+						//println(accum_time);
+						avg_rate = 1000*(accum_load/accum_time);
+						print("Average rate in g/s: ");
+						println(avg_rate,4);
 						//println(avg_rate,3);
 						//check to see if sampling time is appropriate
 						print("Coded time remaining in millis;;;");
@@ -224,15 +224,15 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 									println(time_adj_ms);
 								}
 								// check in to see if pumping rate is really slow (half expected rate) meaning getting a lot of air
-								load_rate = avg_rate <= 0.005;
-								if (load_rate){
+								load_rate = abs(avg_rate) < 0.004;
+								/*if (load_rate){
 									//SSD.println("Sample state ended due to: load ");
 									std::string temp[1] = {"Sample state ended due to: low load rate"};
 									csvw.writeStrings(temp, 1);
 									println("Sample state ended due to: low load rate");
 									pressureEnded = 0;
 									return load_rate;
-								}
+								}*/
 							}
 						}
 					}
@@ -241,7 +241,7 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 					prior_rate = new_rate;
 					prior_time_est = new_time_est;
 					load_count += 1;
-					return load || t_max || t_adj || pressure || load_rate;
+					return load || t_max || t_adj || pressure;// || load_rate;
 					}
 				}
 			}
@@ -388,8 +388,8 @@ void SampleStateLogBuffer::enter(KPStateMachine & sm) {
 	print("Load at end of cycle ");//+ app.sm.current_cycle + ": " + (double)app.load_cell.getLoad());
 	print(app.sm.current_cycle);
 	print("; ");
-	float final_load = app.load_cell.getLoad(25);
-	println((float)final_load);
+	final_load = app.load_cell.getLoad(25);
+	println(final_load,3);
 	//print to SD
 	char cycle_string[50];
 	sprintf(cycle_string, "%u", (int)app.sm.current_cycle);
@@ -399,27 +399,28 @@ void SampleStateLogBuffer::enter(KPStateMachine & sm) {
 	csvw.writeStrings(strings, 3);
 
 	//evaluate load and sampling time
-	float current_tare = app.sm.getState<SampleStateLoadBuffer>(SampleStateNames::LOAD_BUFFER).current_tare;
+	current_tare = app.sm.getState<SampleStateLoadBuffer>(SampleStateNames::LOAD_BUFFER).current_tare;
+
 	//print("current_tare in log buffer;;;;");
 	//println(current_tare);
-	float sampledLoad = final_load - current_tare;
+	sampledLoad = final_load - current_tare;
 	print("sampledLoad: final_load - current_tare;");
 	println(sampledLoad);
 	//print("sample_start_time ms in log buffer;;;");
 	//println(sample_start_time);
 	//print("sample_end_time ms in log buffer;;;");
 	//println(sample_end_time);
-	int mass = app.sm.getState<SampleStateSample>(SampleStateNames::SAMPLE).mass;
-	int sampledTime = (sample_end_time - sample_start_time);
+	sampledTime = (sample_end_time - sample_start_time);
 	print("sampledTime period in ms;;");
 	println(sampledTime);
 	//calculate average pumping rate
-	float average_pump_rate = sampledLoad / sampledTime;
-	print("Average pumping rate grams/ms: sampledLoad/sampledTime;;;");
-	println(average_pump_rate);
+	average_pump_rate = (sampledLoad / sampledTime)*1000;
+	print("Average pumping rate grams/sec: 1000*sampledLoad/sampledTime;;;");
+	println(average_pump_rate,4);
 	//change time opposite sign of load diff (increase for negative, decrease for positive)
+	mass = app.sm.getState<SampleStateSample>(SampleStateNames::SAMPLE).mass;
 	print("load_diff: mass - sampledLoad;;;");
-	float load_diff = mass - sampledLoad;
+	load_diff = mass - sampledLoad;
 	println(load_diff);
 
 	//update time if sample didn't end due to pressure
@@ -435,7 +436,7 @@ void SampleStateLogBuffer::enter(KPStateMachine & sm) {
 		}
 		println(sampledTime);
 		//set new sample time
-		app.sm.getState<SampleStateSample>(SampleStateNames::SAMPLE).time = sampledTime;
+		app.sm.getState<SampleStateSample>(SampleStateNames::SAMPLE).time_adj_ms = sampledTime;
 	}
 	sm.next();
 }
@@ -443,7 +444,7 @@ void SampleStateLogBuffer::enter(KPStateMachine & sm) {
 void SampleStateLoadBuffer::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 	print("Temp: ");
-	float tempC = app.pressure_sensor.getTemp();
+	tempC = app.pressure_sensor.getTemp();
 	println(tempC);
 	char cycle_string[50];
 	sprintf(cycle_string, "%u", (int)app.sm.current_cycle);
