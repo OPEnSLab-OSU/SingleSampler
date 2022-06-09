@@ -53,7 +53,7 @@ public:
 			sum += p_inst;
 		}
 		float p_avg = sum/qty;
-		print("Pressure mbar: ");
+		print("Pressure mbar;;;;; ");
 		println(p_avg);
 		if (p_avg >= min_pressure && p_avg <= max_pressure) {
 			return true;

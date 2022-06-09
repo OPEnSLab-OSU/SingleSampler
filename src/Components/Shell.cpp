@@ -314,7 +314,7 @@ void Shell::setup() {
 		});
 
 	addFunction(
-		"temp_read",
+		"get_temperature",
 		0,
 		cmnd_lambda { Serial.println(app.pressure_sensor.getTemp()); });
 

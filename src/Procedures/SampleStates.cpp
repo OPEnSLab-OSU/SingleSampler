@@ -195,13 +195,13 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 						//println(new_rate);
 						//print("average rate: new_load - current_tare / new_time - sample_start_time;;;");
 						accum_load = new_load - current_tare;
-						//print("Accumulated load (g) ");
+						//print("Accumulated load (g); ");
 						//println(accum_load);
 						accum_time = new_time - sample_start_time;
-						//print("Accumulated time (ms) ");
+						//print("Accumulated time (ms);;; ");
 						//println(accum_time);
 						avg_rate = 1000*(accum_load/accum_time);
-						print("Average rate in g/s: ");
+						print("Average rate in g/s;;;; ");
 						println(avg_rate,4);
 						//println(avg_rate,3);
 						//check to see if sampling time is appropriate
