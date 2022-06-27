@@ -16,8 +16,13 @@ void Logger::log() {
 		ss << timenow;
 		std::string time_string = ss.str();
 
-		std::string strings[3] = {time_string, app.sm.getCurrentStateName(), "0"};
-		writer.writeStrings(strings, 3);
+		const auto pressnow = app.pressure_sensor.getPressure();
+		std::stringstream ps;
+		ps << pressnow;
+		std::string current_pressure = ps.str();
+
+		std::string strings[5] = {time_string," ", app.sm.getCurrentStateName(),", ", current_pressure};
+		writer.writeStrings(strings, 5);
 		last_time = millis();
 	}
 }

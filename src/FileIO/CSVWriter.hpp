@@ -12,8 +12,8 @@ public:
 		File file = SD.open(dir, FILE_WRITE);
 		for (int i = 0; i < len; ++i) {
 			file.print(strs[i].c_str());
-			if (i != len - 1)
-				file.print(", ");
+			//if (i != len - 1)
+			//	file.print(" ");
 		}
 		file.write("\n");
 #ifdef WRITERDEBUG

@@ -32,13 +32,6 @@ public:
   		weight.OFFSET = 0;
   		weight.SCALE = 1.0;
 		tare = 0;
-		//get and print time
-		const auto timenow = now();
-		std::stringstream ss;
-		ss << timenow;
-		std::string time_string = ss.str();
-		std::string strings[2] = {"New Sampling Sequence: Start Time", time_string};
-		csvw.writeStrings(strings, 2);
 
 		print("Initial load; ");
 		println(reTare(50));
@@ -88,9 +81,9 @@ public:
 		float load = getLoad(qty);
 		char load_string[50];
 		sprintf(load_string, "%d.%02u", (int)load, (int)((load - (int)load) * 100));
-		std::string strings[2] = {"FLAGGED LOAD; ", load_string};
+		std::string strings[2] = {"FLAGGED LOAD, ", load_string};
 		csvw.writeStrings(strings, 2);
-		println("FLAGGED LOAD", load_string);
+		println("FLAGGED LOAD;", load_string);
 		return load;
 	}
 
