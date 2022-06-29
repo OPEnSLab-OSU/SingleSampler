@@ -53,7 +53,7 @@ public:
 			#endif
 				if (qty>4){
 					//don't include first 5 readings in average due to unreliability
-					if (i>4){
+					if (i>3){
 						sum += reading;
 						count ++;
 						//print("tally of readings to average: ");
