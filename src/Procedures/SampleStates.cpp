@@ -50,7 +50,7 @@ void SampleStateStop::enter(KPStateMachine & sm) {
 	flushVOff = 1;
 	sampleVOff = 1;
 
-	setTimeCondition(time, [&]() { sm.next(); });
+	setTimeCondition(time, [&]() { sm.next();});
 }
 
 void SampleStateOnramp::enter(KPStateMachine & sm) {
@@ -59,7 +59,7 @@ void SampleStateOnramp::enter(KPStateMachine & sm) {
 	std::stringstream ss;
 	ss << timenow;
 	std::string time_string = ss.str();
-	print("Starting cycle number; ");
+	print("Starting cycle number;");
 	println(app.sm.current_cycle);
 	char cycle_string[50];
 	sprintf(cycle_string, "%u", (int)app.sm.current_cycle);
@@ -75,7 +75,7 @@ void SampleStateOnramp::enter(KPStateMachine & sm) {
 		sampleVOff = 1;
 	}
 
-	setTimeCondition(time, [&]() { sm.next(); });
+	setTimeCondition(time, [&]() { sm.next();});
 }
 
 // Flush
@@ -84,7 +84,7 @@ void SampleStateFlush::enter(KPStateMachine & sm) {
 
 	if (flushVOff){
 		app.shift.setAllRegistersLow();
-		app.shift.setPin(TPICDevices::FLUSH_VALVE, HIGH);  // write in skinny
+		app.shift.setPin(TPICDevices::FLUSH_VALVE, HIGH); // write in skinny
 		app.shift.write();								   // write shifts wide*/
 		flushVOff = 0;
 		println("Flush valve turning on");
@@ -97,7 +97,7 @@ void SampleStateFlush::enter(KPStateMachine & sm) {
 		println("Pump on");
 	}
 
-	setTimeCondition(time, [&]() { sm.next(); });
+	setTimeCondition(time, [&]() { sm.next();});
 }
 
 // Sample
@@ -143,7 +143,7 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 		// check load, exit if matching mass
 		new_load = app.load_cell.getLoad(1);
 		new_time = millis();
-		print("New load reading;");
+		print("New mass reading;");
 		println(new_load);
 		print("New time;;;");
 		println(new_time);
@@ -153,7 +153,7 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 		std::string time_string = ss.str();
 		char cycle_string[50];
 		sprintf(cycle_string, "%u", (int)app.sm.current_cycle);
-		//print("Current_tare in sample state;;;; ");
+		//print("Current_tare in sample state;;;;");
 		//println(current_tare);
 		//print("mass var in sample state;;;; ");
 		//println(mass);
@@ -203,13 +203,13 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 						//println(new_rate);
 						//print("average rate: new_load - current_tare / new_time - sample_start_time;;;");
 						accum_load = new_load - current_tare;
-						//print("Accumulated load (g); ");
+						//print("Accumulated load (g);");
 						//println(accum_load);
 						accum_time = new_time - sample_start_time;
-						//print("Accumulated time (ms);;; ");
+						//print("Accumulated time (ms);;;");
 						//println(accum_time);
 						avg_rate = 1000*(accum_load/accum_time);
-						print("Average rate in g/s;;;; ");
+						print("Average rate in g/s;;;;");
 						println(avg_rate,4);
 						//println(avg_rate,3);
 						//check to see if sampling time is appropriate
@@ -254,7 +254,7 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 				}
 			}
 	};
-	setCondition(condition, [&]() { sm.next(); });
+	setCondition(condition, [&]() { sm.next();});
 }
 
 // Sample leave
@@ -282,7 +282,7 @@ void SampleStateSetup::enter(KPStateMachine & sm) {
 	std::string time_string = ss.str();
 	std::string strings[2] = {time_string, ",New Sampling Sequence"};
 	csvw.writeStrings(strings, 2);
-	setTimeCondition(time, [&]() { sm.next(); });
+	setTimeCondition(time, [&]() { sm.next();});
 }
 
 void SampleStateBetweenPump::enter(KPStateMachine & sm) {
@@ -290,7 +290,7 @@ void SampleStateBetweenPump::enter(KPStateMachine & sm) {
 	app.pump.off();
 	pumpOff = 1;
 	println("Pump off");
-	setTimeCondition(time, [&]() { sm.next(); });
+	setTimeCondition(time, [&]() { sm.next();});
 }
 
 void SampleStateBetweenValve::enter(KPStateMachine & sm) {
@@ -304,7 +304,7 @@ void SampleStateBetweenValve::enter(KPStateMachine & sm) {
 		println("Sample valve turning on");
 		flushVOff = 1;
 	}
-	setTimeCondition(time, [&]() { sm.next(); });
+	setTimeCondition(time, [&]() { sm.next();});
 }
 
 void SampleStateFillTubeOnramp::enter(KPStateMachine & sm) {
@@ -312,13 +312,13 @@ void SampleStateFillTubeOnramp::enter(KPStateMachine & sm) {
 
 	if (flushVOff){
 		app.shift.setAllRegistersLow();
-		app.shift.setPin(TPICDevices::FLUSH_VALVE, HIGH);  // write in skinny
+		app.shift.setPin(TPICDevices::FLUSH_VALVE, HIGH);// write in skinny
 		app.shift.write();								   // write shifts wide*/
 		flushVOff = 0;
 		println("Flush valve turning on");
 		sampleVOff = 1;
 	}
-	setTimeCondition(time, [&]() { sm.next(); });
+	setTimeCondition(time, [&]() { sm.next();});
 }
 
 void SampleStateFillTube::enter(KPStateMachine & sm) {
@@ -326,7 +326,7 @@ void SampleStateFillTube::enter(KPStateMachine & sm) {
 
 	if (flushVOff){
 		app.shift.setAllRegistersLow();
-		app.shift.setPin(TPICDevices::FLUSH_VALVE, HIGH);  // write in skinny
+		app.shift.setPin(TPICDevices::FLUSH_VALVE, HIGH); // write in skinny
 		app.shift.write();								   // write shifts wide*/
 		flushVOff = 0;
 		println("Flush valve turning on");
@@ -338,7 +338,7 @@ void SampleStateFillTube::enter(KPStateMachine & sm) {
 		println("Pump on");
 	}
 
-	setTimeCondition(time, [&]() { sm.next(); });
+	setTimeCondition(time, [&]() { sm.next();});
 }
 
 void SampleStatePressureTare::enter(KPStateMachine & sm) {
@@ -360,7 +360,7 @@ void SampleStatePressureTare::enter(KPStateMachine & sm) {
 	sum	  = 0;
 	count = 0;
 
-	setTimeCondition(time, [&]() { sm.next(); });
+	setTimeCondition(time, [&]() { sm.next();});
 }
 
 void SampleStatePressureTare::update(KPStateMachine & sm) {
@@ -403,9 +403,9 @@ void SampleStatePressureTare::leave(KPStateMachine & sm) {
 
 void SampleStateLogBuffer::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
-	print("Load at end of cycle ");//+ app.sm.current_cycle + ": " + (double)app.load_cell.getLoad());
+	print("Load at end of cycle;");//+ app.sm.current_cycle + ": " + (double)app.load_cell.getLoad());
 	print(app.sm.current_cycle);
-	print("; ");
+	print(";");
 	final_load = app.load_cell.getLoad(25);
 	println(final_load,3);
 	//print to SD
@@ -486,7 +486,7 @@ void SampleStateLoadBuffer::enter(KPStateMachine & sm) {
 	csvw.writeStrings(strings, 5);
 	//SSD.println("Get load");
 	//println(app.load_cell.getLoad(1));
-	print("Tare load; ");
+	print("Tare load;");
 	current_tare = app.load_cell.reTare(25);
 	println(current_tare);
 	/*char tare_string[50];

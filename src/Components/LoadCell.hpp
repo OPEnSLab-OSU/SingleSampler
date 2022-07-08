@@ -33,7 +33,7 @@ public:
   		weight.SCALE = 1.0;
 		tare = 0;
 
-		print("Initial load; ");
+		print("Initial load;");
 		println(reTare(50));
 	}
 	long read(int qty) {
@@ -46,9 +46,9 @@ public:
 		for (int i = 0; i < qty; ++i) {
 			reading = weight.raw_read(1);
 			#ifdef LOAD_CAL
-				print("Load reading ");
+				print("Load reading;");
 				print(i);
-				print(";; ");
+				print(";");
 				println(reading);
 			#endif
 				if (qty>4){

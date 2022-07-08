@@ -48,12 +48,20 @@ public:
 	bool isWithinPressure() {
 		float sum = 0;
 		int qty = 5;
+		int count = 0;
 		for (int i = 0; i < qty; ++i) {
 			float p_inst = getPressure();
-			sum += p_inst;
+			#ifdef PRESSURE_CHECK
+				print("Pressure instant mbar;;;;; ");
+				println(p_inst);
+			#endif
+			if (p_inst>0){
+				count = count +1;
+				sum += p_inst;
+			}
 		}
-		float p_avg = sum/qty;
-		print("Pressure mbar;;;;; ");
+		float p_avg = sum/count;
+		print("Pressure average mbar;;;;; ");
 		println(p_avg);
 		if (p_avg >= min_pressure && p_avg <= max_pressure) {
 			return true;
