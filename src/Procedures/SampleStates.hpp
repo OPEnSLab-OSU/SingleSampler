@@ -94,7 +94,7 @@ public:
 class SampleStateFillTubeOnramp : public KPState {
 public:
 	void enter(KPStateMachine & sm) override;
-	int time = 5;
+	int time = 7;
 };
 
 class SampleStateFillTube : public KPState {
