@@ -107,7 +107,7 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 	//SSD.println(mass);
 	//SSD.print("Input total sampling time in ms;;;");
 	//SSD.println(time);
-
+	wt_offset = 0;
 	current_tare = app.sm.getState<SampleStateLoadBuffer>(SampleStateNames::LOAD_BUFFER).current_tare;
 
 	if (sampleVOff){
@@ -139,7 +139,6 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 
 	auto const condition = [&]() {
 		bool load = 0;
-		float wt_offset = 0;
 		bool load_rate = 0;
 		// check load, exit if matching mass
 		new_load = app.load_cell.getLoad(1);
@@ -148,11 +147,12 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 		println(new_load);
 		print("New time;;;");
 		println(new_time);
-		if(load_count==3){
+		if(load_count==4){
 			wt_offset = ((new_load - prior_load)/(new_time - prior_time))*(new_time - sample_start_time);
 			print("Weight offset;;;;");
 			println(wt_offset);
 		}
+		
 		const auto timenow = now();
 		std::stringstream ss;
 		ss << timenow;
@@ -163,7 +163,7 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 		//println(current_tare);
 		//print("mass var in sample state;;;; ");
 		//println(mass);
-		load = new_load - current_tare >= (mass - wt_offset);
+		load = new_load - current_tare >= mass - wt_offset;
 		if (load){
 			//SSD.println("Sample state ended due to: load ");
 			std::string temp[4] = {time_string, ",Cycle ",cycle_string," ended due to: load"};

@@ -52,12 +52,13 @@ public:
 	unsigned long new_time;
 	float prior_rate = 0;
 	float new_rate;
+	float wt_offset;
 };
 
 class SampleStateStop : public KPState {
 public:
 	void enter(KPStateMachine & sm) override;
-	int time = 60;
+	int time = 45;
 };
 
 class SampleStateFinished : public KPState {
