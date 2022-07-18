@@ -184,6 +184,8 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 				csvw.writeStrings(temp, 4);
 				println("Sample state ended due to: total load ");
 				pressureEnded = 0;
+				// trigger end of all sampling
+				app.sm.current_cycle = app.sm.last_cycle;
 				return total_load;
 			}
 			
