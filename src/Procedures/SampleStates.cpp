@@ -147,6 +147,7 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 		println(new_load);
 		print("New time;;;");
 		println(new_time);
+		// compensate for poor measurements for first 4
 		if(load_count==4){
 			wt_offset = ((new_load - prior_load)/(new_time - prior_time))*(new_time - sample_start_time);
 			print("Weight offset;;;;");
@@ -172,8 +173,20 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 			pressureEnded = 0;
 			return load;
 		}
-			//if not exiting due to load, check time and exit if over time
+
+			//if not exiting due to sample load, check overall load, time and exit if over time
 		else{
+			// check load reading relative to cap of 2900 g
+			bool total_load = 0;
+			total_load = new_load > 2900;
+			if (total_load){
+				std::string temp[4] = {time_string, ",Cycle ",cycle_string," ended due to: total load"};
+				csvw.writeStrings(temp, 4);
+				println("Sample state ended due to: total load ");
+				pressureEnded = 0;
+				return total_load;
+			}
+			
 			bool t_max = timeSinceLastTransition() >= secsToMillis(time);
 			bool t_adj = timeSinceLastTransition() >= time_adj_ms;
 			if (t_max || t_adj){
@@ -255,7 +268,7 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 					prior_rate = new_rate;
 					prior_time_est = new_time_est;
 					load_count += 1;
-					return load || t_max || t_adj || pressure;// || load_rate;
+					return load || total_load || t_max || t_adj || pressure;// || load_rate;
 					}
 				}
 			}

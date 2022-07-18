@@ -5,6 +5,8 @@
 #include <SD.h>
 #include <ArduinoJson.h>
 #include <time.h>
+#include <sstream>
+#include <String>
 //#include <FileIO/SerialSD.hpp>
 #define cmnd_lambda [](Application & app, const std::string * args)
 #define CALL		(app, args)
@@ -136,7 +138,8 @@ void Shell::setup() {
 		"get_time",
 		0,
 		cmnd_lambda {
-			std::string time = std::to_string(app.clock.getTime());
+			const auto timenow = now();
+			std::string time = std::to_string(timenow);
 			Serial.println(time.c_str());
 		});
 
