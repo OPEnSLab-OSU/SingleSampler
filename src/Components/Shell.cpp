@@ -133,14 +133,16 @@ void Shell::setup() {
 			}
 		});
 	
-	//isn't working - displays 1d
+	//unix epoch time - seconds since January 1, 1970
 	addFunction(
 		"get_time",
 		0,
 		cmnd_lambda {
 			const auto timenow = now();
-			std::string time = std::to_string(timenow);
-			Serial.println(time.c_str());
+			char time_string[50];
+			sprintf(time_string, "%u", timenow);
+			Serial.println(time_string);
+
 		});
 
 	addFunction(
