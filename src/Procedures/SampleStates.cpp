@@ -1,9 +1,10 @@
 #include <Procedures/SampleStates.hpp>
 #include <Application/Application.hpp>
 //#include <FileIO/SerialSD.hpp>
-#include <time.h>
+//#include <time.h>
 #include <sstream>
 #include <String>
+#include <OPEnS_RTC.h>
 
 bool pumpOff = 1;
 bool flushVOff = 1;
@@ -61,7 +62,7 @@ void SampleStateStop::enter(KPStateMachine & sm) {
 	char cycle_string[50];
 	sprintf(cycle_string, "%u", (int)app.sm.current_cycle);
 	std::string strings[5] = {time_string,",Ending pressure for cycle: ",cycle_string,",,, ", press_string};
-	csvw.writeStrings(strings, 5);
+	csvw.writeStrings(strings, 5, timenow);
 
 	setTimeCondition(time, [&]() { sm.next();});
 }

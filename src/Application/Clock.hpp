@@ -5,7 +5,8 @@
 #include <Application/Constants.hpp>
 #include <Wire.h>
 #include <SPI.h>
-#include <time.h>
+//#include <time.h>
+#include <OPEnS_RTC.h>
 
 #define RTC_ADDR 0x68
 
@@ -24,15 +25,15 @@ public:
 		setTime(rtc.get());
 	}
 
-	time_t cmpTime(time_t cmp) {
+	DateTime cmpTime(time_t cmp) {
 		return cmp - now();
 	}
 
-	time_t cmpTime(const tmElements_t & cmp) {
+	DateTime cmpTime(const tmElements_t & cmp) {
 		return makeTime(cmp) - now();
 	}
 
-	time_t getTime() {
+	DateTime getTime() {
 		return now();
 	}
 
