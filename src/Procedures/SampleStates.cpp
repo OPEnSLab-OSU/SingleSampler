@@ -50,19 +50,6 @@ void SampleStateStop::enter(KPStateMachine & sm) {
 	flushVOff = 1;
 	sampleVOff = 1;
 
-	//get and print to SD pressure after pump and valves are off
-	float curr_pressure = app.pressure_sensor.getPressure();
-	char press_string[50];
-	sprintf(press_string, "%d.%02d", curr_pressure);
-	const auto timenow = now();
-	std::stringstream ss;
-	ss << timenow;
-	std::string time_string = ss.str();
-	char cycle_string[50];
-	sprintf(cycle_string, "%u", (int)app.sm.current_cycle);
-	std::string strings[5] = {time_string,",Ending pressure for cycle: ",cycle_string,",,, ", press_string};
-	csvw.writeStrings(strings, 5);
-
 	setTimeCondition(time, [&]() { sm.next();});
 }
 
@@ -138,8 +125,8 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 	std::string time_string = ss.str();
 	char cycle_string[50];
 	sprintf(cycle_string, "%u", (int)app.sm.current_cycle);
-	std::string strings[4] = {time_string, ",Cycle ", cycle_string, " Sample Start"};
-	csvw.writeStrings(strings, 4);
+	std::string strings[3] = {time_string, "Sample Start Cycle: ", cycle_string};
+	csvw.writeStrings(strings, 3);
 	sample_start_time = millis();
 	print("sample_start_time ms ;;;");
 	println(sample_start_time);
@@ -180,8 +167,8 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 		load = new_load - current_tare >= mass - wt_offset;
 		if (load){
 			//SSD.println("Sample state ended due to: load ");
-			std::string temp[4] = {time_string, ",Cycle ",cycle_string," ended due to: load"};
-			csvw.writeStrings(temp, 4);
+			std::string temp[3] = {time_string,",Ended due to load cycle: ",cycle_string};
+			csvw.writeStrings(temp, 3);
 			println("Sample state ended due to: load ");
 			pressureEnded = 0;
 			return load;
@@ -193,7 +180,7 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 			bool total_load = 0;
 			total_load = new_load > 2900;
 			if (total_load){
-				std::string temp[4] = {time_string, ",Cycle ",cycle_string," ended due to: total load"};
+				std::string temp[4] = {time_string,",Ended due to total load cycle: ",cycle_string};
 				csvw.writeStrings(temp, 4);
 				println("Sample state ended due to: total load ");
 				pressureEnded = 0;
@@ -205,7 +192,7 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 			bool t_max = timeSinceLastTransition() >= secsToMillis(time);
 			bool t_adj = timeSinceLastTransition() >= time_adj_ms;
 			if (t_max || t_adj){
-				std::string temp[4] = {time_string, ",Cycle ",cycle_string," ended due to: time"};
+				std::string temp[4] = {time_string,",Ended due to time cycle: ",cycle_string};
 				csvw.writeStrings(temp, 4);
 				println("Sample state ended due to: time");
 				pressureEnded = 0;
@@ -215,7 +202,7 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 			else{
 				bool pressure = !app.pressure_sensor.isWithinPressure();
 				if (pressure){
-					std::string temp[4] = {time_string, ",Cycle ",cycle_string," ended due to: pressure"};
+					std::string temp[4] = {time_string, ",Ended due to pressure cycle: ",cycle_string};
 					csvw.writeStrings(temp, 4);
 					println("Sample state ended due to: pressure");
 					pressureEnded = 1;
@@ -413,7 +400,7 @@ void SampleStatePressureTare::leave(KPStateMachine & sm) {
 	std::stringstream ss;
 	ss << timenow;
 	std::string time_string = ss.str();
-	std::string strings[3] = {time_string,",Pressure,, ", press_string};
+	std::string strings[3] = {time_string,",Pressure,,, ", press_string};
 	csvw.writeStrings(strings, 3);
 	print("Normal pressure set to value: ");
 	println(avg);
@@ -516,7 +503,7 @@ void SampleStateLoadBuffer::enter(KPStateMachine & sm) {
 	std::stringstream ss;
 	ss << timenow;
 	std::string time_string = ss.str();
-	std::string strings[5] = {time_string,",Temperature for cycle ", cycle_string,",,", tempC_string};
+	std::string strings[5] = {time_string,",Starting temperature for cycle ", cycle_string,",,", tempC_string};
 	csvw.writeStrings(strings, 5);
 	//SSD.println("Get load");
 	//println(app.load_cell.getLoad(1));

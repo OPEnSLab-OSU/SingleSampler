@@ -22,8 +22,9 @@ public:
 		: KPComponent(name, controller), sensor(PRESSURE_ADDR) {}
 
 	void setup() override {
-		// Setup is backwards apparently
-		if(sensor.initializeMS_5803(false)){
+		if (sensor.initializeMS_5803()) {
+			Serial.println("OK: MS5803 pressure sensor online");
+		} else {
 			Serial.println("ERR: MS5803 pressure sensor offline");
 		}
 		else{
