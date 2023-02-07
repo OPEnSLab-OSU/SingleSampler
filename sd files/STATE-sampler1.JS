@@ -1,0 +1,1 @@
+{"sample":{"last_cycle":24,"sample_mass":100,"idle_time":3600,"flush_time":20,"sample_time":300,"setup_time":300},"load_cell":{"offset":-19106.46,"factor":0.00226},"pressure":{"max_pressure":2000,"min_pressure":0}}
