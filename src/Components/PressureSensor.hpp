@@ -27,12 +27,9 @@ public:
 		} else {
 			Serial.println("ERR: MS5803 pressure sensor offline");
 		}
-		else{
-			Serial.println("OK: MS5803 pressure sensor online");
 			
 			// Wait 3 seconds after initializing
 			delay(3000);
-		}
 	}
 
 	void update() override {}
