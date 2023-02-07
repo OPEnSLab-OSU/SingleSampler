@@ -22,14 +22,16 @@ public:
 		: KPComponent(name, controller), sensor(PRESSURE_ADDR) {}
 
 	void setup() override {
-		if (sensor.initializeMS_5803()) {
-			Serial.println("OK: MS5803 pressure sensor online");
-		} else {
+		// Setup is backwards apparently
+		if(sensor.initializeMS_5803(false)){
 			Serial.println("ERR: MS5803 pressure sensor offline");
 		}
-			
+		else{
+			Serial.println("OK: MS5803 pressure sensor online");
+
 			// Wait 3 seconds after initializing
 			delay(3000);
+		}
 	}
 
 	void update() override {}
