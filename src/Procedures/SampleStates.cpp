@@ -51,9 +51,11 @@ void SampleStateStop::enter(KPStateMachine & sm) {
 	sampleVOff = 1;
 
 	//get and print to SD pressure after pump and valves are off
-	float curr_pressure = app.pressure_sensor.getPressure();
+	current_pressure = app.pressure_sensor.getPressure();
+	print("End pressure: ");
+	println(current_pressure);
 	char press_string[50];
-	sprintf(press_string, "%d.%02d", curr_pressure);
+	sprintf(press_string, "%d",current_pressure);
 	const auto timenow = now();
 	std::stringstream ss;
 	ss << timenow;
@@ -138,7 +140,7 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 	std::string time_string = ss.str();
 	char cycle_string[50];
 	sprintf(cycle_string, "%u", (int)app.sm.current_cycle);
-	std::string strings[3] = {time_string, "Sample Start Cycle: ", cycle_string};
+	std::string strings[3] = {time_string, ",Sample Start Cycle: ", cycle_string};
 	csvw.writeStrings(strings, 3);
 	sample_start_time = millis();
 	print("sample_start_time ms ;;;");
@@ -265,16 +267,16 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 									print("Code time outside 10 percent of estimated time. Updated sampling time in millis;;;");
 									println(time_adj_ms);
 								}
-								// check in to see if pumping rate is really slow (half expected rate) meaning getting a lot of air
-								load_rate = abs(avg_rate) < 0.004;
-								/*if (load_rate){
-									//SSD.println("Sample state ended due to: load ");
+								// check in to see if load increase is really slow meaning getting a lot of air or load not reading
+								load_rate = abs(new_load - prior_load) < 0.01;
+								if (load_count > 4 & load_rate){
+									//SSD.println("Sample state ended due to: low load rate ");
 									std::string temp[1] = {"Sample state ended due to: low load rate"};
 									csvw.writeStrings(temp, 1);
 									println("Sample state ended due to: low load rate");
 									pressureEnded = 0;
 									return load_rate;
-								}*/
+								}
 							}
 						}
 					}
@@ -408,7 +410,7 @@ void SampleStatePressureTare::leave(KPStateMachine & sm) {
 #ifndef DISABLE_PRESSURE_TARE
 	int avg = sum / count;
 	char press_string[50];
-	sprintf(press_string, "%d.%02u", (int)avg, (int)((avg - (int)avg) * 100));
+	sprintf(press_string, "%d", avg);
 	const auto timenow = now();
 	std::stringstream ss;
 	ss << timenow;
