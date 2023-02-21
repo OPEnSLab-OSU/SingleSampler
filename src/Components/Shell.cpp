@@ -140,7 +140,7 @@ void Shell::setup() {
 		cmnd_lambda {
 			const auto timenow = now();
 			char time_string[50];
-			sprintf(time_string, "%u", timenow);
+			sprintf(time_string, "%ld", timenow);
 			Serial.println(time_string);
 
 		});
@@ -204,10 +204,10 @@ void Shell::setup() {
 		});
 
 	addFunction(
-		"sample_idle_time",
+		"sample_interval_time",
 		1,
 		cmnd_lambda {
-			const char * loc[2] = {"sample", "idle_time"};
+			const char * loc[2] = {"sample", "interval_time"};
 			app.reWrite(loc,
 				app.sm.getState<SampleStateIdle>(SampleStateNames::IDLE).time,
 				std::stoi(args[1]));

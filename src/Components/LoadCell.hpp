@@ -17,7 +17,7 @@ public:
 	CSVWriter csvw{"data.csv"};
 	ADS1232 weight = ADS1232(_pdwn, _sclk, _dout);
 	float tare;
-	float factor = 0.002192;//002348 sampler1; 0.002192 sampler2
+	float factor = 0.002192;//0.002348 sampler1; 0.002192 sampler2
 
 	float offset = -18344.85;// -19857.150 sampler1; -18344.85 sampler2
 	long reading = 0;

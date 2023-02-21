@@ -59,6 +59,7 @@ class SampleStateStop : public KPState {
 public:
 	void enter(KPStateMachine & sm) override;
 	int time = 45;
+	int current_pressure;
 };
 
 class SampleStateFinished : public KPState {
