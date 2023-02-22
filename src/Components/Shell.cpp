@@ -204,10 +204,10 @@ void Shell::setup() {
 		});
 
 	addFunction(
-		"sample_interval_time",
+		"sample_idle_time",
 		1,
 		cmnd_lambda {
-			const char * loc[2] = {"sample", "interval_time"};
+			const char * loc[2] = {"sample", "idle_time"};
 			app.reWrite(loc,
 				app.sm.getState<SampleStateIdle>(SampleStateNames::IDLE).time,
 				std::stoi(args[1]));

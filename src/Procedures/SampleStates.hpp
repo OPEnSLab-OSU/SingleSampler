@@ -53,6 +53,8 @@ public:
 	float prior_rate = 0;
 	float new_rate;
 	float wt_offset;
+	float previous_load_check = 0;
+	float load_check = 0;
 };
 
 class SampleStateStop : public KPState {
@@ -127,6 +129,7 @@ public:
 	int sampledTime;
 	float average_pump_rate;
 	float load_diff;
+	float intervalTime;
 };
 
 class SampleStateLoadBuffer : public KPState {

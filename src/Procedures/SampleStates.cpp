@@ -30,7 +30,7 @@ void writeLatch(bool controlPin, ShiftRegister & shift) {
 void SampleStateIdle::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 	if (app.sm.current_cycle < app.sm.last_cycle)
-		setTimeCondition(time, [&]() { sm.transitionTo(SampleStateNames::ONRAMP); });
+		setTimeCondition(time - (sample_start_time - sample_end_time)/1000, [&]() { sm.transitionTo(SampleStateNames::ONRAMP); });
 	else
 		sm.transitionTo(SampleStateNames::FINISHED);
 }
@@ -268,14 +268,22 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 									println(time_adj_ms);
 								}
 								// check in to see if load increase is really slow meaning getting a lot of air or load not reading
-								load_rate = abs(new_load - prior_load) < 0.01;
-								if (load_count > 4 & load_rate){
-									//SSD.println("Sample state ended due to: low load rate ");
-									std::string temp[1] = {"Sample state ended due to: low load rate"};
-									csvw.writeStrings(temp, 1);
-									println("Sample state ended due to: low load rate");
-									pressureEnded = 0;
-									return load_rate;
+								// after first 250 samples (~20 seconds), should be different from tare
+								if (load_count== 250){
+									load_check = load_check/load_count;
+									print("Load rate check value: ");
+									println(load_check);
+									load_rate = abs(load_check - current_tare) < 0.01;
+									if (load_rate){
+										std::string temp[4] = {time_string, ",Ended due to low load rate: ",cycle_string};
+										csvw.writeStrings(temp, 4);
+										println("Sample state ended due to: low load rate");
+										pressureEnded = 0;
+										return load_rate;
+									}
+								}
+								else{
+									load_check += new_load;
 								}
 							}
 						}
@@ -285,7 +293,7 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 					prior_rate = new_rate;
 					prior_time_est = new_time_est;
 					load_count += 1;
-					return load || total_load || t_max || t_adj || pressure;// || load_rate;
+					return load || total_load || t_max || t_adj || pressure; || load_rate;
 					}
 				}
 			}
@@ -500,6 +508,11 @@ void SampleStateLogBuffer::enter(KPStateMachine & sm) {
 		//set new sample time
 		app.sm.getState<SampleStateSample>(SampleStateNames::SAMPLE).time_adj_ms = sampledTime;
 	}
+	// print sleep time
+	print("Sampler will idle for ");
+	intervalTime = (app.sm.getState<SampleStateSample>(SampleStateNames::IDLE).time - sampledTime/1000)/60;
+	print(intervalTime);
+	println("minutes.");
 	//advance sample number
 	app.sm.current_cycle += 1;
 	sm.next();
