@@ -9,6 +9,8 @@ bool pumpOff = 1;
 bool flushVOff = 1;
 bool sampleVOff = 1;
 bool pressureEnded = 0;
+unsigned long cycle_start_time;
+unsigned long cycle_end_time;
 unsigned long sample_start_time;
 unsigned long sample_end_time;
 short load_count = 0;
@@ -30,7 +32,7 @@ void writeLatch(bool controlPin, ShiftRegister & shift) {
 void SampleStateIdle::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
 	if (app.sm.current_cycle < app.sm.last_cycle)
-		setTimeCondition(time - (sample_start_time - sample_end_time)/1000, [&]() { sm.transitionTo(SampleStateNames::ONRAMP); });
+		setTimeCondition(time - (cycle_start_time - sample_end_time)/1000, [&]() { sm.transitionTo(SampleStateNames::ONRAMP); });
 	else
 		sm.transitionTo(SampleStateNames::FINISHED);
 }
@@ -70,6 +72,7 @@ void SampleStateStop::enter(KPStateMachine & sm) {
 
 void SampleStateOnramp::enter(KPStateMachine & sm) {
 	Application & app = *static_cast<Application *>(sm.controller);
+	cycle_start_time = millis();
 	const auto timenow = now();
 	std::stringstream ss;
 	ss << timenow;
@@ -226,6 +229,24 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 				//if not exiting due to load, time, and pressure, check pumping rate
 				else{
 					if (load_count > 0){
+						// check in to see if load increase is really slow meaning getting a lot of air or load not reading
+						// after first 25 samples, should be different from tare		
+						if (load_count== 25){
+									load_check = load_check/load_count - current_tare;
+									print("Load rate check value: ");
+									println(load_check);
+									load_rate = abs(load_check - current_tare) < 0.01;
+									if (load_rate){
+										std::string temp[4] = {time_string, ",Ended due to low load rate: ",cycle_string};
+										csvw.writeStrings(temp, 4);
+										println("Sample state ended due to: low load rate");
+										pressureEnded = 0;
+										return load_rate;
+									}
+								}
+						else{
+							load_check += new_load;
+							}
 						//print("prior_load in sample states;;;;");
 						//println(prior_load);
 						//print("prior_time in sample states;;;;");
@@ -266,24 +287,6 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 									time_adj_ms = new_time_est + timeSinceLastTransition();
 									print("Code time outside 10 percent of estimated time. Updated sampling time in millis;;;");
 									println(time_adj_ms);
-								}
-								// check in to see if load increase is really slow meaning getting a lot of air or load not reading
-								// after first 250 samples (~20 seconds), should be different from tare
-								if (load_count== 250){
-									load_check = load_check/load_count;
-									print("Load rate check value: ");
-									println(load_check);
-									load_rate = abs(load_check - current_tare) < 0.01;
-									if (load_rate){
-										std::string temp[4] = {time_string, ",Ended due to low load rate: ",cycle_string};
-										csvw.writeStrings(temp, 4);
-										println("Sample state ended due to: low load rate");
-										pressureEnded = 0;
-										return load_rate;
-									}
-								}
-								else{
-									load_check += new_load;
 								}
 							}
 						}
@@ -509,10 +512,11 @@ void SampleStateLogBuffer::enter(KPStateMachine & sm) {
 		app.sm.getState<SampleStateSample>(SampleStateNames::SAMPLE).time_adj_ms = sampledTime;
 	}
 	// print sleep time
+	cycle_end_time = millis();
 	print("Sampler will idle for ");
-	intervalTime = (app.sm.getState<SampleStateSample>(SampleStateNames::IDLE).time - sampledTime/1000)/60;
+	intervalTime = (app.sm.getState<SampleStateSample>(SampleStateNames::IDLE).time - (cycle_end_time - cycle_start_time)/1000)/60;
 	print(intervalTime);
-	println("minutes.");
+	println(" minutes.");
 	//advance sample number
 	app.sm.current_cycle += 1;
 	sm.next();
