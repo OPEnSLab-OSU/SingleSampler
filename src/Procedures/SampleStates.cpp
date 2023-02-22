@@ -293,7 +293,7 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 					prior_rate = new_rate;
 					prior_time_est = new_time_est;
 					load_count += 1;
-					return load || total_load || t_max || t_adj || pressure; || load_rate;
+					return load || total_load || t_max || t_adj || pressure || load_rate;
 					}
 				}
 			}
