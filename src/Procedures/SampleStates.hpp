@@ -22,7 +22,7 @@ namespace SampleStateNames {
 class SampleStateIdle : public KPState {
 public:
 	void enter(KPStateMachine & sm) override;
-	int time = DefaultTimes::IDLE_TIME;
+	int time = DefaultTimes::IDLE_TIME - 90;
 };
 
 class SampleStateFlush : public KPState {
