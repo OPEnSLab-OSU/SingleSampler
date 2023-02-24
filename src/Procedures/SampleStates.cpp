@@ -232,9 +232,13 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 						// check in to see if load increase is really slow meaning getting a lot of air or load not reading
 						// after first 25 samples, should be different from tare		
 						if (load_count== 25){
-									load_check = load_check/load_count - current_tare;
+									load_check += new_load;
+									load_check = load_check/(load_count) - current_tare;
 									print("Load rate check value: ");
 									println(load_check);
+									print("current tare: ");
+									println(current_tare);
+									load_check = 0;
 									load_rate = abs(load_check - current_tare) < 0.01;
 									if (load_rate){
 										std::string temp[4] = {time_string, ",Ended due to low load rate: ",cycle_string};
@@ -244,8 +248,12 @@ void SampleStateSample::enter(KPStateMachine & sm) {
 										return load_rate;
 									}
 								}
-						else{
+						else if (load_count <25){
 							load_check += new_load;
+							print("Load check ");
+							print(load_check);
+							print(" for load count ");
+							println(load_count);
 							}
 						//print("prior_load in sample states;;;;");
 						//println(prior_load);
@@ -512,11 +520,11 @@ void SampleStateLogBuffer::enter(KPStateMachine & sm) {
 		app.sm.getState<SampleStateSample>(SampleStateNames::SAMPLE).time_adj_ms = sampledTime;
 	}
 	// print sleep time
-	cycle_end_time = millis();
+	/*cycle_end_time = millis();
 	print("Sampler will idle for ");
 	intervalTime = (app.sm.getState<SampleStateSample>(SampleStateNames::IDLE).time - (cycle_end_time - cycle_start_time)/1000)/60;
 	print(intervalTime);
-	println(" minutes.");
+	println(" minutes.");*/
 	//advance sample number
 	app.sm.current_cycle += 1;
 	sm.next();
